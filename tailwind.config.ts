@@ -10,24 +10,23 @@ const config: Config = {
     extend: {
       colors: {
         paideia: {
-          // Verdes mais vivos/saturados nos tons de destaque (500-700); 900/950
-          // permanecem profundos e neutros para fundos e áreas de menor hierarquia.
+          // Verde fechado, quase petróleo/floresta — sóbrio e de baixa saturação
+          // em toda a rampa, do fundo mais profundo (950) ao tom de maior destaque (500).
           green: {
-            950: "#0A2016",
-            900: "#0F2E1F",
-            800: "#0F5230",
-            700: "#0E6B3D",
-            600: "#159457",
-            500: "#1FAE68",
+            950: "#0C1815",
+            900: "#142420",
+            800: "#1D342D",
+            700: "#2A473D",
+            600: "#385C4F",
+            500: "#487060",
           },
-          // Dourados mais vibrantes nos tons de destaque (400-500), reservando
-          // 700 para texto sóbrio sobre fundos claros.
+          // Dourado amadeirado/envelhecido (latão antigo), não amarelo-ouro vibrante.
           gold: {
-            300: "#F0D584",
-            400: "#EFC34A",
-            500: "#E3A912",
-            600: "#C08A0E",
-            700: "#8F6B0E",
+            300: "#CDBB98",
+            400: "#BA9F6D",
+            500: "#A28149",
+            600: "#816437",
+            700: "#624B28",
           },
           cream: {
             50: "#FDF8EF",

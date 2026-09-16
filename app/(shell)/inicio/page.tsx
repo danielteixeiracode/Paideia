@@ -52,7 +52,7 @@ export default async function InicioPage() {
           </Eyebrow>
           <h1 className="font-serif text-2xl font-semibold text-paideia-ink sm:text-3xl">
             Salve, {perfil.nome.split(" ")[0]}.{" "}
-            <span className="font-serif italic text-paideia-green-700">
+            <span className="font-serif font-bold text-paideia-green-700">
               Seu ritmo formativo está em equilíbrio.
             </span>
           </h1>
