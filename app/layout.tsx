@@ -1,17 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { Libre_Franklin } from "next/font/google";
 import { PwaRegister } from "@/components/pwa-register";
 import "./globals.css";
 
-const display = Playfair_Display({
+const display = Libre_Franklin({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
+  weight: ["600", "700", "800"],
   style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",
 });
 
-const body = Inter({
+const body = Libre_Franklin({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   variable: "--font-body",

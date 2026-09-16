@@ -20,9 +20,9 @@ export function ProgressBar({
   barClassName?: string;
 }) {
   return (
-    <div className={cn("h-1.5 w-full overflow-hidden rounded-full bg-paideia-cream-200", trackClassName, className)}>
+    <div className={cn("h-2 w-full overflow-hidden rounded-full bg-paideia-cream-200", trackClassName, className)}>
       <div
-        className={cn("h-full rounded-full bg-paideia-green-700", barClassName)}
+        className={cn("h-full rounded-full bg-gradient-to-r from-paideia-green-600 to-paideia-green-500", barClassName)}
         style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
       />
     </div>
@@ -40,7 +40,7 @@ export function Badge({
 }) {
   const tones: Record<string, string> = {
     neutral: "bg-paideia-cream-200 text-paideia-ink/70",
-    gold: "bg-paideia-gold-300/40 text-paideia-gold-700",
+    gold: "bg-paideia-gold-400/25 text-paideia-gold-700",
     green: "bg-paideia-green-800 text-paideia-gold-300",
     red: "bg-red-100 text-red-700",
   };

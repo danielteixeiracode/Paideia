@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-display: theme("fontFamily.serif");
-  --font-body: theme("fontFamily.sans");
-}
-
 html {
   scroll-behavior: smooth;
 }
@@ -14,6 +9,20 @@ html {
 body {
   background-color: theme("colors.paideia.cream.100");
   color: theme("colors.paideia.ink");
+}
+
+@layer base {
+  /* Foco visível consistente em toda a interface, sem depender de cada
+     componente declarar o próprio anel de foco. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid theme("colors.paideia.gold.500");
+    outline-offset: 2px;
+  }
 }
 
 @layer utilities {
@@ -29,15 +38,15 @@ body {
 
 @layer components {
   .label-caps {
-    @apply text-[11px] font-semibold uppercase tracking-widest text-paideia-green-700;
+    @apply text-[12px] font-semibold uppercase tracking-widest text-paideia-green-700;
   }
   .card {
-    @apply rounded-2xl border border-paideia-cream-300 bg-white shadow-card;
+    @apply rounded-2xl border border-paideia-cream-300/70 bg-white shadow-card;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-paideia-green-800 px-4 py-2.5 font-medium text-paideia-gold-300 transition hover:bg-paideia-green-700 disabled:opacity-50;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-paideia-green-800 px-4 py-2.5 font-semibold text-paideia-gold-300 shadow-sm transition duration-200 hover:bg-paideia-green-700 hover:shadow-md disabled:opacity-50 disabled:shadow-none;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-paideia-cream-300 bg-white px-4 py-2.5 font-medium text-paideia-ink transition hover:bg-paideia-cream-100;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-paideia-cream-300 bg-white px-4 py-2.5 font-semibold text-paideia-ink shadow-sm transition duration-200 hover:border-paideia-green-700/30 hover:bg-paideia-cream-100 hover:shadow-md disabled:opacity-50 disabled:shadow-none;
   }
 }
