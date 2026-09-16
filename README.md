@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Paideia — Formação Clássica
 
-## Getting Started
+Next.js 14 (App Router) + Tailwind + Supabase. PWA instalável.
 
-First, run the development server:
+## Setup
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. Instale as dependências:
+   ```
+   npm install
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Crie um projeto no [Supabase](https://supabase.com) e rode, na ordem, no SQL Editor:
+   - `supabase/schema.sql` — tabelas, enums, triggers e políticas de RLS.
+   - `supabase/seed.sql` — eixos, capacidades, trilha das Sete Artes Liberais, ativos de exemplo e prompt inicial do Sócrates.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Copie `.env.local.example` para `.env.local` e preencha:
+   - `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` — em Project Settings → API.
+   - `SUPABASE_SERVICE_ROLE_KEY` — idem (mantenha em segredo, só é usada em rotas de servidor).
+   - `ANTHROPIC_API_KEY` — chave da API Anthropic (Sócrates).
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. No Auth do Supabase, habilite o provedor de e-mail/senha. Google/Apple são opcionais (os botões na tela de login chamam `signInWithOAuth`; configure-os em Auth → Providers se quiser usá-los).
 
-## Learn More
+5. Torne seu usuário administrador após o primeiro cadastro:
+   ```sql
+   update perfis set papel = 'administrador' where email = 'seu-email@exemplo.com';
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+6. Rode o app:
+   ```
+   npm run dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Estrutura
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `app/` — rotas (App Router). `app/(shell)` agrupa as páginas autenticadas (sidebar + topbar); `app/(shell)/admin` é restrito a administradores (checado no `middleware.ts` e em `lib/data/session.ts`).
+- `app/api/socrates/route.ts` — integração com a API Anthropic (Claude), injetando contexto da Carteira Intelectual e da Trilha de Formação do usuário no prompt de sistema.
+- `components/` — UI, organizada por domínio.
+- `lib/supabase/` — clients Supabase (browser, server, service role).
+- `lib/data/` — funções de leitura server-side (sessão, dashboard).
+- `types/database.ts` — tipos equivalentes ao schema SQL.
+- `supabase/` — `schema.sql` e `seed.sql`.
 
-## Deploy on Vercel
+## PWA
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+`public/manifest.json` + `public/sw.js` (registrado em `components/pwa-register.tsx`). Ícones em `public/icons/` são placeholders gerados localmente — substitua pela identidade visual final antes de publicar.
