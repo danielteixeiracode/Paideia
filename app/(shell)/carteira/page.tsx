@@ -1,23 +1,10 @@
 import Link from "next/link";
 import { Landmark, BookOpen } from "lucide-react";
 import { requirePerfil } from "@/lib/data/session";
-import { Card, Eyebrow, Badge, ProgressBar, EmptyState } from "@/components/ui/primitives";
+import { Card, Eyebrow, EmptyState } from "@/components/ui/primitives";
+import { CarteiraRow } from "@/components/carteira/carteira-row";
 import { formatHoras } from "@/lib/utils";
 import type { CarteiraItem } from "@/types/database";
-
-const STATUS_LABEL: Record<string, string> = {
-  planejado: "Planejado",
-  em_andamento: "Em Andamento",
-  concluido: "Concluído",
-  pausado: "Pausado",
-};
-
-const STATUS_TONE: Record<string, "neutral" | "gold" | "green" | "red"> = {
-  planejado: "neutral",
-  em_andamento: "gold",
-  concluido: "green",
-  pausado: "red",
-};
 
 export default async function CarteiraPage({
   searchParams,
@@ -104,29 +91,13 @@ export default async function CarteiraPage({
                 <th className="px-4 py-3 font-semibold">Ativo Intelectual</th>
                 <th className="px-4 py-3 font-semibold">Eixo</th>
                 <th className="px-4 py-3 font-semibold">Estado</th>
-                <th className="px-4 py-3 font-semibold">Rendimento</th>
+                <th className="px-4 py-3 font-semibold text-right">Rendimento</th>
+                <th className="px-2 py-3 font-semibold text-right">Ações</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-paideia-cream-200">
               {filtrados.map((item) => (
-                <tr key={item.id}>
-                  <td className="px-4 py-3">
-                    <p className="font-serif font-semibold text-paideia-ink">{item.ativo_ref?.titulo}</p>
-                    <p className="text-xs text-paideia-ink/50">{item.ativo_ref?.autor}</p>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Badge tone="neutral">{item.ativo_ref?.eixo?.nome ?? "—"}</Badge>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Badge tone={STATUS_TONE[item.status]}>{STATUS_LABEL[item.status]}</Badge>
-                    <div className="mt-1.5 w-32">
-                      <ProgressBar value={Number(item.progresso_percentual)} />
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-right font-semibold">
-                    {formatHoras(Number(item.horas_investidas))}
-                  </td>
-                </tr>
+                <CarteiraRow key={item.id} item={item} />
               ))}
             </tbody>
           </table>
