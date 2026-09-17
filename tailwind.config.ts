@@ -36,6 +36,13 @@ const config: Config = {
             300: "#EFDCB3",
           },
           ink: "#241C10",
+          // Curva Ordem → Crise → Restauração do Mapa dos Estudos. Mesma
+          // disciplina de saturação da paleta base: nada de cor pura de UI.
+          fase: {
+            ordem: { soft: "#DEE6ED", base: "#44637E", deep: "#2B4154" },
+            crise: { soft: "#EFE0DC", base: "#914C3B", deep: "#633127" },
+            restauracao: { soft: "#DAECE4", base: "#2A7E5B", deep: "#1B553F" },
+          },
         },
       },
       fontFamily: {

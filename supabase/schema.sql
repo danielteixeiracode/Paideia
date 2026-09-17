@@ -11,6 +11,7 @@ create type tipo_ativo as enum ('livro', 'curso', 'exercicio', 'tratado', 'audio
 create type nivel_ativo as enum ('iniciante', 'intermediario', 'avancado');
 create type status_carteira as enum ('planejado', 'em_andamento', 'concluido', 'pausado');
 create type status_etapa as enum ('bloqueada', 'disponivel', 'em_andamento', 'concluida');
+create type status_trilho_etapa as enum ('nao_iniciado', 'em_andamento', 'concluido');
 create type periodo_dia as enum ('matutino', 'vespertino', 'noturno');
 create type status_atividade as enum ('pendente', 'em_andamento', 'concluida', 'atrasada');
 create type modo_socrates as enum ('maieutico', 'exegese', 'exame');
@@ -168,6 +169,19 @@ create table progresso_capacidade (
   unique (user_id, capacidade_etapa_id)
 );
 
+-- Progresso do aluno nos Três Trilhos (Mapa dos Estudos). O cânone dos trilhos e
+-- suas etapas vive em lib/trilhos.ts; aqui guardamos apenas o estado por aluno,
+-- referenciado pelos slugs estáveis daquele arquivo.
+create table progresso_trilho_etapa (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references perfis(id) on delete cascade,
+  trilho_id text not null,
+  etapa_id text not null,
+  status status_trilho_etapa not null default 'nao_iniciado',
+  atualizado_em timestamptz not null default now(),
+  unique (user_id, etapa_id)
+);
+
 create table planejamento_semanal (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references perfis(id) on delete cascade,
@@ -257,6 +271,7 @@ create table notificacoes (
 -- ---------------------------------------------------------------------
 create index idx_carteira_itens_user on carteira_itens(user_id);
 create index idx_progresso_trilha_user on progresso_trilha(user_id);
+create index idx_progresso_trilho_etapa_user on progresso_trilho_etapa(user_id);
 create index idx_atividades_user_data on atividades_planejadas(user_id, data);
 create index idx_registros_estudo_user_data on registros_estudo(user_id, data);
 create index idx_constancia_user_data on constancia_diaria(user_id, data);
@@ -294,6 +309,8 @@ create trigger trg_carteira_itens_upd before update on carteira_itens
   for each row execute procedure public.set_atualizado_em();
 create trigger trg_progresso_trilha_upd before update on progresso_trilha
   for each row execute procedure public.set_atualizado_em();
+create trigger trg_progresso_trilho_etapa_upd before update on progresso_trilho_etapa
+  for each row execute procedure public.set_atualizado_em();
 create trigger trg_perfis_upd before update on perfis
   for each row execute procedure public.set_atualizado_em();
 create trigger trg_conversas_upd before update on conversas_socrates
@@ -323,6 +340,7 @@ alter table config_socrates enable row level security;
 alter table carteira_itens enable row level security;
 alter table progresso_trilha enable row level security;
 alter table progresso_capacidade enable row level security;
+alter table progresso_trilho_etapa enable row level security;
 alter table planejamento_semanal enable row level security;
 alter table atividades_planejadas enable row level security;
 alter table registros_estudo enable row level security;
@@ -386,6 +404,10 @@ create policy "progresso_trilha_select_admin" on progresso_trilha for select usi
 create policy "progresso_capacidade_all_own" on progresso_capacidade for all
   using (user_id = auth.uid()) with check (user_id = auth.uid());
 create policy "progresso_capacidade_select_admin" on progresso_capacidade for select using (public.is_admin());
+
+create policy "progresso_trilho_etapa_all_own" on progresso_trilho_etapa for all
+  using (user_id = auth.uid()) with check (user_id = auth.uid());
+create policy "progresso_trilho_etapa_select_admin" on progresso_trilho_etapa for select using (public.is_admin());
 
 create policy "planejamento_semanal_all_own" on planejamento_semanal for all
   using (user_id = auth.uid()) with check (user_id = auth.uid());

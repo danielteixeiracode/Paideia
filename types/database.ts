@@ -234,6 +234,15 @@ export interface Notificacao {
   criado_em: string;
 }
 
+export interface ProgressoTrilhoEtapa {
+  id: string;
+  user_id: string;
+  trilho_id: string;
+  etapa_id: string;
+  status: "nao_iniciado" | "em_andamento" | "concluido";
+  atualizado_em: string;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -248,6 +257,7 @@ export interface Database {
       carteira_itens: { Row: CarteiraItem; Insert: Partial<CarteiraItem>; Update: Partial<CarteiraItem> };
       progresso_trilha: { Row: ProgressoTrilha; Insert: Partial<ProgressoTrilha>; Update: Partial<ProgressoTrilha> };
       progresso_capacidade: { Row: ProgressoCapacidade; Insert: Partial<ProgressoCapacidade>; Update: Partial<ProgressoCapacidade> };
+      progresso_trilho_etapa: { Row: ProgressoTrilhoEtapa; Insert: Partial<ProgressoTrilhoEtapa>; Update: Partial<ProgressoTrilhoEtapa> };
       planejamento_semanal: { Row: PlanejamentoSemanal; Insert: Partial<PlanejamentoSemanal>; Update: Partial<PlanejamentoSemanal> };
       atividades_planejadas: { Row: AtividadePlanejada; Insert: Partial<AtividadePlanejada>; Update: Partial<AtividadePlanejada> };
       registros_estudo: { Row: RegistroEstudo; Insert: Partial<RegistroEstudo>; Update: Partial<RegistroEstudo> };

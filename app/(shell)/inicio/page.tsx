@@ -184,13 +184,13 @@ export default async function InicioPage() {
       <div className="grid gap-5 lg:grid-cols-2">
         <Link href="/mapa" className="block rounded-2xl bg-paideia-green-900 p-6 text-paideia-cream-100 shadow-card transition hover:bg-paideia-green-800">
           <Badge tone="gold" className="mb-3">Cartografia Intelectual</Badge>
-          <p className="font-serif text-xl font-semibold">Mapa dos Estudos • Árvore de Conhecimentos</p>
+          <p className="font-serif text-xl font-semibold">Mapa dos Estudos • Os Três Trilhos</p>
           <p className="mt-2 text-sm text-paideia-cream-100/70">
-            Visualize as conexões ontológicas entre dialética, metafísica clássica e o cosmos
-            platônico em um grafo interativo.
+            Literatura, filosofia-teologia e pensamento moderno percorrendo a mesma curva: a ordem
+            originária, a crise que a rompe e a restauração do sentido.
           </p>
           <span className="btn-secondary mt-5 inline-flex bg-white/10 text-paideia-cream-50 hover:bg-white/20">
-            <Network className="h-4 w-4" /> Navegar no Mapa Canônico
+            <Network className="h-4 w-4" /> Percorrer os Três Trilhos
           </span>
         </Link>
 

@@ -1,134 +1,97 @@
+import { Fragment } from "react";
+import { ArrowRight } from "lucide-react";
 import { requirePerfil } from "@/lib/data/session";
-import { Card, Eyebrow, ProgressBar, EmptyState } from "@/components/ui/primitives";
-import { CapacidadeToggle } from "@/components/mapa/capacidade-toggle";
-import type { CapacidadeEtapa, Eixo, EtapaTrilha, ProgressoCapacidade, ProgressoTrilha } from "@/types/database";
+import { Card, Eyebrow, ProgressBar } from "@/components/ui/primitives";
+import { TrilhoColuna } from "@/components/mapa/trilho-coluna";
+import { FASE_ESTILO } from "@/components/mapa/fase-estilo";
+import { FASES, SINTESE, TOTAL_ETAPAS, TRILHOS, type StatusEtapaTrilho } from "@/lib/trilhos";
+import { cn } from "@/lib/utils";
+import type { ProgressoTrilhoEtapa } from "@/types/database";
 
 export default async function MapaPage() {
   const { supabase, perfil } = await requirePerfil();
 
-  const [{ data: eixos }, { data: etapas }, { data: progressoTrilha }] = await Promise.all([
-    supabase.from("eixos").select("*").order("ordem"),
-    supabase.from("etapas_trilha").select("*").eq("ativo", true).order("ordem"),
-    supabase.from("progresso_trilha").select("*").eq("user_id", perfil.id),
-  ]);
-
-  const listaEixos = (eixos ?? []) as Eixo[];
-  const listaEtapas = (etapas ?? []) as EtapaTrilha[];
-  const progressoMap = new Map(
-    ((progressoTrilha as ProgressoTrilha[] | null) ?? []).map((p) => [p.etapa_id, p])
-  );
-
-  const etapaFoco =
-    listaEtapas.find((e) => progressoMap.get(e.id)?.foco_atual) ??
-    listaEtapas.find((e) => progressoMap.get(e.id)?.status === "em_andamento");
-
-  const { data: capacidadesEtapa } = etapaFoco
-    ? await supabase
-        .from("capacidades_etapa")
-        .select("*")
-        .eq("etapa_id", etapaFoco.id)
-        .order("ordem")
-    : { data: [] as CapacidadeEtapa[] };
-
-  const { data: progressoCapacidades } = await supabase
-    .from("progresso_capacidade")
+  const { data } = await supabase
+    .from("progresso_trilho_etapa")
     .select("*")
     .eq("user_id", perfil.id);
 
-  const domMap = new Map(
-    ((progressoCapacidades as ProgressoCapacidade[] | null) ?? []).map((p) => [
-      p.capacidade_etapa_id,
-      p.dominada,
-    ])
-  );
+  const statusPorEtapa: Record<string, StatusEtapaTrilho> = {};
+  for (const linha of ((data as ProgressoTrilhoEtapa[] | null) ?? [])) {
+    statusPorEtapa[linha.etapa_id] = linha.status;
+  }
 
-  const capacidades = (capacidadesEtapa ?? []) as CapacidadeEtapa[];
-  const dominadas = capacidades.filter((c) => domMap.get(c.id)).length;
+  const concluidas = Object.values(statusPorEtapa).filter((s) => s === "concluido").length;
+  const emAndamento = Object.values(statusPorEtapa).filter((s) => s === "em_andamento").length;
 
   return (
     <div className="space-y-6">
-      <div>
-        <Eyebrow>Ordo Artium Liberalium • Grafo Epistemológico</Eyebrow>
-        <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">
-          Cartografia Intelectual — Árvore e Rede dos Saberes
-        </h1>
-        <p className="mt-1 max-w-2xl text-sm text-paideia-ink/60">
-          Visão panorâmica da articulação viva entre as Sete Artes Liberais e a Filosofia Primeira.
-        </p>
-      </div>
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <Eyebrow>Tres Semitae • Cânone da Formação Clássica</Eyebrow>
+          <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">
+            Mapa dos Estudos — Os Três Trilhos
+          </h1>
+          <p className="mt-1 max-w-3xl text-sm text-paideia-ink/60">
+            Três percursos paralelos que atravessam o mesmo movimento: uma ordem originária, a crise
+            que a rompe, e a restauração do sentido em nível mais alto do que o do ponto de partida.
+          </p>
+        </div>
 
-      <div className="grid gap-5 lg:grid-cols-[1.4fr_1fr]">
-        <Card>
-          <Eyebrow>Cosmografia dos Estudos</Eyebrow>
-          <div className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4">
-            {listaEixos.map((eixo) => {
-              const etapasDoEixo = listaEtapas.filter((e) => e.eixo_id === eixo.id);
-              const media = etapasDoEixo.length
-                ? Math.round(
-                    etapasDoEixo.reduce((s, e) => s + Number(progressoMap.get(e.id)?.percentual ?? 0), 0) /
-                      etapasDoEixo.length
-                  )
-                : 0;
-              return (
-                <div
-                  key={eixo.id}
-                  className="flex flex-col items-center gap-2 rounded-xl border border-paideia-cream-300 bg-paideia-cream-50 p-4 text-center"
-                >
-                  <div
-                    className="flex h-14 w-14 items-center justify-center rounded-full text-sm font-bold text-white"
-                    style={{ backgroundColor: eixo.cor }}
-                  >
-                    {media}%
-                  </div>
-                  <p className="text-xs font-semibold">{eixo.nome}</p>
-                </div>
-              );
-            })}
-          </div>
-          <p className="mt-5 rounded-lg bg-paideia-cream-100 p-3 text-xs text-paideia-ink/60">
-            O método de dedução demonstrativa da Lógica é a ferramenta motriz dos Postulados de
-            Euclides no Quadrivium — a razão precede o número, e o número confirma a razão.
+        <Card className="w-full shrink-0 lg:w-64">
+          <Eyebrow>Travessia</Eyebrow>
+          <p className="mt-1 font-serif text-2xl font-bold">
+            {concluidas}
+            <span className="text-base font-semibold text-paideia-ink/40"> / {TOTAL_ETAPAS}</span>
+          </p>
+          <ProgressBar value={(concluidas / TOTAL_ETAPAS) * 100} className="mt-2" />
+          <p className="mt-2 text-[11px] text-paideia-ink/50">
+            etapas concluídas · {emAndamento} em andamento
           </p>
         </Card>
-
-        <Card>
-          <div className="mb-1 flex items-center justify-between">
-            <Eyebrow>Etapa em Foco</Eyebrow>
-            {capacidades.length > 0 && (
-              <span className="text-xs font-semibold text-paideia-ink/50">
-                {dominadas} de {capacidades.length} dominadas
-              </span>
-            )}
-          </div>
-
-          {etapaFoco ? (
-            <>
-              <p className="mt-1 font-serif text-lg font-semibold">{etapaFoco.titulo}</p>
-              <ProgressBar
-                value={capacidades.length ? Math.round((dominadas / capacidades.length) * 100) : 0}
-                className="mt-3"
-              />
-
-              <div className="mt-4 space-y-2">
-                {capacidades.length === 0 ? (
-                  <p className="text-sm text-paideia-ink/50">
-                    Nenhuma capacidade granular cadastrada para esta etapa.
-                  </p>
-                ) : (
-                  capacidades.map((c) => (
-                    <CapacidadeToggle key={c.id} capacidade={c} dominada={Boolean(domMap.get(c.id))} />
-                  ))
-                )}
-              </div>
-            </>
-          ) : (
-            <EmptyState
-              titulo="Nenhuma etapa em foco"
-              descricao="Escolha uma etapa em Trilha de Formação para acompanhar suas capacidades aqui."
-            />
-          )}
-        </Card>
       </div>
+
+      <Card className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        {FASES.map((fase, indice) => (
+          <Fragment key={fase.id}>
+            {indice > 0 && (
+              <ArrowRight className="hidden h-4 w-4 shrink-0 text-paideia-ink/25 sm:block" />
+            )}
+            <div className="flex-1">
+              <span
+                className={cn(
+                  "inline-block rounded-full px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest",
+                  FASE_ESTILO[fase.id].chip
+                )}
+              >
+                {fase.nome}
+              </span>
+              <p className="mt-2 text-xs leading-relaxed text-paideia-ink/60">{fase.resumo}</p>
+            </div>
+          </Fragment>
+        ))}
+      </Card>
+
+      <div className="grid items-start gap-5 lg:grid-cols-3">
+        {TRILHOS.map((trilho) => (
+          <TrilhoColuna key={trilho.id} trilho={trilho} statusPorEtapa={statusPorEtapa} />
+        ))}
+      </div>
+
+      <Card className="overflow-hidden p-0">
+        <div className="h-0.5 w-full bg-gradient-to-r from-paideia-fase-ordem-base via-paideia-fase-crise-base to-paideia-fase-restauracao-base opacity-70" />
+        <div className="p-5">
+          <Eyebrow>Síntese</Eyebrow>
+          <p className="mt-1 font-serif text-lg font-semibold text-paideia-ink">{SINTESE.titulo}</p>
+          <div className="mt-3 grid gap-4 sm:grid-cols-2">
+            {SINTESE.paragrafos.map((paragrafo) => (
+              <p key={paragrafo.slice(0, 32)} className="text-xs leading-relaxed text-paideia-ink/55">
+                {paragrafo}
+              </p>
+            ))}
+          </div>
+        </div>
+      </Card>
     </div>
   );
 }
