@@ -54,10 +54,10 @@ export default async function InicioPage() {
     <div className="space-y-6">
       <div>
         <Eyebrow className="mb-2">Paideia</Eyebrow>
-        <h1 className="font-serif text-2xl font-semibold text-paideia-ink sm:text-3xl">
+        <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">
           Salve, {perfil.nome.split(" ")[0]}.
         </h1>
-        <p className="mt-2 max-w-2xl text-sm text-paideia-ink/60">
+        <p className="mt-2 max-w-2xl text-sm text-ink/60">
           Formação clássica com o mínimo de leitura e a máxima profundidade.
         </p>
       </div>
@@ -71,10 +71,10 @@ export default async function InicioPage() {
       <Card className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <Eyebrow>Continuar</Eyebrow>
-          <p className="mt-1 font-serif text-lg font-semibold text-paideia-ink">
+          <p className="mt-1 font-serif text-lg font-semibold text-ink">
             {continuar ? continuar.titulo : "Comece pelas Obras"}
           </p>
-          <p className="text-sm text-paideia-ink/60">
+          <p className="text-sm text-ink/60">
             {continuar ? continuar.detalhe : "Escolha uma obra e veja a que funções ela serve."}
           </p>
         </div>
@@ -88,9 +88,9 @@ export default async function InicioPage() {
           <Link
             key={a.href}
             href={a.href}
-            className="inline-flex items-center gap-1.5 rounded-full border border-paideia-cream-300 bg-white px-3 py-1.5 text-xs font-semibold text-paideia-ink/70 transition hover:bg-paideia-cream-100"
+            className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-surface px-3 py-1.5 text-xs font-semibold text-ink/70 transition hover:bg-canvas"
           >
-            <a.icon className="h-3.5 w-3.5 text-paideia-green-800" />
+            <a.icon className="h-3.5 w-3.5 text-accent" />
             {a.label}
           </Link>
         ))}

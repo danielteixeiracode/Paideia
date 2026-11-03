@@ -58,15 +58,15 @@ export function AuthCard() {
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-paideia-cream-300 bg-paideia-cream-50 shadow-card">
+    <div className="overflow-hidden rounded-2xl border border-rule bg-sunken shadow-card">
       <div className="grid grid-cols-2">
         <button
           type="button"
           onClick={() => setModo("entrar")}
           className={`py-4 text-sm font-semibold transition ${
             modo === "entrar"
-              ? "bg-white text-paideia-ink"
-              : "bg-paideia-cream-100 text-paideia-green-700 hover:bg-paideia-cream-200"
+              ? "bg-surface text-ink"
+              : "bg-canvas text-accent hover:bg-muted"
           }`}
         >
           Entrar na Academia
@@ -76,28 +76,28 @@ export function AuthCard() {
           onClick={() => setModo("criar")}
           className={`py-4 text-sm font-semibold transition ${
             modo === "criar"
-              ? "bg-white text-paideia-ink"
-              : "bg-paideia-cream-100 text-paideia-green-700 hover:bg-paideia-cream-200"
+              ? "bg-surface text-ink"
+              : "bg-canvas text-accent hover:bg-muted"
           }`}
         >
           Criar Minha Conta
         </button>
       </div>
 
-      <form onSubmit={onSubmit} className="space-y-5 bg-white px-7 py-8">
+      <form onSubmit={onSubmit} className="space-y-5 bg-surface px-7 py-8">
         {modo === "criar" && (
           <div>
             <label className="label-caps mb-2 flex items-center gap-2">
               Nome do Discípulo
             </label>
-            <div className="flex items-center gap-2 rounded-lg border border-paideia-cream-300 bg-paideia-cream-50 px-3 py-2.5 focus-within:border-paideia-gold-500">
-              <UserCircle2 className="h-4 w-4 text-paideia-green-700" />
+            <div className="flex items-center gap-2 rounded-lg border border-rule bg-sunken px-3 py-2.5 focus-within:border-paideia-gold-500">
+              <UserCircle2 className="h-4 w-4 text-accent" />
               <input
                 required
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
                 placeholder="Marcus Aurelius"
-                className="w-full bg-transparent text-sm outline-none placeholder:text-paideia-ink/40"
+                className="w-full bg-transparent text-sm outline-none placeholder:text-ink/40"
               />
             </div>
           </div>
@@ -108,15 +108,15 @@ export function AuthCard() {
             Chave de Identificação (E-mail)
             <ScrollText className="h-3.5 w-3.5" />
           </label>
-          <div className="flex items-center gap-2 rounded-lg border border-paideia-cream-300 bg-paideia-cream-50 px-3 py-2.5 focus-within:border-paideia-gold-500">
-            <UserCircle2 className="h-4 w-4 text-paideia-green-700" />
+          <div className="flex items-center gap-2 rounded-lg border border-rule bg-sunken px-3 py-2.5 focus-within:border-paideia-gold-500">
+            <UserCircle2 className="h-4 w-4 text-accent" />
             <input
               required
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="discipulo@paideia.edu.br"
-              className="w-full bg-transparent text-sm outline-none placeholder:text-paideia-ink/40"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-ink/40"
             />
           </div>
         </div>
@@ -125,13 +125,13 @@ export function AuthCard() {
           <div className="mb-2 flex items-center justify-between">
             <label className="label-caps">Palavra de Passe</label>
             {modo === "entrar" && (
-              <button type="button" className="text-xs font-medium text-paideia-gold-700 hover:underline">
+              <button type="button" className="text-xs font-medium text-gold-ink hover:underline">
                 Esqueceu a chave de acesso?
               </button>
             )}
           </div>
-          <div className="flex items-center gap-2 rounded-lg border border-paideia-cream-300 bg-paideia-cream-50 px-3 py-2.5 focus-within:border-paideia-gold-500">
-            <KeyRound className="h-4 w-4 text-paideia-green-700" />
+          <div className="flex items-center gap-2 rounded-lg border border-rule bg-sunken px-3 py-2.5 focus-within:border-paideia-gold-500">
+            <KeyRound className="h-4 w-4 text-accent" />
             <input
               required
               minLength={6}
@@ -139,13 +139,13 @@ export function AuthCard() {
               value={senha}
               onChange={(e) => setSenha(e.target.value)}
               placeholder="••••••••"
-              className="w-full bg-transparent text-sm outline-none placeholder:text-paideia-ink/40"
+              className="w-full bg-transparent text-sm outline-none placeholder:text-ink/40"
             />
             <button type="button" onClick={() => setMostrarSenha((v) => !v)}>
               {mostrarSenha ? (
-                <EyeOff className="h-4 w-4 text-paideia-ink/50" />
+                <EyeOff className="h-4 w-4 text-ink/50" />
               ) : (
-                <Eye className="h-4 w-4 text-paideia-ink/50" />
+                <Eye className="h-4 w-4 text-ink/50" />
               )}
             </button>
           </div>
@@ -153,21 +153,21 @@ export function AuthCard() {
 
         {modo === "entrar" && (
           <div className="flex items-center justify-between text-xs">
-            <label className="flex items-center gap-2 text-paideia-ink/70">
+            <label className="flex items-center gap-2 text-ink/70">
               <input
                 type="checkbox"
                 checked={manterAberto}
                 onChange={(e) => setManterAberto(e.target.checked)}
-                className="h-4 w-4 rounded border-paideia-cream-300 text-paideia-green-700"
+                className="h-4 w-4 rounded border-rule text-accent"
               />
               Manter pergaminhos abertos
             </label>
-            <span className="italic text-paideia-ink/50">Sessão Segura</span>
+            <span className="italic text-ink/50">Sessão Segura</span>
           </div>
         )}
 
         {erro && <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{erro}</p>}
-        {aviso && <p className="rounded-lg bg-paideia-gold-300/30 px-3 py-2 text-xs text-paideia-green-800">{aviso}</p>}
+        {aviso && <p className="rounded-lg bg-paideia-gold-300/30 px-3 py-2 text-xs text-accent">{aviso}</p>}
 
         <button type="submit" disabled={carregando} className="btn-primary w-full py-3 text-base">
           {carregando ? (
@@ -180,10 +180,10 @@ export function AuthCard() {
           )}
         </button>
 
-        <div className="flex items-center gap-3 pt-1 text-[11px] uppercase tracking-widest text-paideia-ink/40">
-          <span className="h-px flex-1 bg-paideia-cream-300" />
+        <div className="flex items-center gap-3 pt-1 text-[11px] uppercase tracking-widest text-ink/40">
+          <span className="h-px flex-1 bg-rule" />
           Ou aceda via
-          <span className="h-px flex-1 bg-paideia-cream-300" />
+          <span className="h-px flex-1 bg-rule" />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
@@ -196,7 +196,7 @@ export function AuthCard() {
         </div>
       </form>
 
-      <div className="border-t border-paideia-cream-300 bg-paideia-cream-100 py-3 text-center text-[11px] font-medium uppercase tracking-widest text-paideia-green-700">
+      <div className="border-t border-rule bg-canvas py-3 text-center text-[11px] font-medium uppercase tracking-widest text-accent">
         Academia de Estudos Superiores
       </div>
     </div>

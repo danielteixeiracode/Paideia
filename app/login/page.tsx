@@ -17,24 +17,24 @@ const RECURSOS = [
 
 export default function LoginPage() {
   return (
-    <main className="min-h-dvh bg-paideia-cream-100 px-4 py-10 sm:py-16">
+    <main className="min-h-dvh bg-canvas px-4 py-10 sm:py-16">
       <div className="mx-auto max-w-xl">
         <div className="mb-8 flex justify-center">
-          <div className="rounded-2xl border border-paideia-cream-300 bg-paideia-cream-50 px-8 py-5 shadow-card">
+          <div className="rounded-2xl border border-rule bg-sunken px-8 py-5 shadow-card">
             <Logo />
           </div>
         </div>
 
         <div className="mb-6 flex justify-center">
-          <span className="label-caps rounded-full border border-paideia-cream-300 bg-paideia-cream-50 px-4 py-1.5">
+          <span className="label-caps rounded-full border border-rule bg-sunken px-4 py-1.5">
             Paideia
           </span>
         </div>
 
-        <h1 className="text-center font-serif text-3xl font-semibold text-paideia-ink sm:text-4xl">
+        <h1 className="text-center font-serif text-3xl font-semibold text-ink sm:text-4xl">
           Bem-vindo ao templo dos seus estudos
         </h1>
-        <p className="mx-auto mt-3 max-w-md text-center font-serif italic text-paideia-ink/70">
+        <p className="mx-auto mt-3 max-w-md text-center font-serif italic text-ink/70">
           &ldquo;A arte milenar da autoformação integral. Retome seu itinerário entre os mestres da
           sabedoria clássica.&rdquo;
         </p>
@@ -49,25 +49,25 @@ export default function LoginPage() {
 
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {RECURSOS.map((r) => (
-            <div key={r.titulo} className="rounded-xl border border-paideia-cream-300 bg-white p-5 text-center shadow-card">
-              <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-paideia-cream-100">
-                <r.icone className="h-5 w-5 text-paideia-green-800" />
+            <div key={r.titulo} className="rounded-xl border border-rule bg-surface p-5 text-center shadow-card">
+              <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-canvas">
+                <r.icone className="h-5 w-5 text-accent" />
               </div>
-              <p className="font-serif text-base font-semibold text-paideia-ink">{r.titulo}</p>
-              <p className="mt-1.5 text-xs leading-relaxed text-paideia-ink/60">{r.descricao}</p>
+              <p className="font-serif text-base font-semibold text-ink">{r.titulo}</p>
+              <p className="mt-1.5 text-xs leading-relaxed text-ink/60">{r.descricao}</p>
             </div>
           ))}
         </div>
 
         <footer className="mt-10 text-center">
-          <div className="flex items-center justify-center gap-4 text-xs text-paideia-green-800">
+          <div className="flex items-center justify-center gap-4 text-xs text-accent">
             <a href="#" className="hover:underline">Princípios Formativos</a>
             <span>•</span>
             <a href="#" className="hover:underline">Cânone Clássico</a>
             <span>•</span>
             <a href="#" className="hover:underline">Termos &amp; Ética</a>
           </div>
-          <p className="mt-3 text-[11px] uppercase tracking-widest text-paideia-ink/40">
+          <p className="mt-3 text-[11px] uppercase tracking-widest text-ink/40">
             Paideia: a educação dos homens livres desde a Grécia Clássica.
           </p>
         </footer>

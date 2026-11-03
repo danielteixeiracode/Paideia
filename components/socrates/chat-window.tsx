@@ -75,7 +75,7 @@ export function ChatWindow({
     <div className="flex h-full flex-col">
       <div className="flex-1 space-y-4 overflow-y-auto scrollbar-thin px-1 py-2">
         {mensagens.length === 0 && (
-          <div className="rounded-xl border border-dashed border-paideia-cream-300 p-6 text-center text-sm text-paideia-ink/50">
+          <div className="rounded-xl border border-dashed border-rule p-6 text-center text-sm text-ink/50">
             Inicie o diálogo maiêutico. Sócrates aguarda sua primeira indagação.
           </div>
         )}
@@ -83,7 +83,7 @@ export function ChatWindow({
           <MensagemBubble key={m.id} mensagem={m} />
         ))}
         {enviando && (
-          <div className="flex items-center gap-2 text-xs italic text-paideia-ink/40">
+          <div className="flex items-center gap-2 text-xs italic text-ink/40">
             <Loader2 className="h-3.5 w-3.5 animate-spin" /> Sócrates pondera sua resposta...
           </div>
         )}
@@ -92,7 +92,7 @@ export function ChatWindow({
 
       {erro && <p className="mb-2 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{erro}</p>}
 
-      <form onSubmit={enviar} className="flex items-end gap-2 border-t border-paideia-cream-300 pt-3">
+      <form onSubmit={enviar} className="flex items-end gap-2 border-t border-rule pt-3">
         <textarea
           value={texto}
           onChange={(e) => setTexto(e.target.value)}
@@ -104,7 +104,7 @@ export function ChatWindow({
           }}
           rows={2}
           placeholder="Formule sua dúvida, resposta ou silogismo para Sócrates..."
-          className="flex-1 resize-none rounded-lg border border-paideia-cream-300 bg-white px-3 py-2.5 text-sm outline-none focus:border-paideia-gold-500"
+          className="flex-1 resize-none rounded-lg border border-rule bg-surface px-3 py-2.5 text-sm outline-none focus:border-paideia-gold-500"
         />
         <button type="submit" disabled={enviando || !texto.trim()} className="btn-primary h-fit py-2.5">
           {enviando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
@@ -122,11 +122,11 @@ function MensagemBubble({ mensagem }: { mensagem: MensagemSocrates }) {
       <div
         className={`max-w-[85%] rounded-xl px-4 py-3 text-sm leading-relaxed shadow-card sm:max-w-[75%] ${
           doUsuario
-            ? "bg-paideia-green-800 text-paideia-cream-50"
-            : "border border-paideia-gold-300 bg-paideia-cream-50 text-paideia-ink"
+            ? "bg-action text-on-action"
+            : "border border-paideia-gold-300 bg-sunken text-ink"
         }`}
       >
-        {!doUsuario && <p className="mb-1 text-xs font-semibold text-paideia-gold-700">Sócrates</p>}
+        {!doUsuario && <p className="mb-1 text-xs font-semibold text-gold-ink">Sócrates</p>}
         <p className="whitespace-pre-wrap font-serif italic">{mensagem.conteudo}</p>
       </div>
     </div>

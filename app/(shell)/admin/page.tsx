@@ -24,7 +24,7 @@ export default async function AdminPage() {
       <div>
         <Eyebrow>Administratio Paideiae</Eyebrow>
         <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Painel Administrativo</h1>
-        <p className="mt-1 text-sm text-paideia-ink/60">
+        <p className="mt-1 text-sm text-ink/60">
           Gestão das obras, dos exercícios, dos usuários e da configuração do Sócrates.
         </p>
       </div>

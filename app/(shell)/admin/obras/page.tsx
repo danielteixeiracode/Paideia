@@ -25,7 +25,7 @@ export default async function AdminObrasPage() {
       <div>
         <Eyebrow>Administratio Paideiae</Eyebrow>
         <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Obras</h1>
-        <p className="mt-1 text-sm text-paideia-ink/60">
+        <p className="mt-1 text-sm text-ink/60">
           Página provisória, só de leitura. O cadastro de obras virá numa próxima etapa.
         </p>
       </div>
@@ -34,9 +34,9 @@ export default async function AdminObrasPage() {
       {obras.length === 0 ? (
         <EmptyState titulo="Nenhuma obra cadastrada" />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-paideia-cream-300 bg-white shadow-card">
+        <div className="overflow-x-auto rounded-2xl border border-rule bg-surface shadow-card">
           <table className="w-full text-sm">
-            <thead className="bg-paideia-cream-100 text-left text-[11px] uppercase text-paideia-ink/50">
+            <thead className="bg-canvas text-left text-[11px] uppercase text-ink/50">
               <tr>
                 <th className="px-4 py-3">Obra</th>
                 <th className="px-4 py-3">Época</th>
@@ -44,16 +44,16 @@ export default async function AdminObrasPage() {
                 <th className="px-4 py-3">Publicada</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-paideia-cream-200">
+            <tbody className="divide-y divide-rule">
               {obras.map((obra) => (
                 <tr key={obra.id}>
                   <td className="px-4 py-3">
                     <Link href={`/obras/${obra.id}`} className="font-medium hover:underline">
                       {obra.titulo}
                     </Link>
-                    {obra.autor && <p className="text-xs text-paideia-ink/50">{obra.autor}</p>}
+                    {obra.autor && <p className="text-xs text-ink/50">{obra.autor}</p>}
                   </td>
-                  <td className="px-4 py-3 text-paideia-ink/60">
+                  <td className="px-4 py-3 text-ink/60">
                     {obra.epoca ? `${romano(obra.epoca.numero)} • ${obra.epoca.nome}` : "—"}
                   </td>
                   <td className="px-4 py-3">

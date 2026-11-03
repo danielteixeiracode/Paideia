@@ -50,7 +50,7 @@ export default async function SocratesPage({
             <ChatWindow conversaId={conversaAtiva.id} mensagensIniciais={mensagens} />
           ) : (
             <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
-              <p className="font-serif text-lg text-paideia-ink/70">
+              <p className="font-serif text-lg text-ink/70">
                 Nenhum diálogo iniciado. Comece uma nova consulta com Sócrates.
               </p>
               <NovaConversaButton />

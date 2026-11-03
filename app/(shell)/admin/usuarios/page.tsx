@@ -22,9 +22,9 @@ export default async function AdminUsuariosPage() {
       </div>
       <AdminTabs />
 
-      <div className="overflow-hidden rounded-2xl border border-paideia-cream-300 bg-white shadow-card">
+      <div className="overflow-hidden rounded-2xl border border-rule bg-surface shadow-card">
         <table className="w-full text-sm">
-          <thead className="bg-paideia-cream-100 text-left text-[11px] uppercase text-paideia-ink/50">
+          <thead className="bg-canvas text-left text-[11px] uppercase text-ink/50">
             <tr>
               <th className="px-4 py-3">Nome</th>
               <th className="px-4 py-3">E-mail</th>
@@ -32,12 +32,12 @@ export default async function AdminUsuariosPage() {
               <th className="px-4 py-3">Papel</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-paideia-cream-200">
+          <tbody className="divide-y divide-rule">
             {lista.map((u) => (
               <tr key={u.id}>
                 <td className="px-4 py-3 font-medium">{u.nome}</td>
-                <td className="px-4 py-3 text-paideia-ink/60">{u.email}</td>
-                <td className="px-4 py-3 text-paideia-ink/60">{u.grau_atual}</td>
+                <td className="px-4 py-3 text-ink/60">{u.email}</td>
+                <td className="px-4 py-3 text-ink/60">{u.grau_atual}</td>
                 <td className="px-4 py-3">
                   <PapelSelect userId={u.id} papel={u.papel} />
                 </td>

@@ -15,23 +15,23 @@ export function ExercicioItem({
   obra?: { id: string; titulo: string } | null;
 }) {
   return (
-    <li className="rounded-xl border border-paideia-cream-300 bg-paideia-cream-50 p-4">
+    <li className="rounded-xl border border-rule bg-sunken p-4">
       <div className="flex flex-wrap items-center gap-2">
-        <p className="font-serif text-base font-semibold text-paideia-ink">{exercicio.titulo}</p>
+        <p className="font-serif text-base font-semibold text-ink">{exercicio.titulo}</p>
         {exercicio.metodo && <Badge tone="gold">{exercicio.metodo}</Badge>}
       </div>
       {exercicio.enunciado && (
-        <p className="mt-1.5 line-clamp-3 text-sm text-paideia-ink/70">{exercicio.enunciado}</p>
+        <p className="mt-1.5 line-clamp-3 text-sm text-ink/70">{exercicio.enunciado}</p>
       )}
       {(funcao || obra) && (
         <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs">
           {funcao && (
-            <Link href={`/funcoes/${funcao.id}`} className="font-semibold text-paideia-green-800 hover:underline">
+            <Link href={`/funcoes/${funcao.id}`} className="font-semibold text-accent hover:underline">
               Função: {funcao.nome}
             </Link>
           )}
           {obra && (
-            <Link href={`/obras/${obra.id}`} className="font-semibold text-paideia-green-800 hover:underline">
+            <Link href={`/obras/${obra.id}`} className="font-semibold text-accent hover:underline">
               Obra: {obra.titulo}
             </Link>
           )}

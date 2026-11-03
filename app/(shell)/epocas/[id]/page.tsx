@@ -26,12 +26,12 @@ export default async function EpocaPage({ params }: { params: { id: string } }) 
     <div className="space-y-6">
       <ContextoTela tipo="epoca" id={epoca.id} />
       <div>
-        <Link href="/epocas" className="text-xs font-semibold text-paideia-green-800 hover:underline">
+        <Link href="/epocas" className="text-xs font-semibold text-accent hover:underline">
           ← Épocas
         </Link>
         <Eyebrow className="mt-3">Época {romano(epoca.numero)}</Eyebrow>
         <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">{epoca.nome}</h1>
-        {epoca.descricao && <p className="mt-2 max-w-2xl text-sm text-paideia-ink/70">{epoca.descricao}</p>}
+        {epoca.descricao && <p className="mt-2 max-w-2xl text-sm text-ink/70">{epoca.descricao}</p>}
       </div>
 
       <section className="space-y-3">
@@ -45,7 +45,7 @@ export default async function EpocaPage({ params }: { params: { id: string } }) 
                 <Link href={`/obras/${obra.id}`} className="block">
                   <Card className="h-full transition hover:border-paideia-gold-400">
                     <p className="font-serif text-base font-semibold">{obra.titulo}</p>
-                    {obra.autor && <p className="text-sm text-paideia-ink/60">{obra.autor}</p>}
+                    {obra.autor && <p className="text-sm text-ink/60">{obra.autor}</p>}
                   </Card>
                 </Link>
               </li>

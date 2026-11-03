@@ -29,7 +29,7 @@ export function ConversasSidebar({
 
       <div className="flex-1 space-y-1.5 overflow-y-auto scrollbar-thin">
         {conversas.length === 0 && (
-          <p className="px-2 text-xs text-paideia-ink/40">Nenhum diálogo ainda.</p>
+          <p className="px-2 text-xs text-ink/40">Nenhum diálogo ainda.</p>
         )}
         {conversas.map((c) => (
           <Link
@@ -38,8 +38,8 @@ export function ConversasSidebar({
             className={cn(
               "flex items-center gap-2 rounded-lg px-3 py-2.5 text-xs font-medium transition",
               c.id === ativaId
-                ? "bg-paideia-green-800 text-paideia-gold-300"
-                : "text-paideia-ink/70 hover:bg-paideia-cream-100"
+                ? "bg-action text-on-action"
+                : "text-ink/70 hover:bg-canvas"
             )}
           >
             <MessageSquareQuote className="h-3.5 w-3.5 shrink-0" />

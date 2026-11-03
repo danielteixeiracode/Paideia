@@ -49,7 +49,7 @@ export default async function ObrasPage() {
                     </Eyebrow>
                   )}
                   <p className="mt-1 font-serif text-lg font-semibold">{obra.titulo}</p>
-                  {obra.autor && <p className="text-sm text-paideia-ink/60">{obra.autor}</p>}
+                  {obra.autor && <p className="text-sm text-ink/60">{obra.autor}</p>}
                   {funcoes.length > 0 && (
                     <div className="mt-3 flex flex-wrap gap-1.5">
                       {funcoes.map((f) => (

@@ -16,12 +16,12 @@ export function PapelSelect({ userId, papel }: { userId: string; papel: PapelUsu
         onChange={(e) =>
           startTransition(() => atualizarPapelUsuario(userId, e.target.value as PapelUsuario))
         }
-        className="rounded-md border border-paideia-cream-300 bg-white px-2 py-1 text-xs font-semibold"
+        className="rounded-md border border-rule bg-surface px-2 py-1 text-xs font-semibold"
       >
         <option value="aluno">Aluno</option>
         <option value="administrador">Administrador</option>
       </select>
-      {pending && <Loader2 className="h-3.5 w-3.5 animate-spin text-paideia-ink/40" />}
+      {pending && <Loader2 className="h-3.5 w-3.5 animate-spin text-ink/40" />}
     </div>
   );
 }

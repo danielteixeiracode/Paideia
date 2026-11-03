@@ -2,27 +2,191 @@
 @tailwind components;
 @tailwind utilities;
 
+/* =========================================================================
+   Tokens do Paideia — North Star: "O Templo" (ver DESIGN.md).
+   As cores semânticas guardam canais RGB ("R G B") para aceitar opacidade
+   no Tailwind (bg-surface/60). Três temas por data-theme no <html>:
+   claro (padrão), escuro e foco. O script em app/layout.tsx aplica o tema
+   salvo antes da primeira pintura.
+   ========================================================================= */
+
+:root,
+[data-theme="claro"] {
+  color-scheme: light;
+  --c-canvas: 250 241 223; /* cream-100 */
+  --c-surface: 255 255 255;
+  --c-sunken: 253 248 239; /* cream-50 */
+  --c-muted: 245 231 203; /* cream-200 */
+  --c-rule: 239 220 179; /* cream-300 */
+  --c-rule-strong: 185 140 49; /* gold-500 */
+  --c-ink: 36 28 16; /* ink */
+  --c-accent: 22 65 48; /* green-800 */
+  --c-gold: 185 140 49; /* gold-500 */
+  --c-gold-ink: 113 84 30; /* gold-700 */
+  --c-action: 22 65 48; /* green-800 */
+  --c-action-hover: 28 89 64; /* green-700 */
+  --c-on-action: 220 196 143; /* gold-300 */
+  --c-focus: 185 140 49; /* gold-500 */
+
+  --shadow-1: 0 1px 2px rgb(36 28 16 / 0.06);
+  --shadow-2: 0 16px 40px -20px rgb(36 28 16 / 0.35);
+}
+
+/* Escuro: verde bem profundo como fundo, dourado como destaque. */
+[data-theme="escuro"] {
+  color-scheme: dark;
+  --c-canvas: 10 26 20; /* green-950 */
+  --c-surface: 17 39 31; /* green-900 */
+  --c-sunken: 13 32 25; /* entre green-950 e green-900 */
+  --c-muted: 22 65 48; /* green-800 */
+  --c-rule: 28 89 64; /* green-700 */
+  --c-rule-strong: 185 140 49; /* gold-500 */
+  --c-ink: 250 241 223; /* cream-100 */
+  --c-accent: 220 196 143; /* gold-300 */
+  --c-gold: 209 172 92; /* gold-400 */
+  --c-gold-ink: 220 196 143; /* gold-300 */
+  --c-action: 209 172 92; /* gold-400 */
+  --c-action-hover: 220 196 143; /* gold-300 */
+  --c-on-action: 10 26 20; /* green-950 */
+  --c-focus: 209 172 92; /* gold-400 */
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.35);
+  --shadow-2: 0 16px 40px -20px rgb(0 0 0 / 0.7);
+}
+
+/* Foco: papel quente, texto escuro, sem elementos de interface. */
+[data-theme="foco"] {
+  color-scheme: light;
+  --c-canvas: 247 236 213; /* papel quente, entre cream-100 e cream-200 */
+  --c-surface: 247 236 213; /* a página é o papel: sem cartões destacados */
+  --c-sunken: 242 229 202;
+  --c-muted: 245 231 203; /* cream-200 */
+  --c-rule: 239 220 179; /* cream-300 */
+  --c-rule-strong: 151 111 38; /* gold-600 */
+  --c-ink: 26 20 11; /* tinta mais funda que ink, para leitura longa */
+  --c-accent: 22 65 48; /* green-800 */
+  --c-gold: 151 111 38; /* gold-600 */
+  --c-gold-ink: 113 84 30; /* gold-700 */
+  --c-action: 22 65 48; /* green-800 */
+  --c-action-hover: 28 89 64; /* green-700 */
+  --c-on-action: 220 196 143; /* gold-300 */
+  --c-focus: 151 111 38; /* gold-600 */
+
+  --shadow-1: none;
+  --shadow-2: 0 16px 40px -20px rgb(36 28 16 / 0.25);
+}
+
+:root {
+  /* Filete: a régua fina do códice. */
+  --rule-width: 0.5px;
+
+  /* Espaçamento: escala de 4px. Gutter e respiro entre seções acompanham a tela. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --gutter: var(--space-4);
+  --space-section: var(--space-6);
+
+  /* Grade: 4 colunas no celular, 8 no tablet, 12 no desktop. */
+  --grid-columns: 4;
+  --grid-gap: var(--space-4);
+
+  /* Medidas de linha. */
+  --measure-reading: 66ch;
+  --measure-page: 72rem;
+
+  /* Movimento. Discreto: respostas a ações (hover, abrir, confirmar).
+     Assinatura: o único momento marcante, no templo. */
+  --motion-subtle-duration: 180ms;
+  --motion-subtle-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-signature-duration: 1100ms;
+  --motion-signature-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-signature-stagger: 90ms;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --gutter: var(--space-5);
+    --grid-columns: 8;
+    --grid-gap: var(--space-5);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --gutter: var(--space-6);
+    --space-section: var(--space-7);
+    --grid-columns: 12;
+  }
+}
+
+/* Movimento reduzido: o discreto vira instantâneo e a assinatura some. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-subtle-duration: 0.01ms;
+    --motion-signature-duration: 0.01ms;
+    --motion-signature-stagger: 0ms;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
-  background-color: theme("colors.paideia.cream.100");
-  color: theme("colors.paideia.ink");
+  background-color: rgb(var(--c-canvas));
+  color: rgb(var(--c-ink));
+  caret-color: rgb(var(--c-accent));
 }
 
 @layer base {
-  /* Foco visível consistente em toda a interface, sem depender de cada
-     componente declarar o próprio anel de foco. */
-  a:focus-visible,
-  button:focus-visible,
-  input:focus-visible,
-  select:focus-visible,
-  textarea:focus-visible,
-  [tabindex]:focus-visible {
-    outline: 2px solid theme("colors.paideia.gold.500");
+  /* Foco visível e igual em toda a interface. */
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-focus));
     outline-offset: 2px;
   }
+
+  ::selection {
+    background-color: rgb(var(--c-gold) / 0.3);
+    color: rgb(var(--c-ink));
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+}
+
+/* Modo foco: some tudo o que é interface; fica só o conteúdo, numa medida
+   de leitura. Os elementos de interface do (shell) levam data-chrome. */
+[data-theme="foco"] [data-chrome] {
+  display: none !important;
+}
+[data-theme="foco"] [data-shell-content] {
+  padding-left: 0 !important;
+}
+[data-theme="foco"] [data-shell-content] > main {
+  width: 100%;
+  max-width: calc(var(--measure-reading) + 2 * var(--gutter));
+  margin-inline: auto;
 }
 
 @layer utilities {
@@ -31,17 +195,24 @@ body {
     height: 6px;
   }
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: theme("colors.paideia.gold.400");
+    background-color: rgb(var(--c-gold) / 0.7);
     border-radius: 999px;
   }
 
-  /* Templo do Início: as colunas sobem da base ao carregar. Só com movimento
-     permitido; quem pede movimento reduzido vê o templo já montado. */
+  /* Grade de página por token (4/8/12 colunas). */
+  .grade {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+    gap: var(--grid-gap);
+  }
+
+  /* Templo do Início: o momento de assinatura. As colunas sobem da base ao
+     carregar; quem pede movimento reduzido vê o templo já montado. */
   @media (prefers-reduced-motion: no-preference) {
     .templo-subir {
       transform-box: fill-box;
       transform-origin: bottom;
-      animation: templo-subir 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+      animation: templo-subir var(--motion-signature-duration) var(--motion-signature-ease) both;
     }
   }
 }
@@ -58,16 +229,60 @@ body {
 }
 
 @layer components {
+  /* Papéis tipográficos (ver DESIGN.md › Typography). */
+  .t-display {
+    @apply font-serif text-display font-medium text-ink;
+  }
+  .t-titulo {
+    @apply font-serif text-titulo font-medium text-ink;
+  }
+  .t-subtitulo {
+    @apply font-serif text-subtitulo font-medium text-ink;
+  }
+  .t-leitura {
+    @apply max-w-leitura font-sans text-leitura text-ink;
+  }
+  .t-corpo {
+    @apply font-sans text-corpo text-ink;
+  }
+  .t-interface {
+    @apply font-sans text-interface font-medium;
+  }
+  .t-nota {
+    @apply font-sans text-nota text-ink/70;
+  }
+  /* Algarismos romanos: serifa, versais com folga de letra. */
+  .t-romano {
+    @apply font-serif font-medium tracking-[0.08em];
+    font-variant-numeric: lining-nums;
+  }
+
+  /* Filete: régua de 0,5px. */
+  .filete {
+    border-top: var(--rule-width) solid rgb(var(--c-rule-strong) / 0.6);
+  }
+
+  /* Marcador de seção: algarismo romano seguido de filete. */
+  .marcador {
+    @apply t-romano flex items-center gap-3 text-subtitulo text-gold-ink;
+  }
+  .marcador::after {
+    content: "";
+    flex: 1;
+    border-top: var(--rule-width) solid rgb(var(--c-rule-strong) / 0.6);
+  }
+
+  /* Herdados das telas atuais, agora sobre os tokens. */
   .label-caps {
-    @apply text-[12px] font-semibold uppercase tracking-widest text-paideia-green-700;
+    @apply text-[12px] font-semibold uppercase tracking-widest text-accent;
   }
   .card {
-    @apply rounded-2xl border border-paideia-cream-300/70 bg-white shadow-card;
+    @apply rounded-2xl border border-rule/70 bg-surface shadow-card;
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-paideia-green-800 px-4 py-2.5 font-semibold text-paideia-gold-300 shadow-sm transition duration-200 hover:bg-paideia-green-700 hover:shadow-md disabled:opacity-50 disabled:shadow-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-action px-4 py-2.5 font-semibold text-on-action transition-colors duration-discreto ease-discreto hover:bg-action-hover disabled:opacity-50;
   }
   .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-paideia-cream-300 bg-white px-4 py-2.5 font-semibold text-paideia-ink shadow-sm transition duration-200 hover:border-paideia-green-700/30 hover:bg-paideia-cream-100 hover:shadow-md disabled:opacity-50 disabled:shadow-none;
+    @apply inline-flex items-center justify-center gap-2 rounded-xl border border-rule bg-surface px-4 py-2.5 font-semibold text-ink transition-colors duration-discreto ease-discreto hover:border-accent/30 hover:bg-canvas disabled:opacity-50;
   }
 }

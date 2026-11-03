@@ -15,7 +15,7 @@ const TABS = [
 export function AdminTabs() {
   const pathname = usePathname();
   return (
-    <div className="flex flex-wrap gap-2 border-b border-paideia-cream-300 pb-3">
+    <div className="flex flex-wrap gap-2 border-b border-rule pb-3">
       {TABS.map((tab) => {
         const active = pathname === tab.href;
         return (
@@ -24,7 +24,7 @@ export function AdminTabs() {
             href={tab.href}
             className={cn(
               "rounded-full px-4 py-1.5 text-xs font-semibold transition",
-              active ? "bg-paideia-green-800 text-paideia-gold-300" : "bg-white text-paideia-ink/70 hover:bg-paideia-cream-100"
+              active ? "bg-action text-on-action" : "bg-surface text-ink/70 hover:bg-canvas"
             )}
           >
             {tab.label}

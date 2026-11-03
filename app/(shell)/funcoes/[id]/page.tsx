@@ -42,7 +42,7 @@ export default async function FuncaoPage({ params }: { params: { id: string } })
     <div className="space-y-6">
       <ContextoTela tipo="funcao" id={funcao.id} />
       <div>
-        <Link href="/funcoes" className="text-xs font-semibold text-paideia-green-800 hover:underline">
+        <Link href="/funcoes" className="text-xs font-semibold text-accent hover:underline">
           ← Funções
         </Link>
         <Eyebrow className="mt-3">Função {funcao.numero}</Eyebrow>
@@ -54,10 +54,10 @@ export default async function FuncaoPage({ params }: { params: { id: string } })
           {funcao.o_que_forma && (
             <div>
               <Eyebrow>O que forma</Eyebrow>
-              <p className="mt-1 text-sm leading-relaxed text-paideia-ink/80">{funcao.o_que_forma}</p>
+              <p className="mt-1 text-sm leading-relaxed text-ink/80">{funcao.o_que_forma}</p>
             </div>
           )}
-          {funcao.descricao && <p className="text-sm leading-relaxed text-paideia-ink/70">{funcao.descricao}</p>}
+          {funcao.descricao && <p className="text-sm leading-relaxed text-ink/70">{funcao.descricao}</p>}
         </Card>
       )}
 
@@ -72,8 +72,8 @@ export default async function FuncaoPage({ params }: { params: { id: string } })
                 <Link href={`/obras/${obra!.id}`} className="block">
                   <Card className="h-full transition hover:border-paideia-gold-400">
                     <p className="font-serif text-base font-semibold">{obra!.titulo}</p>
-                    {obra!.autor && <p className="text-sm text-paideia-ink/60">{obra!.autor}</p>}
-                    {nota && <p className="mt-1.5 text-sm text-paideia-ink/70">{nota}</p>}
+                    {obra!.autor && <p className="text-sm text-ink/60">{obra!.autor}</p>}
+                    {nota && <p className="mt-1.5 text-sm text-ink/70">{nota}</p>}
                   </Card>
                 </Link>
               </li>

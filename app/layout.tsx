@@ -1,19 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Libre_Franklin } from "next/font/google";
+import { EB_Garamond, Hanken_Grotesk } from "next/font/google";
 import { PwaRegister } from "@/components/pwa-register";
+import { SCRIPT_TEMA } from "@/lib/tema";
 import "./globals.css";
 
-const display = Libre_Franklin({
+// Títulos e algarismos romanos.
+const display = EB_Garamond({
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: "variable",
   style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",
 });
 
-const body = Libre_Franklin({
+// Interface e texto corrido.
+const body = Hanken_Grotesk({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: "variable",
   variable: "--font-body",
   display: "swap",
 });
@@ -43,7 +46,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${display.variable} ${body.variable}`}>
+    // O script do <head> põe data-theme no <html> antes da hidratação.
+    <html lang="pt-BR" className={`${display.variable} ${body.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: SCRIPT_TEMA }} />
+      </head>
       <body className="font-sans antialiased">
         {children}
         <PwaRegister />

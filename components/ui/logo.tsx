@@ -10,8 +10,8 @@ export function Logo({ className, iconOnly = false }: { className?: string; icon
       </div>
       {!iconOnly && (
         <div className="leading-tight">
-          <p className="font-serif text-xl font-bold tracking-wide text-paideia-green-900">PAIDEIA</p>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-paideia-gold-600">
+          <p className="font-serif text-xl font-bold tracking-wide text-accent">PAIDEIA</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold-ink">
             Formação Clássica
           </p>
         </div>

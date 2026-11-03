@@ -34,9 +34,9 @@ export default async function EpocasPage() {
                   </span>
                   <div className="min-w-0 flex-1">
                     <p className="font-serif text-lg font-semibold">{e.nome}</p>
-                    {e.descricao && <p className="text-sm text-paideia-ink/60">{e.descricao}</p>}
+                    {e.descricao && <p className="text-sm text-ink/60">{e.descricao}</p>}
                   </div>
-                  <span className="shrink-0 text-xs text-paideia-ink/50">{e.obras[0]?.count ?? 0} obras</span>
+                  <span className="shrink-0 text-xs text-ink/50">{e.obras[0]?.count ?? 0} obras</span>
                 </Card>
               </Link>
             </li>

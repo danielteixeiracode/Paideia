@@ -81,18 +81,18 @@ export function SocratesGaveta() {
         aria-label="Diálogo com Sócrates"
         tabIndex={-1}
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-full flex-col bg-white shadow-card outline-none transition-transform duration-200 sm:max-w-md sm:border-l sm:border-paideia-cream-300",
+          "fixed inset-y-0 right-0 z-50 flex w-full flex-col bg-surface shadow-card outline-none transition-transform duration-200 sm:max-w-md sm:border-l sm:border-rule",
           aberta ? "translate-x-0" : "pointer-events-none translate-x-full"
         )}
         style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
       >
-        <div className="flex items-center justify-between gap-3 border-b border-paideia-cream-300 px-4 py-3">
+        <div className="flex items-center justify-between gap-3 border-b border-rule px-4 py-3">
           <div className="leading-tight">
-            <p className="font-serif text-base font-semibold text-paideia-ink">Sócrates</p>
+            <p className="font-serif text-base font-semibold text-ink">Sócrates</p>
             {conversa && (
               <Link
                 href={`/socrates?c=${conversa.conversaId}`}
-                className="text-xs font-semibold text-paideia-green-800 hover:underline"
+                className="text-xs font-semibold text-accent hover:underline"
               >
                 Abrir diálogo completo
               </Link>
@@ -102,7 +102,7 @@ export function SocratesGaveta() {
             type="button"
             onClick={() => setAberta(false)}
             aria-label="Fechar"
-            className="rounded-full p-2 text-paideia-ink/60 hover:bg-paideia-cream-100"
+            className="rounded-full p-2 text-ink/60 hover:bg-canvas"
           >
             <X className="h-5 w-5" />
           </button>
@@ -112,7 +112,7 @@ export function SocratesGaveta() {
           {erro ? (
             <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{erro}</p>
           ) : carregando && !conversa ? (
-            <div className="flex h-full items-center justify-center text-paideia-ink/40">
+            <div className="flex h-full items-center justify-center text-ink/40">
               <Loader2 className="h-5 w-5 animate-spin" />
             </div>
           ) : conversa ? (

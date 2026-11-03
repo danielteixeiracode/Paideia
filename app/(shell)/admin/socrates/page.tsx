@@ -19,7 +19,7 @@ export default async function AdminSocratesPage() {
       <div>
         <Eyebrow>Administratio Paideiae</Eyebrow>
         <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Configuração do Sócrates</h1>
-        <p className="mt-1 text-sm text-paideia-ink/60">
+        <p className="mt-1 text-sm text-ink/60">
           Ajuste o prompt de sistema, o modelo e os parâmetros do mentor de IA usado em{" "}
           <span className="font-semibold">Diálogo com Sócrates</span>.
         </p>
@@ -37,7 +37,7 @@ export default async function AdminSocratesPage() {
               required
               rows={10}
               defaultValue={config?.system_prompt}
-              className="w-full rounded-lg border border-paideia-cream-300 bg-paideia-cream-50 px-3 py-2.5 text-sm outline-none focus:border-paideia-gold-500"
+              className="w-full rounded-lg border border-rule bg-sunken px-3 py-2.5 text-sm outline-none focus:border-paideia-gold-500"
             />
           </div>
 
@@ -47,7 +47,7 @@ export default async function AdminSocratesPage() {
               <input
                 name="modelo"
                 defaultValue={config?.modelo ?? "claude-sonnet-5"}
-                className="w-full rounded-lg border border-paideia-cream-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-rule px-3 py-2 text-sm"
               />
             </div>
             <div>
@@ -59,7 +59,7 @@ export default async function AdminSocratesPage() {
                 min="0"
                 max="1"
                 defaultValue={config?.temperatura ?? 0.7}
-                className="w-full rounded-lg border border-paideia-cream-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-rule px-3 py-2 text-sm"
               />
             </div>
             <div>
@@ -70,7 +70,7 @@ export default async function AdminSocratesPage() {
                 min="128"
                 max="4096"
                 defaultValue={config?.max_tokens ?? 1024}
-                className="w-full rounded-lg border border-paideia-cream-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-rule px-3 py-2 text-sm"
               />
             </div>
           </div>

@@ -38,10 +38,10 @@ export default async function AdminEixosPage() {
       <Card>
         <p className="font-serif text-lg font-semibold">Novo Eixo</p>
         <form action={criarEixo} className="mt-3 grid gap-3 sm:grid-cols-2">
-          <input name="nome" required placeholder="Nome (ex: Filosofia Geral)" className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm" />
-          <input name="slug" required placeholder="slug (ex: filosofia-geral)" className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm" />
-          <input name="cor" type="color" defaultValue="#153D29" className="h-10 rounded-md border border-paideia-cream-300 px-2" />
-          <input name="descricao" placeholder="Descrição breve" className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm sm:col-span-2" />
+          <input name="nome" required placeholder="Nome (ex: Filosofia Geral)" className="rounded-md border border-rule px-3 py-2 text-sm" />
+          <input name="slug" required placeholder="slug (ex: filosofia-geral)" className="rounded-md border border-rule px-3 py-2 text-sm" />
+          <input name="cor" type="color" defaultValue="#153D29" className="h-10 rounded-md border border-rule px-2" />
+          <input name="descricao" placeholder="Descrição breve" className="rounded-md border border-rule px-3 py-2 text-sm sm:col-span-2" />
           <SubmitButton label="Criar Eixo" />
         </form>
       </Card>

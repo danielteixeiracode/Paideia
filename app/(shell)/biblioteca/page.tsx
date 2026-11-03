@@ -24,7 +24,7 @@ export default async function BibliotecaPage() {
         <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">
           Biblioteca Clássica &amp; Repositório de Ativos
         </h1>
-        <p className="mt-1 max-w-2xl text-sm text-paideia-ink/60">
+        <p className="mt-1 max-w-2xl text-sm text-ink/60">
           Catálogo curado de tratados canônicos, diálogos maiêuticos, cursos guiados e exercícios
           dialéticos para alocação direta na sua Carteira Intelectual.
         </p>

@@ -9,7 +9,7 @@ export function MobileNav() {
   const pathname = usePathname();
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-30 flex justify-around border-t border-paideia-cream-300 bg-paideia-green-900 px-1 lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 flex justify-around border-t border-rule bg-paideia-green-900 px-1 lg:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
       {NAV_ALUNO.map((item) => {

@@ -22,7 +22,7 @@ export function AtivoRow({
   if (editing) {
     return (
       <tr>
-        <td colSpan={5} className="bg-paideia-cream-50 px-4 py-4">
+        <td colSpan={5} className="bg-sunken px-4 py-4">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -39,12 +39,12 @@ export function AtivoRow({
               defaultValue={ativo.titulo}
               required
               placeholder="Título"
-              className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm lg:col-span-2"
+              className="rounded-md border border-rule px-3 py-2 text-sm lg:col-span-2"
             />
             <select
               name="tipo"
               defaultValue={ativo.tipo}
-              className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm"
+              className="rounded-md border border-rule px-3 py-2 text-sm"
             >
               <option value="livro">Livro</option>
               <option value="tratado">Tratado</option>
@@ -57,18 +57,18 @@ export function AtivoRow({
               name="subtitulo"
               defaultValue={ativo.subtitulo ?? ""}
               placeholder="Subtítulo"
-              className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm"
+              className="rounded-md border border-rule px-3 py-2 text-sm"
             />
             <input
               name="autor"
               defaultValue={ativo.autor ?? ""}
               placeholder="Autor"
-              className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm"
+              className="rounded-md border border-rule px-3 py-2 text-sm"
             />
             <select
               name="eixo_id"
               defaultValue={ativo.eixo_id ?? ""}
-              className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm"
+              className="rounded-md border border-rule px-3 py-2 text-sm"
             >
               <option value="">Eixo...</option>
               {eixos.map((e) => (
@@ -83,12 +83,12 @@ export function AtivoRow({
               step="0.5"
               defaultValue={ativo.duracao_estimada_horas}
               placeholder="Duração (h)"
-              className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm"
+              className="rounded-md border border-rule px-3 py-2 text-sm"
             />
             <select
               name="nivel"
               defaultValue={ativo.nivel}
-              className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm"
+              className="rounded-md border border-rule px-3 py-2 text-sm"
             >
               <option value="iniciante">Iniciante</option>
               <option value="intermediario">Intermediário</option>
@@ -98,7 +98,7 @@ export function AtivoRow({
               name="descricao"
               defaultValue={ativo.descricao ?? ""}
               placeholder="Descrição"
-              className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm lg:col-span-3"
+              className="rounded-md border border-rule px-3 py-2 text-sm lg:col-span-3"
             />
             <div className="flex items-center gap-2 lg:col-span-3">
               <button type="submit" disabled={pending} className="btn-primary px-3 py-1.5 text-xs">
@@ -108,7 +108,7 @@ export function AtivoRow({
                 type="button"
                 onClick={() => setEditing(false)}
                 disabled={pending}
-                className="rounded-md border border-paideia-cream-300 px-3 py-1.5 text-xs text-paideia-ink/70"
+                className="rounded-md border border-rule px-3 py-1.5 text-xs text-ink/70"
               >
                 Cancelar
               </button>
@@ -123,7 +123,7 @@ export function AtivoRow({
     <tr>
       <td className="px-4 py-3">
         <p className="font-medium">{ativo.titulo}</p>
-        <p className="text-xs text-paideia-ink/50">{ativo.autor}</p>
+        <p className="text-xs text-ink/50">{ativo.autor}</p>
       </td>
       <td className="px-4 py-3 capitalize">{ativo.tipo}</td>
       <td className="px-4 py-3">
@@ -136,7 +136,7 @@ export function AtivoRow({
         <div className="flex items-center justify-end gap-1">
           <button
             onClick={() => setEditing(true)}
-            className="rounded-lg p-1.5 text-paideia-ink/40 hover:bg-paideia-cream-200 hover:text-paideia-ink"
+            className="rounded-lg p-1.5 text-ink/40 hover:bg-muted hover:text-ink"
             aria-label="Editar ativo"
           >
             <Pencil className="h-4 w-4" />

@@ -60,7 +60,7 @@ export function Templo({ colunas, aceso }: { colunas: ColunaTemplo[]; aceso: boo
               onBlur={() => setAtiva(null)}
             >
               <title>{`${c.numero}. ${c.nome}`}</title>
-              <g className="templo-subir" style={{ animationDelay: `${i * 80}ms` }}>
+              <g className="templo-subir" style={{ animationDelay: `calc(var(--motion-signature-stagger) * ${i})` }}>
                 {/* área de clique da coluna inteira */}
                 <rect x={cx - 34} y="150" width="68" height="198" className="fill-transparent" />
                 <rect
@@ -101,7 +101,7 @@ export function Templo({ colunas, aceso }: { colunas: ColunaTemplo[]; aceso: boo
                 textAnchor="middle"
                 className={cn(
                   "font-serif text-[22px] font-bold",
-                  destacada ? "fill-paideia-gold-600" : "fill-paideia-green-800"
+                  destacada ? "fill-gold-ink" : "fill-accent"
                 )}
               >
                 {c.numero}
@@ -115,10 +115,10 @@ export function Templo({ colunas, aceso }: { colunas: ColunaTemplo[]; aceso: boo
         <rect x="24" y="362" width="652" height="14" className="fill-paideia-cream-200 stroke-paideia-green-800 stroke-[2]" />
       </svg>
 
-      <figcaption className="mt-2 min-h-[1.5rem] text-center text-sm text-paideia-ink/70" aria-live="polite">
+      <figcaption className="mt-2 min-h-[1.5rem] text-center text-sm text-ink/70" aria-live="polite">
         {ativa ? (
           <>
-            <span className="font-semibold text-paideia-green-800">Função {ativa.numero}</span> · {ativa.nome}
+            <span className="font-semibold text-accent">Função {ativa.numero}</span> · {ativa.nome}
           </>
         ) : (
           "Sete colunas, uma para cada função pedagógica."

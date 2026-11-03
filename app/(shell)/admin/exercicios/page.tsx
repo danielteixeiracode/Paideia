@@ -25,7 +25,7 @@ export default async function AdminExerciciosPage() {
       <div>
         <Eyebrow>Administratio Paideiae</Eyebrow>
         <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Exercícios</h1>
-        <p className="mt-1 text-sm text-paideia-ink/60">
+        <p className="mt-1 text-sm text-ink/60">
           Página provisória, só de leitura. O cadastro de exercícios virá numa próxima etapa.
         </p>
       </div>
@@ -34,9 +34,9 @@ export default async function AdminExerciciosPage() {
       {exercicios.length === 0 ? (
         <EmptyState titulo="Nenhum exercício cadastrado" />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-paideia-cream-300 bg-white shadow-card">
+        <div className="overflow-x-auto rounded-2xl border border-rule bg-surface shadow-card">
           <table className="w-full text-sm">
-            <thead className="bg-paideia-cream-100 text-left text-[11px] uppercase text-paideia-ink/50">
+            <thead className="bg-canvas text-left text-[11px] uppercase text-ink/50">
               <tr>
                 <th className="px-4 py-3">Exercício</th>
                 <th className="px-4 py-3">Função</th>
@@ -45,7 +45,7 @@ export default async function AdminExerciciosPage() {
                 <th className="px-4 py-3">Publicado</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-paideia-cream-200">
+            <tbody className="divide-y divide-rule">
               {exercicios.map((e) => (
                 <tr key={e.id}>
                   <td className="px-4 py-3 font-medium">{e.titulo}</td>
@@ -56,7 +56,7 @@ export default async function AdminExerciciosPage() {
                       </Link>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-paideia-ink/60">
+                  <td className="px-4 py-3 text-ink/60">
                     {e.obra ? (
                       <Link href={`/obras/${e.obra.id}`} className="hover:underline">
                         {e.obra.titulo}
@@ -65,7 +65,7 @@ export default async function AdminExerciciosPage() {
                       "Geral da função"
                     )}
                   </td>
-                  <td className="px-4 py-3 text-paideia-ink/60">{e.metodo ?? "—"}</td>
+                  <td className="px-4 py-3 text-ink/60">{e.metodo ?? "—"}</td>
                   <td className="px-4 py-3">
                     <Badge tone={e.ativo ? "green" : "neutral"}>{e.ativo ? "Sim" : "Não"}</Badge>
                   </td>

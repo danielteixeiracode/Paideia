@@ -32,26 +32,26 @@ export function EixoCard({ eixo, capacidades }: { eixo: Eixo; capacidades: Capac
             defaultValue={eixo.nome}
             required
             placeholder="Nome do eixo"
-            className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm"
+            className="rounded-md border border-rule px-3 py-2 text-sm"
           />
           <input
             name="slug"
             defaultValue={eixo.slug}
             required
             placeholder="slug"
-            className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm"
+            className="rounded-md border border-rule px-3 py-2 text-sm"
           />
           <input
             name="cor"
             type="color"
             defaultValue={eixo.cor}
-            className="h-10 rounded-md border border-paideia-cream-300 px-2"
+            className="h-10 rounded-md border border-rule px-2"
           />
           <input
             name="descricao"
             defaultValue={eixo.descricao ?? ""}
             placeholder="Descrição breve"
-            className="rounded-md border border-paideia-cream-300 px-3 py-2 text-sm"
+            className="rounded-md border border-rule px-3 py-2 text-sm"
           />
           <div className="flex items-center gap-2 sm:col-span-2">
             <button type="submit" disabled={pending} className="btn-primary px-3 py-1.5 text-xs">
@@ -61,7 +61,7 @@ export function EixoCard({ eixo, capacidades }: { eixo: Eixo; capacidades: Capac
               type="button"
               onClick={() => setEditing(false)}
               disabled={pending}
-              className="rounded-md border border-paideia-cream-300 px-3 py-1.5 text-xs text-paideia-ink/70"
+              className="rounded-md border border-rule px-3 py-1.5 text-xs text-ink/70"
             >
               Cancelar
             </button>
@@ -74,13 +74,13 @@ export function EixoCard({ eixo, capacidades }: { eixo: Eixo; capacidades: Capac
               <span className="h-3 w-3 rounded-full" style={{ backgroundColor: eixo.cor }} />
               <div>
                 <p className="font-serif text-lg font-semibold">{eixo.nome}</p>
-                <p className="text-xs text-paideia-ink/50">{eixo.slug}</p>
+                <p className="text-xs text-ink/50">{eixo.slug}</p>
               </div>
             </div>
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setEditing(true)}
-                className="rounded-lg p-1.5 text-paideia-ink/40 hover:bg-paideia-cream-200 hover:text-paideia-ink"
+                className="rounded-lg p-1.5 text-ink/40 hover:bg-muted hover:text-ink"
                 aria-label={`Editar eixo ${eixo.nome}`}
               >
                 <Pencil className="h-4 w-4" />
@@ -88,7 +88,7 @@ export function EixoCard({ eixo, capacidades }: { eixo: Eixo; capacidades: Capac
               <DeleteButton action={removerEixo.bind(null, eixo.id)} />
             </div>
           </div>
-          {eixo.descricao && <p className="mt-2 text-sm text-paideia-ink/60">{eixo.descricao}</p>}
+          {eixo.descricao && <p className="mt-2 text-sm text-ink/60">{eixo.descricao}</p>}
         </>
       )}
 
@@ -104,7 +104,7 @@ export function EixoCard({ eixo, capacidades }: { eixo: Eixo; capacidades: Capac
           name="nome"
           required
           placeholder="Nova capacidade"
-          className="flex-1 rounded-md border border-paideia-cream-300 bg-white px-2.5 py-1.5 text-xs outline-none focus:border-paideia-gold-500"
+          className="flex-1 rounded-md border border-rule bg-surface px-2.5 py-1.5 text-xs outline-none focus:border-paideia-gold-500"
         />
         <SubmitButton label="Adicionar" small />
       </form>

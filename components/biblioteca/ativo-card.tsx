@@ -28,22 +28,22 @@ export function AtivoCard({
   const Icon = ICONS[ativo.tipo] ?? BookOpen;
 
   return (
-    <div className="flex flex-col rounded-2xl border border-paideia-cream-300 bg-white p-5 shadow-card">
+    <div className="flex flex-col rounded-2xl border border-rule bg-surface p-5 shadow-card">
       <div className="mb-3 flex items-center justify-between">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-paideia-cream-100">
-          <Icon className="h-5 w-5 text-paideia-green-800" />
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-canvas">
+          <Icon className="h-5 w-5 text-accent" />
         </div>
         {eixo && <Badge tone="neutral">{eixo.nome}</Badge>}
       </div>
 
-      {ativo.subtitulo && <p className="text-[11px] uppercase tracking-wide text-paideia-gold-600">{ativo.subtitulo}</p>}
-      <p className="mt-1 font-serif text-lg font-semibold text-paideia-ink">{ativo.titulo}</p>
-      {ativo.autor && <p className="text-xs text-paideia-ink/50">{ativo.autor}</p>}
+      {ativo.subtitulo && <p className="text-[11px] uppercase tracking-wide text-gold-ink">{ativo.subtitulo}</p>}
+      <p className="mt-1 font-serif text-lg font-semibold text-ink">{ativo.titulo}</p>
+      {ativo.autor && <p className="text-xs text-ink/50">{ativo.autor}</p>}
       {ativo.descricao && (
-        <p className="mt-2 flex-1 text-sm leading-relaxed text-paideia-ink/60 line-clamp-3">{ativo.descricao}</p>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/60 line-clamp-3">{ativo.descricao}</p>
       )}
 
-      <div className="mt-3 flex items-center gap-3 text-[11px] text-paideia-ink/50">
+      <div className="mt-3 flex items-center gap-3 text-[11px] text-ink/50">
         <span>{ativo.duracao_estimada_horas}h estimadas</span>
         <span>•</span>
         <span className="capitalize">{ativo.nivel}</span>

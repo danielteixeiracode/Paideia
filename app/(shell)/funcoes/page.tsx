@@ -34,8 +34,8 @@ export default async function FuncoesPage() {
               <Card className="h-full transition hover:border-paideia-gold-400">
                 <Eyebrow>Função {f.numero}</Eyebrow>
                 <p className="mt-1 font-serif text-lg font-semibold">{f.nome}</p>
-                {f.o_que_forma && <p className="mt-1.5 text-sm text-paideia-ink/70">{f.o_que_forma}</p>}
-                <p className="mt-3 text-xs text-paideia-ink/50">
+                {f.o_que_forma && <p className="mt-1.5 text-sm text-ink/70">{f.o_que_forma}</p>}
+                <p className="mt-3 text-xs text-ink/50">
                   {f.obra_funcoes[0]?.count ?? 0} obras • {f.exercicios[0]?.count ?? 0} exercícios
                 </p>
               </Card>

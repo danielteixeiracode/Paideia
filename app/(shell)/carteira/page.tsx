@@ -55,7 +55,7 @@ export default async function CarteiraPage() {
                   <Card className="flex h-full items-start justify-between gap-3 transition hover:border-paideia-gold-400">
                     <div className="min-w-0">
                       <p className="font-serif text-base font-semibold">{item.obra!.titulo}</p>
-                      {item.obra!.autor && <p className="text-sm text-paideia-ink/60">{item.obra!.autor}</p>}
+                      {item.obra!.autor && <p className="text-sm text-ink/60">{item.obra!.autor}</p>}
                     </div>
                     <Badge tone="gold" className="shrink-0">{item.estado}</Badge>
                   </Card>
@@ -79,19 +79,19 @@ export default async function CarteiraPage() {
               <li key={f.id}>
                 <Card>
                   <Badge>{f.tipo}</Badge>
-                  <p className="mt-2 line-clamp-4 whitespace-pre-line text-sm text-paideia-ink/80">{f.conteudo}</p>
+                  <p className="mt-2 line-clamp-4 whitespace-pre-line text-sm text-ink/80">{f.conteudo}</p>
                   <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs">
                     {f.obra && (
-                      <Link href={`/obras/${f.obra.id}`} className="font-semibold text-paideia-green-800 hover:underline">
+                      <Link href={`/obras/${f.obra.id}`} className="font-semibold text-accent hover:underline">
                         Obra: {f.obra.titulo}
                       </Link>
                     )}
                     {f.funcao && (
-                      <Link href={`/funcoes/${f.funcao.id}`} className="font-semibold text-paideia-green-800 hover:underline">
+                      <Link href={`/funcoes/${f.funcao.id}`} className="font-semibold text-accent hover:underline">
                         Função: {f.funcao.nome}
                       </Link>
                     )}
-                    {f.exercicio && <span className="text-paideia-ink/50">Exercício: {f.exercicio.titulo}</span>}
+                    {f.exercicio && <span className="text-ink/50">Exercício: {f.exercicio.titulo}</span>}
                   </div>
                 </Card>
               </li>

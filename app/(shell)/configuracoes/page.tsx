@@ -20,7 +20,7 @@ export default async function ConfiguracoesPage() {
             <input
               name="nome"
               defaultValue={perfil.nome}
-              className="w-full rounded-lg border border-paideia-cream-300 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-rule px-3 py-2 text-sm"
             />
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -31,7 +31,7 @@ export default async function ConfiguracoesPage() {
                 type="number"
                 min={10}
                 defaultValue={perfil.meta_diaria_min}
-                className="w-full rounded-lg border border-paideia-cream-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-rule px-3 py-2 text-sm"
               />
             </div>
             <div>
@@ -42,7 +42,7 @@ export default async function ConfiguracoesPage() {
                 min={1}
                 step="0.5"
                 defaultValue={perfil.meta_semanal_horas}
-                className="w-full rounded-lg border border-paideia-cream-300 px-3 py-2 text-sm"
+                className="w-full rounded-lg border border-rule px-3 py-2 text-sm"
               />
             </div>
           </div>

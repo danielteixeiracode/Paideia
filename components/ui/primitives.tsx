@@ -20,7 +20,7 @@ export function ProgressBar({
   barClassName?: string;
 }) {
   return (
-    <div className={cn("h-2 w-full overflow-hidden rounded-full bg-paideia-cream-200", trackClassName, className)}>
+    <div className={cn("h-2 w-full overflow-hidden rounded-full bg-muted", trackClassName, className)}>
       <div
         className={cn("h-full rounded-full bg-gradient-to-r from-paideia-green-600 to-paideia-green-500", barClassName)}
         style={{ width: `${Math.min(100, Math.max(0, value))}%` }}
@@ -39,9 +39,9 @@ export function Badge({
   className?: string;
 }) {
   const tones: Record<string, string> = {
-    neutral: "bg-paideia-cream-200 text-paideia-ink/70",
-    gold: "bg-paideia-gold-400/25 text-paideia-gold-700",
-    green: "bg-paideia-green-800 text-paideia-gold-300",
+    neutral: "bg-muted text-ink/70",
+    gold: "bg-paideia-gold-400/25 text-gold-ink",
+    green: "bg-action text-on-action",
     red: "bg-red-100 text-red-700",
   };
   return (
@@ -53,9 +53,9 @@ export function Badge({
 
 export function EmptyState({ titulo, descricao }: { titulo: string; descricao?: string }) {
   return (
-    <div className="rounded-xl border border-dashed border-paideia-cream-300 bg-white/60 px-5 py-10 text-center">
-      <p className="font-serif text-base font-semibold text-paideia-ink">{titulo}</p>
-      {descricao && <p className="mt-1 text-sm text-paideia-ink/60">{descricao}</p>}
+    <div className="rounded-xl border border-dashed border-rule bg-surface/60 px-5 py-10 text-center">
+      <p className="font-serif text-base font-semibold text-ink">{titulo}</p>
+      {descricao && <p className="mt-1 text-sm text-ink/60">{descricao}</p>}
     </div>
   );
 }

@@ -67,7 +67,7 @@ export default async function ObraPage({ params }: { params: { id: string } }) {
     <div className="space-y-6">
       <ContextoTela tipo="obra" id={obra.id} />
       <div>
-        <Link href="/obras" className="text-xs font-semibold text-paideia-green-800 hover:underline">
+        <Link href="/obras" className="text-xs font-semibold text-accent hover:underline">
           ← Obras
         </Link>
         {obra.epoca && (
@@ -78,7 +78,7 @@ export default async function ObraPage({ params }: { params: { id: string } }) {
           </Eyebrow>
         )}
         <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">{obra.titulo}</h1>
-        {obra.autor && <p className="mt-1 text-sm text-paideia-ink/60">{obra.autor}</p>}
+        {obra.autor && <p className="mt-1 text-sm text-ink/60">{obra.autor}</p>}
         <div className="mt-3">
           <CarteiraBotao obraId={obra.id} estado={carteira?.estado ?? null} />
         </div>
@@ -86,7 +86,7 @@ export default async function ObraPage({ params }: { params: { id: string } }) {
 
       {obra.descricao && (
         <Card>
-          <p className="text-sm leading-relaxed text-paideia-ink/80">{obra.descricao}</p>
+          <p className="text-sm leading-relaxed text-ink/80">{obra.descricao}</p>
         </Card>
       )}
 
@@ -104,9 +104,9 @@ export default async function ObraPage({ params }: { params: { id: string } }) {
                 <Eyebrow>Função {funcao.numero}</Eyebrow>
                 <p className="mt-0.5 font-serif text-lg font-semibold">{funcao.nome}</p>
               </Link>
-              {nota && <p className="mt-1 text-sm text-paideia-ink/70">{nota}</p>}
+              {nota && <p className="mt-1 text-sm text-ink/70">{nota}</p>}
               {exercicios.length === 0 ? (
-                <p className="mt-3 text-sm text-paideia-ink/50">Nenhum exercício desta função ainda.</p>
+                <p className="mt-3 text-sm text-ink/50">Nenhum exercício desta função ainda.</p>
               ) : (
                 <ul className="mt-3 space-y-2">
                   {exercicios.map((e) => (
