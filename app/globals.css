@@ -234,6 +234,19 @@ body {
   }
 }
 
+/* Assinatura já vista nesta sessão: o templo aparece pronto. */
+[data-assinatura="vista"] .templo-subir {
+  animation: none !important;
+}
+/* Números que vão contar ficam escondidos até o contador assumir, para não
+   aparecerem prontos e depois voltarem a zero. Com movimento reduzido ou
+   assinatura vista, aparecem direto. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-assinatura="vista"]) [data-contador]:not([data-contador-pronto]) {
+    visibility: hidden;
+  }
+}
+
 @keyframes templo-subir {
   from {
     transform: scaleY(0);

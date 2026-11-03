@@ -9,10 +9,13 @@ export function ChatWindow({
   conversaId,
   mensagensIniciais,
   contexto,
+  pergunta,
 }: {
   conversaId: string;
   mensagensIniciais: MensagemSocrates[];
   contexto?: ContextoTela;
+  // Pergunta do Sócrates que o aluno está respondendo (vai junto, como contexto).
+  pergunta?: string;
 }) {
   const [mensagens, setMensagens] = useState<MensagemSocrates[]>(mensagensIniciais);
   const [texto, setTexto] = useState("");
@@ -52,7 +55,7 @@ export function ChatWindow({
       const res = await fetch("/api/socrates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ conversaId, conteudo, contexto }),
+        body: JSON.stringify({ conversaId, conteudo, contexto, pergunta }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Falha ao consultar Sócrates.");

@@ -65,3 +65,22 @@ const ROMANOS = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"
 export function romano(n: number) {
   return ROMANOS[n] ?? String(n);
 }
+
+const RELATIVO = new Intl.RelativeTimeFormat("pt-BR", { numeric: "auto" });
+
+// "agora", "há 3 horas", "ontem", "há 2 semanas".
+export function quandoRelativo(iso: string, agora = new Date()) {
+  const segundos = Math.round((new Date(iso).getTime() - agora.getTime()) / 1000);
+  const passos: [Intl.RelativeTimeFormatUnit, number][] = [
+    ["year", 31_536_000],
+    ["month", 2_592_000],
+    ["week", 604_800],
+    ["day", 86_400],
+    ["hour", 3_600],
+    ["minute", 60],
+  ];
+  for (const [unidade, s] of passos) {
+    if (Math.abs(segundos) >= s) return RELATIVO.format(Math.round(segundos / s), unidade);
+  }
+  return "agora";
+}

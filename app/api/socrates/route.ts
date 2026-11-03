@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@/lib/supabase/server";
 import { TIPOS_CONTEXTO, type ContextoTela } from "@/lib/socrates";
+import { ehPerguntaSocrates } from "@/lib/perguntas-socrates";
 
 export const runtime = "nodejs";
 
@@ -31,10 +32,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
   }
 
-  const { conversaId, conteudo, contexto: contextoTela } = (await request.json()) as {
+  const { conversaId, conteudo, contexto: contextoTela, pergunta } = (await request.json()) as {
     conversaId: string;
     conteudo: string;
     contexto?: ContextoTela;
+    pergunta?: string;
   };
 
   if (!conversaId || !conteudo?.trim()) {
@@ -77,6 +79,8 @@ export async function POST(request: Request) {
     .single();
 
   const linhaTela = await descreverTela(supabase, contextoTela);
+  // Só perguntas do próprio Sócrates (lib/perguntas-socrates.ts) entram no prompt.
+  const linhaPergunta = ehPerguntaSocrates(pergunta) ? `O aluno está respondendo a esta pergunta sua: "${pergunta}"` : null;
 
   const carteiraTexto = (carteira ?? [])
     .map((c: any) => `- ${c.ativo_ref?.titulo} (${c.ativo_ref?.autor ?? "autor desconhecido"}) — ${Math.round(c.progresso_percentual)}% concluído`)
@@ -85,7 +89,7 @@ export async function POST(request: Request) {
   const contexto = `Discípulo: ${perfil?.nome ?? "desconhecido"} (${perfil?.grau_atual ?? "grau não definido"})
 
 Carteira Intelectual (ativos em andamento/planejados):
-${carteiraTexto || "Nenhum ativo em andamento."}${linhaTela ? `\n\n${linhaTela}` : ""}`;
+${carteiraTexto || "Nenhum ativo em andamento."}${linhaTela ? `\n\n${linhaTela}` : ""}${linhaPergunta ? `\n${linhaPergunta}` : ""}`;
 
   const systemPrompt = `${config?.system_prompt ?? "Você é Sócrates, mentor da Paideia. Conduza pelo método maiêutico."}\n\n---\nCONTEXTO DO DISCÍPULO:\n${contexto}`;
 

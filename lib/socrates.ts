@@ -10,5 +10,11 @@ export interface ContextoTela {
 
 export const SEM_CONTEXTO: ContextoTela = { tipo: "nenhum" };
 
-// Pede à gaveta do Sócrates que se abra (usado pela paleta de comandos).
+// Pede à gaveta do Sócrates que se abra (paleta de comandos, Início). Pode
+// levar uma pergunta do Sócrates, que aparece no topo e vai com a resposta.
 export const EVENTO_ABRIR_SOCRATES = "paideia:abrir-socrates";
+export type DetalheAbrirSocrates = { pergunta?: string } | undefined;
+
+export function abrirSocrates(detalhe?: { pergunta?: string }) {
+  window.dispatchEvent(new CustomEvent(EVENTO_ABRIR_SOCRATES, { detail: detalhe }));
+}

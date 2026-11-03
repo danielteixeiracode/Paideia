@@ -242,7 +242,8 @@ Componentes base em `components/ui/`, todos nos três modos, com foco visível, 
 | `Gaveta`, `Dialogo` | `sobreposicao.tsx` | Foco preso, Esc fecha, clique no fundo fecha, rolagem da página travada, foco devolvido a quem abriu. Gaveta: lateral, tela cheia no celular. Diálogo: central (base no celular); `alerta` para confirmações. |
 | `Comandos`, `useComandos` | `../comandos/comandos.tsx` | Provedor no layout do (shell): Ctrl K / Cmd K abre a paleta; `g` + letra leva a cada tela (i Início, o Obras, f Funções, e Épocas, c Carteira, s Sócrates); `?` abre a lista de atalhos. Atalhos de uma tecla não disparam enquanto se digita num campo nem com outra janela aberta. Navegar fecha a paleta. |
 | `PaletaComandos` | `../comandos/paleta.tsx` | Sobre o `Dialogo` (posição topo, cabeçalho próprio). Combobox com setas, Home/End, Enter e Esc. Busca obras, funções e épocas no banco com espera de 250ms (a partir de duas letras, pela sessão do aluno, sob RLS); navegação do aluno e, para o administrador, do admin; ações: modos claro/escuro/foco, abrir o Sócrates e guardar na Carteira a obra aberta. Campo vazio mostra os cinco recentes (no navegador); sem resultado, "Nada encontrado". Troca de item sem animação. |
-| `ColunaProgresso`, `ColunaSVG` | `coluna-progresso.tsx` | A coluna do templo como barra de progresso, sem número escrito; o leitor de tela ouve "vazia", "começando a encher", "mais da metade cheia" ou "cheia". `ColunaSVG` é a mesma coluna dentro de outro SVG (o templo a usa). |
+| `Contador` | `contador.tsx` | Número que conta até o valor no momento de assinatura (uma vez por sessão, nunca com movimento reduzido); algarismos tabulares. |
+| `ColunaProgresso`, `ColunaSVG` | `coluna-progresso.tsx` | A coluna do templo como barra de progresso, sem número escrito; o leitor de tela ouve "vazia", "começando a encher", "mais da metade cheia" ou "cheia". `ColunaSVG` é a mesma coluna dentro de outro SVG, com proporções ajustáveis (`geometria`); o templo-selo a usa. |
 
 ### Buttons
 - **Shape:** cantos discretos (6px).
@@ -272,8 +273,15 @@ Componentes base em `components/ui/`, todos nos três modos, com foco visível, 
 - **Celular** (abaixo de 768px): no topo ficam só a marca, a busca (apenas ícone) e a conta; o seletor de modo vai para dentro do menu da conta. A navegação desce para a barra inferior, sobre a superfície do tema como o cabeçalho, com filete duplo em cima, os mesmos seis romanos em `gold-ink` e rótulos `micro` em `ink-muted`; item ativo em `ink` semibold, sublinhado em dourado e com `aria-current`; alvo de 56px; respeita a área segura.
 - **Modo foco:** cabeçalho, barra do celular e botão do Sócrates somem.
 
-### Templo
-Elemento central do Início e único momento de assinatura: SVG com frontão, arquitrave, 7 colunas (uma por função pedagógica) e estilóbato. A coluna se enche de dourado de baixo para cima; com todas cheias, o frontão se acende. Ao carregar, as colunas sobem em sequência (`--motion-signature-duration` 1100ms, `--motion-signature-ease`, intervalo `--motion-signature-stagger` 90ms).
+### Templo (selo do Início)
+Elemento de assinatura do Início, à direita do título (no celular, centralizado abaixo dele). SVG em `components/corpo/templo.tsx` (viewBox 240 × 196) com frontão, arquitrave, 7 colunas (uma por função pedagógica, de `ColunaSVG`) e estilóbato, com o algarismo romano de cada função embaixo.
+- **Legibilidade:** 220px de largura no desktop (mínimo 190px) e 240px no celular; cada fuste com 20 a 22px; romanos com 14 a 15px; traços de 1,5px de tela em qualquer tamanho (`vector-effect: non-scaling-stroke`); preenchimento em gold-500 contra o contorno green-800 (3,7:1) e contra o fuste vazio cream-100.
+- **Preenchimento:** derivado de `registro_eventos` por `lib/templo.ts` (regra provisória); sem porcentagem escrita. Com as sete cheias, o frontão se acende em dourado.
+- **Legenda de altura fixa** (3,5rem, não move o layout): mostra romano, nome e quantidade de eventos da coluna apontada pelo mouse ou focada pelo teclado; sem coluna apontada, "A formação" e o total de eventos. No toque, o primeiro toque mostra a função na legenda e o segundo abre `/funcoes/[id]`. Cada coluna tem `aria-label` com função e eventos.
+- **Momento de assinatura:** ver Movimento.
+
+### Início
+Frontispício (marcador I, título "Início" em display, "Bem-vindo de volta") com o templo-selo; "Continuar" (único bloco escuro, pedra green-800 fixa em todos os modos, com título da obra em serifa, função, próximo exercício e os botões "Retomar" e "Ver a obra"; sem eventos, "Começar pelas Obras"); "Sócrates pergunta" (cartão com a pergunta da função com menos eventos, em serifa itálica, perguntas provisórias em `lib/perguntas-socrates.ts`; o botão abre a gaveta com a pergunta no topo, enviada como contexto); três colunas de códice abertas por filete, não caixas (sementes da Carteira com as funções em romano, frutos recentes, as sete épocas com as da Carteira em dourado); atividade recente em linhas separadas por filete, com romano da função e data relativa (`lib/eventos.ts`). Cada bloco tem título pequeno com filete e o atalho para o membro correspondente; estados vazios dizem o que fazer, sem cobrança.
 
 ### Sócrates
 Botão circular fixo de pedra verde com borda dourada e gaveta lateral em `surface` com sombra de sobreposição; tela cheia no celular. Some no modo foco.
@@ -282,7 +290,7 @@ Botão circular fixo de pedra verde com borda dourada e gaveta lateral em `surfa
 - **Entrada de tela** (`app/(shell)/template.tsx`, `.anim-pagina`): fade com deslocamento de 6px, 225ms, no movimento discreto; começa quando a tela já chegou, nunca atrasa a navegação; nenhuma animação com movimento reduzido. O Next 14 ainda não integra a View Transitions API.
 - **Resposta imediata:** ações do aluno são otimistas (`CarteiraBotao`, "Guardar esta obra" da paleta, `FormularioOtimista` nas Configurações): a interface muda no clique com um aviso, e volta ao estado anterior com aviso de erro se o servidor falhar. As ações devolvem `ResultadoAcao` (`lib/acoes.ts`).
 - **Discreto** (`--motion-subtle-duration` 180ms, `--motion-subtle-ease` `cubic-bezier(0.22, 1, 0.36, 1)`; utilitários `duration-discreto ease-discreto`): respostas a ações, como hover, abrir e confirmar.
-- **Assinatura** (`--motion-signature-duration` 1100ms, `--motion-signature-ease` `cubic-bezier(0.16, 1, 0.3, 1)`): só no templo.
+- **Assinatura** (`--motion-signature-duration` 1100ms, `--motion-signature-ease` `cubic-bezier(0.16, 1, 0.3, 1)`): só no Início. As colunas do templo sobem em sequência (90ms entre elas) e os números (`Contador`) contam até o valor, uma vez por sessão: o script do `<head>` marca `data-assinatura="vista"` no `<html>` a partir do `sessionStorage`, e então tudo aparece pronto. Os números ficam ocultos até o contador assumir, para não aparecerem prontos e voltarem a zero.
 - **Movimento reduzido:** com `prefers-reduced-motion: reduce`, todas as durações caem para 0,01ms e o templo aparece montado.
 
 ## Do's and Don'ts

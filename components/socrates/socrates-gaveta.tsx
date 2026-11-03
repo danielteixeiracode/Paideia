@@ -8,7 +8,7 @@ import { ChatWindow } from "@/components/socrates/chat-window";
 import { useContextoTela } from "@/components/socrates/contexto-tela";
 import { Gaveta } from "@/components/ui/sobreposicao";
 import { abrirConversaAtual } from "@/app/(shell)/socrates/actions";
-import { EVENTO_ABRIR_SOCRATES } from "@/lib/socrates";
+import { EVENTO_ABRIR_SOCRATES, type DetalheAbrirSocrates } from "@/lib/socrates";
 import type { MensagemSocrates } from "@/types/database";
 
 // Botão fixo + gaveta lateral com o mesmo chat e a mesma conversa de /socrates.
@@ -21,6 +21,8 @@ export function SocratesGaveta() {
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [conversa, setConversa] = useState<{ conversaId: string; mensagens: MensagemSocrates[] } | null>(null);
+  // Pergunta do Sócrates que o aluno escolheu responder (Início); vale até fechar.
+  const [pergunta, setPergunta] = useState<string | null>(null);
 
   const naPaginaDoSocrates = pathname === "/socrates" || pathname.startsWith("/socrates/");
 
@@ -29,7 +31,8 @@ export function SocratesGaveta() {
   }, [naPaginaDoSocrates]);
 
   // Recarrega a conversa a cada abertura, para trazer o que foi dito em /socrates.
-  async function abrir() {
+  async function abrir(novaPergunta: string | null = null) {
+    setPergunta(novaPergunta);
     setAberta(true);
     setErro(null);
     setCarregando(true);
@@ -47,7 +50,7 @@ export function SocratesGaveta() {
   // A paleta de comandos e os atalhos abrem a gaveta por este evento.
   useEffect(() => {
     if (naPaginaDoSocrates) return;
-    const onAbrir = () => abrir();
+    const onAbrir = (e: Event) => abrir((e as CustomEvent<DetalheAbrirSocrates>).detail?.pergunta ?? null);
     window.addEventListener(EVENTO_ABRIR_SOCRATES, onAbrir);
     return () => window.removeEventListener(EVENTO_ABRIR_SOCRATES, onAbrir);
   });
@@ -59,7 +62,7 @@ export function SocratesGaveta() {
       {/* Fica na página mesmo com a gaveta aberta, para receber o foco de volta. */}
       <button
         type="button"
-        onClick={abrir}
+        onClick={() => abrir()}
         aria-label="Conversar com Sócrates"
         className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] right-4 z-30 flex h-12 w-12 items-center justify-center rounded-full border border-paideia-gold-500 bg-paideia-green-900 text-paideia-gold-300 shadow-overlay transition-colors duration-discreto ease-discreto hover:bg-paideia-green-800 md:bottom-6 md:right-6"
       >
@@ -68,7 +71,10 @@ export function SocratesGaveta() {
 
       <Gaveta
         aberta={aberta}
-        onFechar={() => setAberta(false)}
+        onFechar={() => {
+          setAberta(false);
+          setPergunta(null);
+        }}
         titulo="Sócrates"
         acaoCabecalho={
           conversa && (
@@ -92,7 +98,22 @@ export function SocratesGaveta() {
             <span className="sr-only">Abrindo o diálogo</span>
           </div>
         ) : conversa ? (
-          <ChatWindow conversaId={conversa.conversaId} mensagensIniciais={conversa.mensagens} contexto={contexto} />
+          <>
+            {pergunta && (
+              <figure className="mb-3 shrink-0 border-b border-rule pb-3">
+                <figcaption className="t-nota">Sócrates pergunta</figcaption>
+                <blockquote className="mt-1 font-serif text-subtitulo italic leading-snug text-ink">{pergunta}</blockquote>
+              </figure>
+            )}
+            <div className="min-h-0 flex-1">
+              <ChatWindow
+                conversaId={conversa.conversaId}
+                mensagensIniciais={conversa.mensagens}
+                contexto={contexto}
+                pergunta={pergunta ?? undefined}
+              />
+            </div>
+          </>
         ) : null}
       </Gaveta>
     </>

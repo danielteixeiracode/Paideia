@@ -1,9 +1,34 @@
 import { cn } from "@/lib/utils";
 
-// Geometria de uma coluna do templo, em unidades do SVG. O centro horizontal
-// é `cx`; capitel em y=150, fuste de 162 a 338, base até 348.
-const FUSTE = { topo: 162, base: 338, meiaLargura: 21 };
-const ALTURA_FUSTE = FUSTE.base - FUSTE.topo;
+// Proporções de uma coluna do templo, em unidades do SVG. Os valores padrão
+// são os da coluna grande; o templo-selo do Início passa as suas.
+export interface GeometriaColuna {
+  topo: number; // y do alto do capitel
+  fuste: number; // altura do fuste
+  largura: number; // largura do fuste
+  capitel: number; // altura do capitel
+  sobraCapitel: number; // quanto o capitel passa do fuste, de cada lado
+  base: number; // altura da base
+  sobraBase: number;
+  larguraClique: number; // área de clique (normalmente o passo entre colunas)
+  estrias: boolean; // caneluras do fuste (só fazem sentido em tamanho grande)
+}
+
+const PADRAO: GeometriaColuna = {
+  topo: 150,
+  fuste: 176,
+  largura: 42,
+  capitel: 12,
+  sobraCapitel: 9,
+  base: 10,
+  sobraBase: 6,
+  larguraClique: 68,
+  estrias: true,
+};
+
+// Traço em pixels de tela, qualquer que seja o tamanho do desenho: nunca
+// abaixo de 1,25px, mesmo no selo pequeno.
+const TRACO = { vectorEffect: "non-scaling-stroke" as const };
 
 // A coluna como grupo SVG, para ser posta dentro de outro desenho (o templo).
 // A pedra é sempre a mesma, em qualquer tema: é a forma-mãe do sistema.
@@ -13,6 +38,7 @@ export function ColunaSVG({
   destacada = false,
   animar = false,
   ordem = 0,
+  geometria,
 }: {
   cx: number;
   preenchimento: number; // 0 a 1
@@ -20,46 +46,65 @@ export function ColunaSVG({
   // Sobe da base ao aparecer (momento de assinatura); `ordem` escalona a entrada.
   animar?: boolean;
   ordem?: number;
+  geometria?: Partial<GeometriaColuna>;
 }) {
-  const cheio = ALTURA_FUSTE * Math.min(1, Math.max(0, preenchimento));
+  const g = { ...PADRAO, ...geometria };
+  const topoFuste = g.topo + g.capitel;
+  const baseFuste = topoFuste + g.fuste;
+  const x = cx - g.largura / 2;
+  const cheio = g.fuste * Math.min(1, Math.max(0, preenchimento));
+
   return (
     <g
       className={animar ? "templo-subir" : undefined}
       style={animar ? { animationDelay: `calc(var(--motion-signature-stagger) * ${ordem})` } : undefined}
     >
       {/* área de clique da coluna inteira */}
-      <rect x={cx - 34} y="150" width="68" height="198" className="fill-transparent" />
       <rect
-        x={cx - FUSTE.meiaLargura}
-        y={FUSTE.topo}
-        width={FUSTE.meiaLargura * 2}
-        height={ALTURA_FUSTE}
-        className="fill-paideia-cream-100"
+        x={cx - g.larguraClique / 2}
+        y={g.topo}
+        width={g.larguraClique}
+        height={g.capitel + g.fuste + g.base}
+        className="fill-transparent"
       />
+      <rect x={x} y={topoFuste} width={g.largura} height={g.fuste} className="fill-paideia-cream-100" />
       {cheio > 0 && (
-        <rect
-          x={cx - FUSTE.meiaLargura}
-          y={FUSTE.base - cheio}
-          width={FUSTE.meiaLargura * 2}
-          height={cheio}
-          className="fill-paideia-gold-400"
-        />
+        <rect x={x} y={baseFuste - cheio} width={g.largura} height={cheio} className="fill-paideia-gold-500" />
       )}
-      <line x1={cx - 8} y1={FUSTE.topo + 4} x2={cx - 8} y2={FUSTE.base - 4} className="stroke-paideia-green-800/15 stroke-[1.5]" />
-      <line x1={cx + 8} y1={FUSTE.topo + 4} x2={cx + 8} y2={FUSTE.base - 4} className="stroke-paideia-green-800/15 stroke-[1.5]" />
+      {g.estrias && (
+        <>
+          <line {...TRACO} x1={cx - 8} y1={topoFuste + 4} x2={cx - 8} y2={baseFuste - 4} className="stroke-paideia-green-800/15 stroke-[1.5]" />
+          <line {...TRACO} x1={cx + 8} y1={topoFuste + 4} x2={cx + 8} y2={baseFuste - 4} className="stroke-paideia-green-800/15 stroke-[1.5]" />
+        </>
+      )}
       <rect
-        x={cx - FUSTE.meiaLargura}
-        y={FUSTE.topo}
-        width={FUSTE.meiaLargura * 2}
-        height={ALTURA_FUSTE}
+        {...TRACO}
+        x={x}
+        y={topoFuste}
+        width={g.largura}
+        height={g.fuste}
         className={cn(
-          "fill-none transition-[stroke]",
-          destacada ? "stroke-paideia-gold-600 stroke-[3]" : "stroke-paideia-green-800 stroke-[2]"
+          "fill-none transition-[stroke] duration-discreto",
+          destacada ? "stroke-paideia-gold-600 stroke-[2.5]" : "stroke-paideia-green-800 stroke-[1.5]"
         )}
       />
       {/* capitel e base */}
-      <rect x={cx - 30} y="150" width="60" height="12" className="fill-paideia-cream-50 stroke-paideia-green-800 stroke-[2]" />
-      <rect x={cx - 27} y="338" width="54" height="10" className="fill-paideia-cream-50 stroke-paideia-green-800 stroke-[2]" />
+      <rect
+        {...TRACO}
+        x={x - g.sobraCapitel}
+        y={g.topo}
+        width={g.largura + 2 * g.sobraCapitel}
+        height={g.capitel}
+        className="fill-paideia-cream-50 stroke-paideia-green-800 stroke-[1.5]"
+      />
+      <rect
+        {...TRACO}
+        x={x - g.sobraBase}
+        y={baseFuste}
+        width={g.largura + 2 * g.sobraBase}
+        height={g.base}
+        className="fill-paideia-cream-50 stroke-paideia-green-800 stroke-[1.5]"
+      />
     </g>
   );
 }
