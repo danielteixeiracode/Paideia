@@ -275,7 +275,7 @@ Componentes base em `components/ui/`, todos nos três modos, com foco visível, 
 
 ### Templo (selo do Início)
 Elemento de assinatura do Início, à direita do título (no celular, centralizado abaixo dele). SVG em `components/corpo/templo.tsx` (viewBox 240 × 196) com frontão, arquitrave, 7 colunas (uma por função pedagógica, de `ColunaSVG`) e estilóbato, com o algarismo romano de cada função embaixo.
-- **Legibilidade:** 220px de largura no desktop (mínimo 190px) e 240px no celular; cada fuste com 20 a 22px; romanos com 14 a 15px; traços de 1,5px de tela em qualquer tamanho (`vector-effect: non-scaling-stroke`); preenchimento em gold-500 contra o contorno green-800 (3,7:1) e contra o fuste vazio cream-100.
+- **Legibilidade:** 220px de largura no desktop (mínimo 190px) e 240px no celular; cada fuste com 20 a 22px; romanos com 14 a 15px; traços de 1,5px de tela em qualquer tamanho (`vector-effect: non-scaling-stroke`); preenchimento em "dourado em relevo" (gradiente horizontal gold-500, gold-300, gold-400, gold-600: luz um pouco à esquerda do centro, como uma coluna redonda iluminada) contra o contorno green-800 e o fuste vazio cream-50.
 - **Preenchimento:** derivado de `registro_eventos` por `lib/templo.ts` (regra provisória); sem porcentagem escrita. Com as sete cheias, o frontão se acende em dourado.
 - **Legenda de altura fixa** (3,5rem, não move o layout): mostra romano, nome e quantidade de eventos da coluna apontada pelo mouse ou focada pelo teclado; sem coluna apontada, "A formação" e o total de eventos. No toque, o primeiro toque mostra a função na legenda e o segundo abre `/funcoes/[id]`. Cada coluna tem `aria-label` com função e eventos.
 - **Momento de assinatura:** ver Movimento.

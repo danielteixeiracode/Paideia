@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { cn, romano } from "@/lib/utils";
-import { ColunaSVG, type GeometriaColuna } from "@/components/ui/coluna-progresso";
+import { ColunaSVG, DefsOuro, type GeometriaColuna } from "@/components/ui/coluna-progresso";
 import { Contador } from "@/components/ui/contador";
 import { assinaturaJaVista, marcarAssinaturaVista, registrarAssinatura } from "@/lib/assinatura";
 
@@ -64,6 +64,7 @@ export function Templo({ colunas, aceso, totalEventos }: { colunas: ColunaTemplo
   return (
     <figure className="mx-auto w-[240px] lg:mx-0 lg:w-[220px]">
       <svg viewBox="0 0 240 196" className="h-auto w-full" role="group" aria-label="Templo das sete funções pedagógicas">
+        <DefsOuro />
         {/* Frontão */}
         <polygon
           {...TRACO}

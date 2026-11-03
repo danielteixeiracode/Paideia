@@ -26,6 +26,25 @@ const PADRAO: GeometriaColuna = {
   estrias: true,
 };
 
+// Dourado em relevo do preenchimento: luz um pouco à esquerda do centro e
+// bordas mais escuras, como uma coluna redonda iluminada. Só dourados da
+// paleta (gold-500, 300, 400, 600). Todo SVG que usa ColunaSVG inclui
+// <DefsOuro /> uma vez.
+export const ID_OURO = "paideia-ouro-coluna";
+
+export function DefsOuro() {
+  return (
+    <defs>
+      <linearGradient id={ID_OURO} x1="0" x2="1" y1="0" y2="0">
+        <stop offset="0" stopColor="#B98C31" />
+        <stop offset="0.35" stopColor="#DCC48F" />
+        <stop offset="0.6" stopColor="#D1AC5C" />
+        <stop offset="1" stopColor="#976F26" />
+      </linearGradient>
+    </defs>
+  );
+}
+
 // Traço em pixels de tela, qualquer que seja o tamanho do desenho: nunca
 // abaixo de 1,25px, mesmo no selo pequeno.
 const TRACO = { vectorEffect: "non-scaling-stroke" as const };
@@ -67,10 +86,8 @@ export function ColunaSVG({
         height={g.capitel + g.fuste + g.base}
         className="fill-transparent"
       />
-      <rect x={x} y={topoFuste} width={g.largura} height={g.fuste} className="fill-paideia-cream-100" />
-      {cheio > 0 && (
-        <rect x={x} y={baseFuste - cheio} width={g.largura} height={cheio} className="fill-paideia-gold-500" />
-      )}
+      <rect x={x} y={topoFuste} width={g.largura} height={g.fuste} className="fill-paideia-cream-50" />
+      {cheio > 0 && <rect x={x} y={baseFuste - cheio} width={g.largura} height={cheio} fill={`url(#${ID_OURO})`} />}
       {g.estrias && (
         <>
           <line {...TRACO} x1={cx - 8} y1={topoFuste + 4} x2={cx - 8} y2={baseFuste - 4} className="stroke-paideia-green-800/15 stroke-[1.5]" />
@@ -136,6 +153,7 @@ export function ColunaProgresso({
       aria-label={`${rotulo}: coluna ${descreverPreenchimento(valor)}`}
       className={cn("h-auto w-10", className)}
     >
+      <DefsOuro />
       <ColunaSVG cx={98} preenchimento={valor} animar={animar} />
     </svg>
   );
