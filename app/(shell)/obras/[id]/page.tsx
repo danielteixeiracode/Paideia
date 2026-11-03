@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePerfil } from "@/lib/data/session";
-import { Card, Eyebrow, Badge, EmptyState } from "@/components/ui/primitives";
+import { Card, Eyebrow, EmptyState } from "@/components/ui/primitives";
 import { ExercicioItem } from "@/components/corpo/exercicio-item";
 import { ContextoTela } from "@/components/socrates/contexto-tela";
+import { CarteiraBotao } from "@/components/corpo/carteira-botao";
 import { romano } from "@/lib/utils";
 import type { Epoca, Exercicio, FuncaoPedagogica, Obra } from "@/types/database";
 
@@ -78,13 +79,9 @@ export default async function ObraPage({ params }: { params: { id: string } }) {
         )}
         <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">{obra.titulo}</h1>
         {obra.autor && <p className="mt-1 text-sm text-paideia-ink/60">{obra.autor}</p>}
-        {carteira && (
-          <div className="mt-3">
-            <Link href="/carteira">
-              <Badge tone="green">Na sua Carteira: {carteira.estado}</Badge>
-            </Link>
-          </div>
-        )}
+        <div className="mt-3">
+          <CarteiraBotao obraId={obra.id} estado={carteira?.estado ?? null} />
+        </div>
       </div>
 
       {obra.descricao && (

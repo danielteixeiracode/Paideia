@@ -2,21 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Settings, Flame } from "lucide-react";
+import { Settings } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { NAV_ALUNO, NAV_ADMIN } from "@/lib/nav";
 import { cn } from "@/lib/utils";
 import type { Perfil } from "@/types/database";
 
-export function Sidebar({
-  perfil,
-  constanciaDias,
-  eixosEquilibrados,
-}: {
-  perfil: Perfil;
-  constanciaDias: number;
-  eixosEquilibrados: number;
-}) {
+export function Sidebar({ perfil }: { perfil: Perfil }) {
   const pathname = usePathname();
   const isAdmin = perfil.papel === "administrador";
 
@@ -86,27 +78,7 @@ export function Sidebar({
         )}
       </nav>
 
-      <div className="space-y-3 border-t border-white/10 px-4 py-4">
-        <div className="rounded-xl bg-white/5 p-3">
-          <div className="mb-1.5 flex items-center justify-between text-xs">
-            <span className="flex items-center gap-1.5 font-semibold text-paideia-gold-300">
-              <Flame className="h-3.5 w-3.5" /> Constância: {constanciaDias} dias
-            </span>
-            <span className="rounded-full bg-paideia-gold-500/20 px-2 py-0.5 text-[10px] font-semibold text-paideia-gold-300">
-              Paideia
-            </span>
-          </div>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
-            <div
-              className="h-full rounded-full bg-paideia-gold-500"
-              style={{ width: `${Math.min(100, (constanciaDias / 21) * 100)}%` }}
-            />
-          </div>
-          <p className="mt-1.5 text-[11px] text-paideia-cream-100/60">
-            {eixosEquilibrados} eixos equilibrados esta semana
-          </p>
-        </div>
-
+      <div className="border-t border-white/10 px-4 py-4">
         <div className="flex items-center justify-between rounded-lg px-1">
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-paideia-gold-500/20 text-xs font-bold text-paideia-gold-300">

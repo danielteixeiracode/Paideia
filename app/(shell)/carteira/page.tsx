@@ -25,8 +25,13 @@ export default async function CarteiraPage() {
       .order("criado_em", { ascending: false }),
   ]);
 
-  const itens = ((obrasData ?? []) as unknown as (CarteiraObra & { obra: Obra | null })[]).filter((i) => i.obra);
   const frutos = (frutosData ?? []) as unknown as FrutoLista[];
+
+  // Semente: obra guardada que ainda não deu nenhum fruto.
+  const obrasComFruto = new Set(frutos.map((f) => f.obra_id).filter(Boolean));
+  const sementes = ((obrasData ?? []) as unknown as (CarteiraObra & { obra: Obra | null })[]).filter(
+    (i) => i.obra && !obrasComFruto.has(i.obra_id)
+  );
 
   return (
     <div className="space-y-6">
@@ -36,15 +41,15 @@ export default async function CarteiraPage() {
       </div>
 
       <section className="space-y-3">
-        <p className="font-serif text-lg font-semibold">Obras</p>
-        {itens.length === 0 ? (
+        <p className="font-serif text-lg font-semibold">Sementes</p>
+        {sementes.length === 0 ? (
           <EmptyState
-            titulo="Nenhuma obra na sua Carteira ainda"
-            descricao="As obras que você guardar aparecem aqui."
+            titulo="Nenhuma semente na sua Carteira"
+            descricao="Guarde uma obra pela ficha dela em Obras. Ela fica aqui até dar o primeiro fruto."
           />
         ) : (
           <ul className="grid gap-3 sm:grid-cols-2">
-            {itens.map((item) => (
+            {sementes.map((item) => (
               <li key={item.id}>
                 <Link href={`/obras/${item.obra!.id}`} className="block">
                   <Card className="flex h-full items-start justify-between gap-3 transition hover:border-paideia-gold-400">
