@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/data/session";
+import type { ResultadoAcao } from "@/lib/acoes";
 
 export async function criarEixo(formData: FormData) {
   await requireAdmin();
@@ -127,7 +128,9 @@ export async function removerAtivo(id: string) {
   revalidatePath("/biblioteca");
 }
 
-export async function atualizarConfigSocrates(formData: FormData) {
+// Devolve o resultado para a tela mostrar o aviso; os campos, as regras e o
+// que se grava são os mesmos de antes.
+export async function atualizarConfigSocrates(formData: FormData): Promise<ResultadoAcao> {
   const { supabase, perfil } = await requireAdmin();
   const id = String(formData.get("id") ?? "");
   const payload = {
@@ -137,19 +140,21 @@ export async function atualizarConfigSocrates(formData: FormData) {
     max_tokens: Number(formData.get("max_tokens") ?? 1024),
     atualizado_por: perfil.id,
   };
-  if (!payload.system_prompt) return;
+  if (!payload.system_prompt) return { ok: false, erro: "O prompt de sistema não pode ficar vazio." };
 
-  if (id) {
-    await supabase.from("config_socrates").update(payload).eq("id", id);
-  } else {
-    await supabase.from("config_socrates").insert({ ...payload, nome: "Sócrates", ativo: true });
-  }
+  const { error } = id
+    ? await supabase.from("config_socrates").update(payload).eq("id", id)
+    : await supabase.from("config_socrates").insert({ ...payload, nome: "Sócrates", ativo: true });
+  if (error) return { ok: false, erro: "Não foi possível salvar a configuração. Tente de novo." };
   revalidatePath("/admin/socrates");
+  return { ok: true };
 }
 
-export async function atualizarPapelUsuario(userId: string, papel: "aluno" | "administrador") {
+export async function atualizarPapelUsuario(userId: string, papel: "aluno" | "administrador"): Promise<ResultadoAcao> {
   await requireAdmin();
   const supabase = createClient();
-  await supabase.from("perfis").update({ papel }).eq("id", userId);
+  const { error } = await supabase.from("perfis").update({ papel }).eq("id", userId);
+  if (error) return { ok: false, erro: "Não foi possível mudar o papel. Tente de novo." };
   revalidatePath("/admin/usuarios");
+  return { ok: true };
 }
