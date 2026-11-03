@@ -21,12 +21,15 @@ export function CartaoObra({
   funcoes,
   nota,
   nivel = 3,
+  mostrarEpoca = true,
 }: {
   obra: ObraLista;
   funcoes: FuncaoColunata[];
   nota?: string | null;
   // Nível do título do cartão, conforme a hierarquia da página.
   nivel?: 2 | 3;
+  // Desligado onde a época já está no topo da página (ficha da época).
+  mostrarEpoca?: boolean;
 }) {
   const Titulo = nivel === 2 ? "h2" : "h3";
   return (
@@ -35,18 +38,21 @@ export function CartaoObra({
         as="article"
         className="flex h-full flex-col transition-colors duration-discreto ease-discreto group-hover:border-rule-strong/70 group-hover:bg-sunken"
       >
-        <div className="flex items-center justify-between gap-3">
-          {obra.epoca ? (
-            <span className="t-nota">
-              <span className="t-romano mr-1 text-gold-ink">{romano(obra.epoca.numero)}</span>
-              {obra.epoca.nome}
-            </span>
-          ) : (
-            <span className="t-nota">Sem época</span>
-          )}
-          {obra.naCarteira && <Selo tom="acao">Na Carteira</Selo>}
-        </div>
-        <Titulo className="mt-3 font-serif text-xl font-medium leading-snug text-ink group-hover:underline group-hover:decoration-rule-strong group-hover:underline-offset-4">
+        {(mostrarEpoca || obra.naCarteira) && (
+          <div className="mb-3 flex items-center justify-between gap-3">
+            {mostrarEpoca &&
+              (obra.epoca ? (
+                <span className="t-nota">
+                  <span className="t-romano mr-1 text-gold-ink">{romano(obra.epoca.numero)}</span>
+                  {obra.epoca.nome}
+                </span>
+              ) : (
+                <span className="t-nota">Sem época</span>
+              ))}
+            {obra.naCarteira && <Selo tom="acao" className="ml-auto">Na Carteira</Selo>}
+          </div>
+        )}
+        <Titulo className="font-serif text-xl font-medium leading-snug text-ink group-hover:underline group-hover:decoration-rule-strong group-hover:underline-offset-4">
           {obra.titulo}
         </Titulo>
         {obra.autor && <p className="t-nota mt-1">{obra.autor}</p>}

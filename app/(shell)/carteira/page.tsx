@@ -1,103 +1,64 @@
-import Link from "next/link";
 import { requirePerfil } from "@/lib/data/session";
-import { Card, Eyebrow, Badge, EmptyState } from "@/components/ui/primitives";
-import type { CarteiraObra, Fruto, Obra } from "@/types/database";
-
-type FrutoLista = Fruto & {
-  obra: { id: string; titulo: string } | null;
-  funcao: { id: string; nome: string } | null;
-  exercicio: { id: string; titulo: string } | null;
-};
+import { ContextoTela } from "@/components/socrates/contexto-tela";
+import { TituloBloco } from "@/components/ui/titulo-bloco";
+import { CAMPOS_CARTAO_OBRA, paraObraLista, type ObraBanco } from "@/lib/data/obras";
+import { SementesCarteira } from "./sementes";
+import { FrutosCarteira, type FrutoLinha } from "./frutos";
 
 export default async function CarteiraPage() {
   const { supabase, perfil } = await requirePerfil();
 
-  const [{ data: obrasData }, { data: frutosData }] = await Promise.all([
+  // Só os dados do aluno (RLS e filtro por user_id).
+  const [carteiraR, frutosR, funcoesR] = await Promise.all([
     supabase
       .from("carteira_obras")
-      .select("*, obra:obras(*)")
+      .select(`obra_id, obra:obras(${CAMPOS_CARTAO_OBRA})`)
       .eq("user_id", perfil.id)
       .order("atualizado_em", { ascending: false }),
     supabase
       .from("frutos")
-      .select("*, obra:obras(id, titulo), funcao:funcoes_pedagogicas(id, nome), exercicio:exercicios(id, titulo)")
+      .select("id, tipo, conteudo, criado_em, obra_id, obra:obras(id, titulo), funcao:funcoes_pedagogicas(numero, nome), exercicio:exercicios(titulo)")
       .eq("user_id", perfil.id)
       .order("criado_em", { ascending: false }),
+    supabase.from("funcoes_pedagogicas").select("id, numero, nome").order("numero"),
   ]);
 
-  const frutos = (frutosData ?? []) as unknown as FrutoLista[];
+  const frutos = (frutosR.data ?? []) as unknown as (FrutoLinha & { obra_id: string | null })[];
 
-  // Semente: obra guardada que ainda não deu nenhum fruto.
+  // Semente: obra guardada que ainda não deu nenhum fruto. Quando dá o
+  // primeiro, ela passa a aparecer pelos frutos.
   const obrasComFruto = new Set(frutos.map((f) => f.obra_id).filter(Boolean));
-  const sementes = ((obrasData ?? []) as unknown as (CarteiraObra & { obra: Obra | null })[]).filter(
-    (i) => i.obra && !obrasComFruto.has(i.obra_id)
-  );
+  const vazio = new Set<string>();
+  const sementes = ((carteiraR.data ?? []) as unknown as { obra_id: string; obra: ObraBanco | null }[])
+    .filter((i) => i.obra && !obrasComFruto.has(i.obra_id))
+    .map((i) => paraObraLista(i.obra!, vazio));
+
+  const nSementes = sementes.length;
+  const nFrutos = frutos.length;
 
   return (
-    <div className="space-y-6">
-      <div>
-        <Eyebrow>O livro entra como semente; o fruto é o ativo</Eyebrow>
-        <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Carteira Intelectual</h1>
-      </div>
+    <div className="space-y-12">
+      <ContextoTela tipo="nenhum" />
 
-      <section className="space-y-3">
-        <p className="font-serif text-lg font-semibold">Sementes</p>
-        {sementes.length === 0 ? (
-          <EmptyState
-            titulo="Nenhuma semente na sua Carteira"
-            descricao="Guarde uma obra pela ficha dela em Obras. Ela fica aqui até dar o primeiro fruto."
-          />
-        ) : (
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {sementes.map((item) => (
-              <li key={item.id}>
-                <Link href={`/obras/${item.obra!.id}`} className="block">
-                  <Card className="flex h-full items-start justify-between gap-3 transition hover:border-paideia-gold-400">
-                    <div className="min-w-0">
-                      <p className="font-serif text-base font-semibold">{item.obra!.titulo}</p>
-                      {item.obra!.autor && <p className="text-sm text-ink/60">{item.obra!.autor}</p>}
-                    </div>
-                    <Badge tone="gold" className="shrink-0">{item.estado}</Badge>
-                  </Card>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
+      <header>
+        <div className="marcador max-w-md" aria-hidden>
+          V
+        </div>
+        <h1 className="t-display mt-3">Carteira</h1>
+        <p className="t-leitura mt-3 text-ink-muted">O livro entra como semente; o fruto é o ativo.</p>
+        <p className="t-nota mt-4">
+          {nSementes === 1 ? "1 semente" : `${nSementes} sementes`} e {nFrutos === 1 ? "1 fruto" : `${nFrutos} frutos`}
+        </p>
+      </header>
+
+      <section className="space-y-5">
+        <TituloBloco titulo="Sementes" grande href="/obras" link="Obras" />
+        <SementesCarteira sementes={sementes} funcoes={(funcoesR.data ?? []) as { id: string; numero: number; nome: string }[]} />
       </section>
 
       <section className="space-y-3">
-        <p className="font-serif text-lg font-semibold">Frutos</p>
-        {frutos.length === 0 ? (
-          <EmptyState
-            titulo="Nenhum fruto ainda"
-            descricao="O que você produzir nos exercícios aparece aqui."
-          />
-        ) : (
-          <ul className="space-y-3">
-            {frutos.map((f) => (
-              <li key={f.id}>
-                <Card>
-                  <Badge>{f.tipo}</Badge>
-                  <p className="mt-2 line-clamp-4 whitespace-pre-line text-sm text-ink/80">{f.conteudo}</p>
-                  <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs">
-                    {f.obra && (
-                      <Link href={`/obras/${f.obra.id}`} className="font-semibold text-accent hover:underline">
-                        Obra: {f.obra.titulo}
-                      </Link>
-                    )}
-                    {f.funcao && (
-                      <Link href={`/funcoes/${f.funcao.id}`} className="font-semibold text-accent hover:underline">
-                        Função: {f.funcao.nome}
-                      </Link>
-                    )}
-                    {f.exercicio && <span className="text-ink/50">Exercício: {f.exercicio.titulo}</span>}
-                  </div>
-                </Card>
-              </li>
-            ))}
-          </ul>
-        )}
+        <TituloBloco titulo="Frutos" grande />
+        <FrutosCarteira frutos={frutos} agora={new Date().toISOString()} />
       </section>
     </div>
   );
