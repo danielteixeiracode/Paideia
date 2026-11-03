@@ -34,6 +34,27 @@ body {
     background-color: theme("colors.paideia.gold.400");
     border-radius: 999px;
   }
+
+  /* Templo do Início: as colunas sobem da base ao carregar. Só com movimento
+     permitido; quem pede movimento reduzido vê o templo já montado. */
+  @media (prefers-reduced-motion: no-preference) {
+    .templo-subir {
+      transform-box: fill-box;
+      transform-origin: bottom;
+      animation: templo-subir 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+  }
+}
+
+@keyframes templo-subir {
+  from {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
 }
 
 @layer components {
