@@ -12,6 +12,7 @@ import { Dialogo } from "@/components/ui/sobreposicao";
 import { useAviso } from "@/components/ui/aviso";
 import { useContextoTela } from "@/components/socrates/contexto-tela";
 import { guardarObra } from "@/app/(shell)/obras/actions";
+import { ERRO_CONEXAO } from "@/lib/acoes";
 
 type Grupo = "Recentes" | "Obras" | "Funções" | "Épocas" | "Ir para" | "Administração" | "Ações";
 
@@ -204,9 +205,11 @@ export function PaletaComandos({ aberta, onFechar, isAdmin }: { aberta: boolean;
         grupo: "Ações",
         rotulo: "Guardar esta obra na Carteira",
         marcador: <Landmark className="h-4 w-4" aria-hidden />,
+        // Otimista: o aviso sai na hora; se o servidor falhar, outro aviso explica.
         executar: async () => {
-          await guardarObra(obraId);
           avisar("Obra guardada na Carteira.", { tom: "sucesso" });
+          const resultado = await guardarObra(obraId).catch(() => ERRO_CONEXAO);
+          if (!resultado.ok) avisar(resultado.erro, { tom: "erro" });
         },
       });
     }

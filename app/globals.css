@@ -281,6 +281,20 @@ body {
   animation: aviso-entrar var(--motion-subtle-duration) var(--motion-subtle-ease) both;
 }
 
+/* Entrada de tela (app/(shell)/template.tsx): só com movimento permitido,
+   para que quem pede movimento reduzido veja a tela pronta, sem fade. */
+@keyframes pagina-entrar {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .anim-pagina {
+    animation: pagina-entrar calc(var(--motion-subtle-duration) * 1.25) var(--motion-subtle-ease) both;
+  }
+}
+
 @layer components {
   /* Papéis tipográficos (ver DESIGN.md › Typography). */
   .t-display {
@@ -317,6 +331,9 @@ body {
   /* Filete duplo: duas réguas finas, como a base da arquitrave. */
   .filete-duplo-baixo {
     border-bottom: 3px double rgb(var(--c-rule-strong) / 0.6);
+  }
+  .filete-duplo-cima {
+    border-top: 3px double rgb(var(--c-rule-strong) / 0.6);
   }
 
   /* Marcador de seção: algarismo romano seguido de filete. */

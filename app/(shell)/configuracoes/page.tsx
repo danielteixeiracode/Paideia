@@ -1,6 +1,7 @@
 import { requirePerfil } from "@/lib/data/session";
 import { Card, Eyebrow } from "@/components/ui/primitives";
-import { SubmitButton } from "@/components/admin/submit-button";
+import { Botao } from "@/components/ui/botao";
+import { FormularioOtimista } from "@/components/ui/formulario-otimista";
 import { atualizarPerfil } from "./actions";
 
 export default async function ConfiguracoesPage() {
@@ -14,7 +15,7 @@ export default async function ConfiguracoesPage() {
       </div>
 
       <Card>
-        <form action={atualizarPerfil} className="space-y-4">
+        <FormularioOtimista action={atualizarPerfil} sucesso="Alterações salvas." className="space-y-4">
           <div>
             <label className="label-caps mb-1.5 block">Nome</label>
             <input
@@ -46,8 +47,8 @@ export default async function ConfiguracoesPage() {
               />
             </div>
           </div>
-          <SubmitButton label="Salvar Alterações" />
-        </form>
+          <Botao type="submit">Salvar Alterações</Botao>
+        </FormularioOtimista>
       </Card>
     </div>
   );

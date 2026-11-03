@@ -1,41 +1,58 @@
 "use client";
 
-import { useTransition } from "react";
-import { Landmark, Loader2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Landmark } from "lucide-react";
 import { guardarObra, removerObra } from "@/app/(shell)/obras/actions";
-import { Badge } from "@/components/ui/primitives";
+import { Botao } from "@/components/ui/botao";
+import { SeloEstadoObra } from "@/components/ui/selo";
+import { useAviso } from "@/components/ui/aviso";
+import { ERRO_CONEXAO } from "@/lib/acoes";
 
 // Na ficha da obra: guarda a obra na Carteira ou, se já guardada, mostra o
-// estado e permite remover.
+// estado e permite remover. Otimista: a interface muda no clique, com aviso,
+// e volta ao que era (com a mensagem do servidor) se a ação falhar.
 export function CarteiraBotao({ obraId, estado }: { obraId: string; estado: string | null }) {
-  const [pending, startTransition] = useTransition();
+  const [estadoLocal, setEstadoLocal] = useState(estado);
+  const avisar = useAviso();
+  // Conta as ações em voo: só a mais recente pode desfazer a interface.
+  const versao = useRef(0);
 
-  if (!estado) {
+  // Quando o servidor confirma e a página recarrega os dados, eles mandam.
+  useEffect(() => setEstadoLocal(estado), [estado]);
+
+  async function alternar() {
+    const anterior = estadoLocal;
+    const guardando = anterior === null;
+    const minhaVersao = ++versao.current;
+
+    setEstadoLocal(guardando ? "semente" : null);
+    avisar(guardando ? "Obra guardada na Carteira." : "Obra removida da Carteira.", {
+      tom: guardando ? "sucesso" : "neutro",
+    });
+
+    const resultado = await (guardando ? guardarObra(obraId) : removerObra(obraId)).catch(() => ERRO_CONEXAO);
+
+    if (!resultado.ok && minhaVersao === versao.current) {
+      setEstadoLocal(anterior);
+      avisar(resultado.erro, { tom: "erro", acao: { rotulo: "Tentar de novo", onClick: alternar } });
+    }
+  }
+
+  if (!estadoLocal) {
     return (
-      <button
-        type="button"
-        disabled={pending}
-        onClick={() => startTransition(() => guardarObra(obraId))}
-        className="btn-primary px-3 py-1.5 text-xs"
-      >
-        {pending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Landmark className="h-3.5 w-3.5" />}
+      <Botao tamanho="sm" onClick={alternar} icone={<Landmark className="h-3.5 w-3.5" aria-hidden />}>
         Guardar na Carteira
-      </button>
+      </Botao>
     );
   }
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Badge tone="green">Na sua Carteira: {estado}</Badge>
-      <button
-        type="button"
-        disabled={pending}
-        onClick={() => startTransition(() => removerObra(obraId))}
-        className="btn-secondary px-3 py-1.5 text-xs"
-      >
-        {pending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+      <span className="t-nota">Na sua Carteira:</span>
+      <SeloEstadoObra estado={estadoLocal} />
+      <Botao tamanho="sm" variante="secundario" onClick={alternar}>
         Remover da Carteira
-      </button>
+      </Botao>
     </div>
   );
 }

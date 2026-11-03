@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Search, LogOut, Settings } from "lucide-react";
+import { Search, LogOut, Settings, ShieldCheck } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { NAV_ALUNO, NAV_ADMIN, rotaAtiva } from "@/lib/nav";
 import { cn, romano } from "@/lib/utils";
@@ -181,6 +181,9 @@ function MenuConta({ perfil }: { perfil: Perfil }) {
               <p id="menu-conta-admin" className="px-3 pb-1 pt-1.5 text-nota text-ink-muted">
                 Administração
               </p>
+              <Link role="menuitem" href="/admin" className={item}>
+                <ShieldCheck className="h-4 w-4 text-ink-muted" aria-hidden /> Painel
+              </Link>
               {NAV_ADMIN.map((a) => (
                 <Link key={a.href} role="menuitem" href={a.href} className={item}>
                   <a.icon className="h-4 w-4 text-ink-muted" aria-hidden /> {a.label}

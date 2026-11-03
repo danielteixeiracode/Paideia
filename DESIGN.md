@@ -154,7 +154,7 @@ A ambição aparece como precisão e contenção, não como ornamento. Há um ú
 As primitivas são as cores do Paideia e não mudam; as semânticas dão a cada cor um papel e são resolvidas pelo tema ativo (`data-theme` no `<html>`). Os valores do frontmatter são os do modo claro.
 
 ### Primary
-- **Verde Esmeralda Profundo** (green-900, green-950): a pedra. Barra do celular, botão do Sócrates, caixa do logo do login; no modo escuro, também fundo e superfície.
+- **Verde Esmeralda Profundo** (green-900, green-950): a pedra. Botão do Sócrates, caixa do logo do login; no modo escuro, também fundo e superfície.
 - **Verde Esmeralda** (green-800): ação principal e links no claro e no foco (`action`, `accent`).
 - **Verde Esmeralda Claro** (green-700): hover da ação; bordas no modo escuro.
 
@@ -266,10 +266,10 @@ Componentes base em `components/ui/`, todos nos três modos, com foco visível, 
 
 ### Navigation
 - **Cabeçalho, a "arquitrave"** (fixo ao rolar): sobre a superfície do tema (`surface`), não sobre a pedra verde. Não há menu lateral; o conteúdo ocupa a largura inteira, no container `pagina` (72rem). O título da tela não aparece no topo: a navegação já mostra onde o aluno está.
-  - **Faixa de cima** (56px): marca "Paideia" (leva ao Início) à esquerda; à direita a busca ("Buscar ou ir para", com a dica Ctrl K, que abre a paleta de comandos), o seletor dos três modos e o menu da conta (círculo com a inicial). O menu da conta tem Configurações, Sair e, só para o administrador, a seção Administração (Obras, Exercícios, Sócrates, Usuários). Fecha com Esc, clique fora ou ao navegar.
+  - **Faixa de cima** (56px): marca "Paideia" (leva ao Início) à esquerda; à direita a busca ("Buscar ou ir para", com a dica Ctrl K, que abre a paleta de comandos), o seletor dos três modos e o menu da conta (círculo com a inicial). O menu da conta tem Configurações, Sair e, só para o administrador, a seção Administração (Painel, Obras, Exercícios, Sócrates, Usuários). Fecha com Esc, clique fora ou ao navegar.
   - **Faixa de baixo** (a partir de 768px): a navegação centralizada, cada item com seu romano em `gold-ink` (I Início, II Obras, III Funções, IV Épocas, V Carteira, VI Sócrates); item ativo em `ink` semibold, com sublinhado dourado e `aria-current`. Entre um filete fino em cima (`.filete`) e um filete duplo embaixo (`.filete-duplo-baixo`, 3px double).
   - **Ao rolar:** ganha uma sombra de filete discreta (linha de `rule-strong` e sombra curta de tinta).
-- **Celular** (abaixo de 768px): no topo ficam só a marca, a busca (apenas ícone) e a conta; o seletor de modo vai para dentro do menu da conta. A navegação desce para a barra inferior de pedra verde, com os mesmos seis romanos e rótulos `micro`, alvo de 56px, item ativo em dourado com traço no topo; respeita a área segura.
+- **Celular** (abaixo de 768px): no topo ficam só a marca, a busca (apenas ícone) e a conta; o seletor de modo vai para dentro do menu da conta. A navegação desce para a barra inferior, sobre a superfície do tema como o cabeçalho, com filete duplo em cima, os mesmos seis romanos em `gold-ink` e rótulos `micro` em `ink-muted`; item ativo em `ink` semibold, sublinhado em dourado e com `aria-current`; alvo de 56px; respeita a área segura.
 - **Modo foco:** cabeçalho, barra do celular e botão do Sócrates somem.
 
 ### Templo
@@ -279,6 +279,8 @@ Elemento central do Início e único momento de assinatura: SVG com frontão, ar
 Botão circular fixo de pedra verde com borda dourada e gaveta lateral em `surface` com sombra de sobreposição; tela cheia no celular. Some no modo foco.
 
 ### Movimento
+- **Entrada de tela** (`app/(shell)/template.tsx`, `.anim-pagina`): fade com deslocamento de 6px, 225ms, no movimento discreto; começa quando a tela já chegou, nunca atrasa a navegação; nenhuma animação com movimento reduzido. O Next 14 ainda não integra a View Transitions API.
+- **Resposta imediata:** ações do aluno são otimistas (`CarteiraBotao`, "Guardar esta obra" da paleta, `FormularioOtimista` nas Configurações): a interface muda no clique com um aviso, e volta ao estado anterior com aviso de erro se o servidor falhar. As ações devolvem `ResultadoAcao` (`lib/acoes.ts`).
 - **Discreto** (`--motion-subtle-duration` 180ms, `--motion-subtle-ease` `cubic-bezier(0.22, 1, 0.36, 1)`; utilitários `duration-discreto ease-discreto`): respostas a ações, como hover, abrir e confirmar.
 - **Assinatura** (`--motion-signature-duration` 1100ms, `--motion-signature-ease` `cubic-bezier(0.16, 1, 0.3, 1)`): só no templo.
 - **Movimento reduzido:** com `prefers-reduced-motion: reduce`, todas as durações caem para 0,01ms e o templo aparece montado.
