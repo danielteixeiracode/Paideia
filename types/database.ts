@@ -176,6 +176,98 @@ export interface Notificacao {
   criado_em: string;
 }
 
+// ---------------------------------------------------------------------
+// Novo modelo do corpo: Obra → Função pedagógica → Exercício → Fruto → Registro
+// ---------------------------------------------------------------------
+
+export interface Epoca {
+  id: string;
+  numero: number;
+  nome: string;
+  descricao: string | null;
+}
+
+export interface FuncaoPedagogica {
+  id: string;
+  numero: number;
+  nome: string;
+  o_que_forma: string | null;
+  descricao: string | null;
+}
+
+export interface Obra {
+  id: string;
+  titulo: string;
+  autor: string | null;
+  epoca_id: string | null;
+  descricao: string | null;
+  imagem_url: string | null;
+  ordem: number;
+  ativo: boolean;
+  criado_em: string;
+  atualizado_em: string;
+  epoca?: Epoca;
+}
+
+export interface ObraFuncao {
+  obra_id: string;
+  funcao_id: string;
+  nota: string | null;
+  obra?: Obra;
+  funcao?: FuncaoPedagogica;
+}
+
+export interface Exercicio {
+  id: string;
+  funcao_id: string;
+  obra_id: string | null;
+  titulo: string;
+  enunciado: string | null;
+  metodo: string | null;
+  ordem: number;
+  ativo: boolean;
+  criado_em: string;
+  atualizado_em: string;
+  funcao?: FuncaoPedagogica;
+  obra?: Obra;
+}
+
+export interface CarteiraObra {
+  id: string;
+  user_id: string;
+  obra_id: string;
+  estado: string;
+  criado_em: string;
+  atualizado_em: string;
+  obra?: Obra;
+}
+
+export interface Fruto {
+  id: string;
+  user_id: string;
+  exercicio_id: string | null;
+  obra_id: string | null;
+  funcao_id: string | null;
+  conversa_id: string | null;
+  tipo: string;
+  conteudo: string;
+  criado_em: string;
+  atualizado_em: string;
+}
+
+export interface RegistroEvento {
+  id: string;
+  user_id: string;
+  tipo: string;
+  obra_id: string | null;
+  funcao_id: string | null;
+  exercicio_id: string | null;
+  fruto_id: string | null;
+  conversa_id: string | null;
+  metadata: Record<string, unknown>;
+  criado_em: string;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -192,6 +284,15 @@ export interface Database {
       conversas_socrates: { Row: ConversaSocrates; Insert: Partial<ConversaSocrates>; Update: Partial<ConversaSocrates> };
       mensagens_socrates: { Row: MensagemSocrates; Insert: Partial<MensagemSocrates>; Update: Partial<MensagemSocrates> };
       notificacoes: { Row: Notificacao; Insert: Partial<Notificacao>; Update: Partial<Notificacao> };
+      epocas: { Row: Epoca; Insert: Partial<Epoca>; Update: Partial<Epoca> };
+      funcoes_pedagogicas: { Row: FuncaoPedagogica; Insert: Partial<FuncaoPedagogica>; Update: Partial<FuncaoPedagogica> };
+      obras: { Row: Obra; Insert: Partial<Obra>; Update: Partial<Obra> };
+      obra_funcoes: { Row: ObraFuncao; Insert: Partial<ObraFuncao>; Update: Partial<ObraFuncao> };
+      exercicios: { Row: Exercicio; Insert: Partial<Exercicio>; Update: Partial<Exercicio> };
+      carteira_obras: { Row: CarteiraObra; Insert: Partial<CarteiraObra>; Update: Partial<CarteiraObra> };
+      frutos: { Row: Fruto; Insert: Partial<Fruto>; Update: Partial<Fruto> };
+      // Só inserção: o RLS não permite update nem delete.
+      registro_eventos: { Row: RegistroEvento; Insert: Partial<RegistroEvento>; Update: Partial<RegistroEvento> };
     };
   };
 }

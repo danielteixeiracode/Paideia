@@ -323,3 +323,165 @@ create policy "mensagens_socrates_select_admin" on mensagens_socrates for select
 create policy "notificacoes_all_own" on notificacoes for all
   using (user_id = auth.uid()) with check (user_id = auth.uid());
 create policy "notificacoes_select_admin" on notificacoes for select using (public.is_admin());
+
+-- =========================================================================
+-- NOVO MODELO DO CORPO (supabase/migrations/2026-11-03-novo-modelo-corpo.sql)
+-- Obra → Função pedagógica → Exercício → Fruto → Registro do aluno.
+-- Épocas e funções pedagógicas são preenchidas pela própria migração.
+-- =========================================================================
+
+-- ---------------------------------------------------------------------
+-- CONTEÚDO PEDAGÓGICO (gerido pelo administrador, leitura pública)
+-- ---------------------------------------------------------------------
+create table epocas (
+  id uuid primary key default gen_random_uuid(),
+  numero int not null unique,          -- I a VII
+  nome text not null,
+  descricao text
+);
+
+create table funcoes_pedagogicas (
+  id uuid primary key default gen_random_uuid(),
+  numero int not null unique,          -- 1 a 7
+  nome text not null,
+  o_que_forma text,
+  descricao text
+);
+
+create table obras (
+  id uuid primary key default gen_random_uuid(),
+  titulo text not null,
+  autor text,
+  epoca_id uuid references epocas(id) on delete set null,
+  descricao text,
+  imagem_url text,
+  ordem int not null default 0,
+  ativo boolean not null default true,
+  criado_em timestamptz not null default now(),
+  atualizado_em timestamptz not null default now()
+);
+
+create table obra_funcoes (
+  obra_id uuid not null references obras(id) on delete cascade,
+  funcao_id uuid not null references funcoes_pedagogicas(id) on delete cascade,
+  nota text,
+  primary key (obra_id, funcao_id)
+);
+
+create table exercicios (
+  id uuid primary key default gen_random_uuid(),
+  funcao_id uuid not null references funcoes_pedagogicas(id) on delete restrict,
+  obra_id uuid references obras(id) on delete set null,
+  titulo text not null,
+  enunciado text,
+  metodo text,                         -- texto livre: narração, recitação, debate...
+  ordem int not null default 0,
+  ativo boolean not null default true,
+  criado_em timestamptz not null default now(),
+  atualizado_em timestamptz not null default now()
+);
+
+-- ---------------------------------------------------------------------
+-- DADOS DO ALUNO (RLS: apenas o próprio usuário + admin)
+-- ---------------------------------------------------------------------
+create table carteira_obras (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references perfis(id) on delete cascade,
+  obra_id uuid not null references obras(id) on delete cascade,
+  estado text not null default 'semente',
+  criado_em timestamptz not null default now(),
+  atualizado_em timestamptz not null default now(),
+  unique (user_id, obra_id)
+);
+
+create table frutos (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references perfis(id) on delete cascade,
+  exercicio_id uuid references exercicios(id) on delete set null,
+  obra_id uuid references obras(id) on delete set null,
+  funcao_id uuid references funcoes_pedagogicas(id) on delete set null,
+  conversa_id uuid references conversas_socrates(id) on delete set null,
+  tipo text not null,
+  conteudo text not null,
+  criado_em timestamptz not null default now(),
+  atualizado_em timestamptz not null default now()
+);
+
+-- Só inserção: não há políticas de update/delete.
+create table registro_eventos (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references perfis(id) on delete cascade,
+  tipo text not null,
+  obra_id uuid references obras(id) on delete set null,
+  funcao_id uuid references funcoes_pedagogicas(id) on delete set null,
+  exercicio_id uuid references exercicios(id) on delete set null,
+  fruto_id uuid references frutos(id) on delete set null,
+  conversa_id uuid references conversas_socrates(id) on delete set null,
+  metadata jsonb not null default '{}'::jsonb,
+  criado_em timestamptz not null default now()
+);
+
+create index idx_obras_epoca on obras(epoca_id);
+create index idx_obra_funcoes_funcao on obra_funcoes(funcao_id);
+create index idx_exercicios_funcao on exercicios(funcao_id, ordem);
+create index idx_exercicios_obra on exercicios(obra_id);
+create index idx_carteira_obras_user on carteira_obras(user_id);
+create index idx_frutos_user on frutos(user_id, criado_em);
+create index idx_registro_eventos_user on registro_eventos(user_id, criado_em);
+
+create trigger trg_obras_upd before update on obras
+  for each row execute procedure public.set_atualizado_em();
+create trigger trg_exercicios_upd before update on exercicios
+  for each row execute procedure public.set_atualizado_em();
+create trigger trg_carteira_obras_upd before update on carteira_obras
+  for each row execute procedure public.set_atualizado_em();
+create trigger trg_frutos_upd before update on frutos
+  for each row execute procedure public.set_atualizado_em();
+
+alter table epocas enable row level security;
+alter table funcoes_pedagogicas enable row level security;
+alter table obras enable row level security;
+alter table obra_funcoes enable row level security;
+alter table exercicios enable row level security;
+alter table carteira_obras enable row level security;
+alter table frutos enable row level security;
+alter table registro_eventos enable row level security;
+
+create policy "epocas_select_auth" on epocas for select using (auth.role() = 'authenticated');
+create policy "epocas_write_admin" on epocas for insert with check (public.is_admin());
+create policy "epocas_update_admin" on epocas for update using (public.is_admin());
+create policy "epocas_delete_admin" on epocas for delete using (public.is_admin());
+
+create policy "funcoes_pedagogicas_select_auth" on funcoes_pedagogicas for select using (auth.role() = 'authenticated');
+create policy "funcoes_pedagogicas_write_admin" on funcoes_pedagogicas for insert with check (public.is_admin());
+create policy "funcoes_pedagogicas_update_admin" on funcoes_pedagogicas for update using (public.is_admin());
+create policy "funcoes_pedagogicas_delete_admin" on funcoes_pedagogicas for delete using (public.is_admin());
+
+create policy "obras_select_auth" on obras for select using (auth.role() = 'authenticated');
+create policy "obras_write_admin" on obras for insert with check (public.is_admin());
+create policy "obras_update_admin" on obras for update using (public.is_admin());
+create policy "obras_delete_admin" on obras for delete using (public.is_admin());
+
+create policy "obra_funcoes_select_auth" on obra_funcoes for select using (auth.role() = 'authenticated');
+create policy "obra_funcoes_write_admin" on obra_funcoes for insert with check (public.is_admin());
+create policy "obra_funcoes_update_admin" on obra_funcoes for update using (public.is_admin());
+create policy "obra_funcoes_delete_admin" on obra_funcoes for delete using (public.is_admin());
+
+create policy "exercicios_select_auth" on exercicios for select using (auth.role() = 'authenticated');
+create policy "exercicios_write_admin" on exercicios for insert with check (public.is_admin());
+create policy "exercicios_update_admin" on exercicios for update using (public.is_admin());
+create policy "exercicios_delete_admin" on exercicios for delete using (public.is_admin());
+
+create policy "carteira_obras_all_own" on carteira_obras for all
+  using (user_id = auth.uid()) with check (user_id = auth.uid());
+create policy "carteira_obras_select_admin" on carteira_obras for select using (public.is_admin());
+
+create policy "frutos_all_own" on frutos for all
+  using (user_id = auth.uid()) with check (user_id = auth.uid());
+create policy "frutos_select_admin" on frutos for select using (public.is_admin());
+
+create policy "registro_eventos_insert_own" on registro_eventos for insert
+  with check (user_id = auth.uid());
+create policy "registro_eventos_select_own" on registro_eventos for select
+  using (user_id = auth.uid());
+create policy "registro_eventos_select_admin" on registro_eventos for select using (public.is_admin());
