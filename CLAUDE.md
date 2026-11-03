@@ -2,6 +2,8 @@
 
 Leia este arquivo antes de qualquer alteração. Ele substitui a versão anterior, que descrevia o conceito antigo (Trivium/Quadrivium como eixos, planejamento semanal, porcentagem por eixo).
 
+Fonte da verdade: o CLAUDE.md manda na alma e no conceito; o docs/design/briefing.md e o DESIGN.md mandam no visual; o PRODUCT.md só resume o CLAUDE.md.
+
 ## Alma
 
 Guiar a pessoa numa formação clássica de nível médio, com o mínimo de leitura e a máxima profundidade.
