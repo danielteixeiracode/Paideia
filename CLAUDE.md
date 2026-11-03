@@ -61,6 +61,8 @@ Não construir novas funcionalidades sobre: `eixos`, `capacidades`, `atividades_
 
 As abas Trilha de Formação e Mapa dos Estudos foram removidas do app; não recriar. O script que apaga as tabelas da trilha (`supabase/migrations/2026-11-03-remove-trilhas-e-mapa.sql`) já foi aplicado no banco real.
 
+Os dados de supabase/seeds/exemplo-corpo.sql são de teste e não representam a seleção real de obras do Daniel.
+
 Pendências técnicas:
 - O service worker (sw.js) guarda em cache páginas que exigem login: corrigir antes de publicar.
 - O app só roda localmente por enquanto; não há configuração de hospedagem.
