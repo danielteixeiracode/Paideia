@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { requirePerfil } from "@/lib/data/session";
 import { Card, Eyebrow, Badge, EmptyState } from "@/components/ui/primitives";
 import { ExercicioItem } from "@/components/corpo/exercicio-item";
+import { ContextoTela } from "@/components/socrates/contexto-tela";
 import { romano } from "@/lib/utils";
 import type { Epoca, Exercicio, FuncaoPedagogica, Obra } from "@/types/database";
 
@@ -63,6 +64,7 @@ export default async function ObraPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="space-y-6">
+      <ContextoTela tipo="obra" id={obra.id} />
       <div>
         <Link href="/obras" className="text-xs font-semibold text-paideia-green-800 hover:underline">
           ← Obras

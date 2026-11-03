@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { requirePerfil } from "@/lib/data/session";
 import { Card, Eyebrow, EmptyState } from "@/components/ui/primitives";
 import { romano } from "@/lib/utils";
+import { ContextoTela } from "@/components/socrates/contexto-tela";
 import type { Epoca, Obra } from "@/types/database";
 
 export default async function EpocaPage({ params }: { params: { id: string } }) {
@@ -23,6 +24,7 @@ export default async function EpocaPage({ params }: { params: { id: string } }) 
 
   return (
     <div className="space-y-6">
+      <ContextoTela tipo="epoca" id={epoca.id} />
       <div>
         <Link href="/epocas" className="text-xs font-semibold text-paideia-green-800 hover:underline">
           ← Épocas

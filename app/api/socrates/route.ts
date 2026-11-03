@@ -1,8 +1,25 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@/lib/supabase/server";
+import { TIPOS_CONTEXTO, type ContextoTela } from "@/lib/socrates";
 
 export const runtime = "nodejs";
+
+const FONTE_CONTEXTO = {
+  obra: { tabela: "obras", coluna: "titulo", rotulo: "obra" },
+  funcao: { tabela: "funcoes_pedagogicas", coluna: "nome", rotulo: "função" },
+  epoca: { tabela: "epocas", coluna: "nome", rotulo: "época" },
+  exercicio: { tabela: "exercicios", coluna: "titulo", rotulo: "exercício" },
+} as const;
+
+// Uma linha dizendo ao Sócrates o que o aluno tem na tela, ou null.
+async function descreverTela(supabase: ReturnType<typeof createClient>, contexto?: ContextoTela) {
+  if (!contexto?.id || !(TIPOS_CONTEXTO as readonly string[]).includes(contexto.tipo)) return null;
+  const fonte = FONTE_CONTEXTO[contexto.tipo as keyof typeof FONTE_CONTEXTO];
+  const { data } = await supabase.from(fonte.tabela).select(fonte.coluna).eq("id", contexto.id).maybeSingle();
+  const nome = (data as Record<string, string> | null)?.[fonte.coluna];
+  return nome ? `O aluno está vendo: ${fonte.rotulo} ${nome}` : null;
+}
 
 export async function POST(request: Request) {
   const supabase = createClient();
@@ -14,9 +31,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Não autenticado." }, { status: 401 });
   }
 
-  const { conversaId, conteudo } = (await request.json()) as {
+  const { conversaId, conteudo, contexto: contextoTela } = (await request.json()) as {
     conversaId: string;
     conteudo: string;
+    contexto?: ContextoTela;
   };
 
   if (!conversaId || !conteudo?.trim()) {
@@ -58,6 +76,8 @@ export async function POST(request: Request) {
     .select("*")
     .single();
 
+  const linhaTela = await descreverTela(supabase, contextoTela);
+
   const carteiraTexto = (carteira ?? [])
     .map((c: any) => `- ${c.ativo_ref?.titulo} (${c.ativo_ref?.autor ?? "autor desconhecido"}) — ${Math.round(c.progresso_percentual)}% concluído`)
     .join("\n");
@@ -65,7 +85,7 @@ export async function POST(request: Request) {
   const contexto = `Discípulo: ${perfil?.nome ?? "desconhecido"} (${perfil?.grau_atual ?? "grau não definido"})
 
 Carteira Intelectual (ativos em andamento/planejados):
-${carteiraTexto || "Nenhum ativo em andamento."}`;
+${carteiraTexto || "Nenhum ativo em andamento."}${linhaTela ? `\n\n${linhaTela}` : ""}`;
 
   const systemPrompt = `${config?.system_prompt ?? "Você é Sócrates, mentor da Paideia. Conduza pelo método maiêutico."}\n\n---\nCONTEXTO DO DISCÍPULO:\n${contexto}`;
 

@@ -3,13 +3,16 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Send, Loader2 } from "lucide-react";
 import type { MensagemSocrates } from "@/types/database";
+import type { ContextoTela } from "@/lib/socrates";
 
 export function ChatWindow({
   conversaId,
   mensagensIniciais,
+  contexto,
 }: {
   conversaId: string;
   mensagensIniciais: MensagemSocrates[];
+  contexto?: ContextoTela;
 }) {
   const [mensagens, setMensagens] = useState<MensagemSocrates[]>(mensagensIniciais);
   const [texto, setTexto] = useState("");
@@ -49,7 +52,7 @@ export function ChatWindow({
       const res = await fetch("/api/socrates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ conversaId, conteudo }),
+        body: JSON.stringify({ conversaId, conteudo, contexto }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Falha ao consultar Sócrates.");

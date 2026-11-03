@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { requirePerfil } from "@/lib/data/session";
 import { Card, Eyebrow, EmptyState } from "@/components/ui/primitives";
 import { ExercicioItem } from "@/components/corpo/exercicio-item";
+import { ContextoTela } from "@/components/socrates/contexto-tela";
 import type { Exercicio, FuncaoPedagogica, Obra } from "@/types/database";
 
 export default async function FuncaoPage({ params }: { params: { id: string } }) {
@@ -39,6 +40,7 @@ export default async function FuncaoPage({ params }: { params: { id: string } })
 
   return (
     <div className="space-y-6">
+      <ContextoTela tipo="funcao" id={funcao.id} />
       <div>
         <Link href="/funcoes" className="text-xs font-semibold text-paideia-green-800 hover:underline">
           ← Funções
