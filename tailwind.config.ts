@@ -5,6 +5,9 @@ import type { Config } from "tailwindcss";
 const semantica = (nome: string) => `rgb(var(--c-${nome}) / <alpha-value>)`;
 
 const config: Config = {
+  // hover: só em aparelhos com ponteiro que passa por cima (mouse); no toque
+  // não fica um estado de hover preso depois do toque.
+  future: { hoverOnlyWhenSupported: true },
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -50,6 +53,7 @@ const config: Config = {
         rule: semantica("rule"), // bordas e filetes discretos
         "rule-strong": semantica("rule-strong"), // filetes de marcação (dourado)
         ink: semantica("ink"), // texto
+        "ink-muted": semantica("ink-muted"), // texto secundário, sempre ≥4,5:1
         accent: semantica("accent"), // links e texto de destaque
         gold: semantica("gold"), // acento dourado decorativo
         "gold-ink": semantica("gold-ink"), // texto em dourado

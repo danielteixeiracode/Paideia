@@ -20,6 +20,7 @@
   --c-rule: 239 220 179; /* cream-300 */
   --c-rule-strong: 185 140 49; /* gold-500 */
   --c-ink: 36 28 16; /* ink */
+  --c-ink-muted: 109 100 86; /* tinta secundária: ink sobre cream-100, ≥4,5:1 em todas as superfícies */
   --c-accent: 22 65 48; /* green-800 */
   --c-gold: 185 140 49; /* gold-500 */
   --c-gold-ink: 113 84 30; /* gold-700 */
@@ -42,6 +43,7 @@
   --c-rule: 28 89 64; /* green-700 */
   --c-rule-strong: 185 140 49; /* gold-500 */
   --c-ink: 250 241 223; /* cream-100 */
+  --c-ink-muted: 164 166 152; /* tinta secundária: cream-100 sobre green-900, ≥4,5:1 */
   --c-accent: 220 196 143; /* gold-300 */
   --c-gold: 209 172 92; /* gold-400 */
   --c-gold-ink: 220 196 143; /* gold-300 */
@@ -64,6 +66,7 @@
   --c-rule: 239 220 179; /* cream-300 */
   --c-rule-strong: 151 111 38; /* gold-600 */
   --c-ink: 26 20 11; /* tinta mais funda que ink, para leitura longa */
+  --c-ink-muted: 107 100 87; /* tinta secundária: ≥4,5:1 sobre o papel */
   --c-accent: 22 65 48; /* green-800 */
   --c-gold: 151 111 38; /* gold-600 */
   --c-gold-ink: 113 84 30; /* gold-700 */
@@ -228,6 +231,42 @@ body {
   }
 }
 
+/* Entradas discretas das sobreposições e avisos (movimento discreto). */
+@keyframes camada-surgir {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes gaveta-entrar {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes dialogo-entrar {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+@keyframes aviso-entrar {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.anim-camada {
+  animation: camada-surgir var(--motion-subtle-duration) var(--motion-subtle-ease) both;
+}
+.anim-gaveta {
+  animation: gaveta-entrar calc(var(--motion-subtle-duration) * 1.5) var(--motion-subtle-ease) both;
+}
+.anim-dialogo {
+  animation: dialogo-entrar var(--motion-subtle-duration) var(--motion-subtle-ease) both;
+}
+.anim-aviso {
+  animation: aviso-entrar var(--motion-subtle-duration) var(--motion-subtle-ease) both;
+}
+
 @layer components {
   /* Papéis tipográficos (ver DESIGN.md › Typography). */
   .t-display {
@@ -249,7 +288,7 @@ body {
     @apply font-sans text-interface font-medium;
   }
   .t-nota {
-    @apply font-sans text-nota text-ink/70;
+    @apply font-sans text-nota text-ink-muted;
   }
   /* Algarismos romanos: serifa, versais com folga de letra. */
   .t-romano {

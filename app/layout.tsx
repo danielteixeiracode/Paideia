@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { EB_Garamond, Hanken_Grotesk } from "next/font/google";
 import { PwaRegister } from "@/components/pwa-register";
+import { AvisoProvider } from "@/components/ui/aviso";
 import { SCRIPT_TEMA } from "@/lib/tema";
 import "./globals.css";
 
@@ -52,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: SCRIPT_TEMA }} />
       </head>
       <body className="font-sans antialiased">
-        {children}
+        <AvisoProvider>{children}</AvisoProvider>
         <PwaRegister />
       </body>
     </html>

@@ -25,6 +25,7 @@ colors:
   rule: "#EFDCB3"
   rule-strong: "#B98C31"
   ink: "#241C10"
+  ink-muted: "#6D6456"
   accent: "#164130"
   gold: "#B98C31"
   gold-ink: "#71541E"
@@ -130,7 +131,7 @@ components:
 
 # Design System: Paideia
 
-<!-- Estado: tokens do redesign implementados (etapa 2), em tailwind.config.ts e app/globals.css. As telas ainda não foram redesenhadas: só passaram a usar os tokens semânticos, com a mesma aparência no modo claro. A direção completa está em docs/design/briefing.md, que vence onde este arquivo for omisso. Página de conferência: /design (só em desenvolvimento). -->
+<!-- Estado: tokens (etapa 2) e componentes base (etapa 3) implementados, em tailwind.config.ts e app/globals.css. As telas ainda não foram redesenhadas: só passaram a usar os tokens semânticos, com a mesma aparência no modo claro. A direção completa está em docs/design/briefing.md, que vence onde este arquivo for omisso. Página de conferência: /design (só em desenvolvimento). -->
 
 ## Overview
 
@@ -166,11 +167,15 @@ As primitivas são as cores do Paideia e não mudam; as semânticas dão a cada 
 - **Pergaminho** (cream-100): fundo de leitura (`canvas`) no claro.
 - **Pergaminho Claro** (cream-50) e **Branco**: áreas recuadas (`sunken`) e superfícies (`surface`) no claro.
 - **Pergaminho Médio** (cream-200, cream-300): selos e trilhos (`muted`), bordas (`rule`).
-- **Tinta** (ink): texto; tons secundários por opacidade (`text-ink/70`, `/60`).
+- **Tinta** (ink): texto principal.
+- **Tinta Secundária** (ink-muted): texto secundário, ajuda, metadados, placeholder e estado desativado. Cor sólida por modo, sempre com contraste de 4,5:1 ou mais sobre canvas, surface, sunken e muted. Não usar opacidade solta sobre `ink` para texto secundário.
 
 ### Modos
-- **Escuro:** canvas green-950, surface green-900, sunken entre os dois, muted green-800, rule green-700, ink cream-100, accent e gold-ink gold-300, gold e action gold-400 com texto green-950, focus gold-400.
-- **Foco:** canvas e surface no mesmo papel quente (rgb 247 236 213), sunken um tom abaixo, tinta mais funda (rgb 26 20 11), filetes, gold e foco em gold-600; sem sombra de cartão.
+- **Escuro:** canvas green-950, surface green-900, sunken entre os dois, muted green-800, rule green-700, ink cream-100, ink-muted rgb 164 166 152, accent e gold-ink gold-300, gold e action gold-400 com texto green-950, focus gold-400.
+- **Foco:** canvas e surface no mesmo papel quente (rgb 247 236 213), sunken um tom abaixo, tinta mais funda (rgb 26 20 11), ink-muted rgb 107 100 87, filetes, gold e foco em gold-600; sem sombra de cartão.
+
+### Named Rules
+**A Regra dos 4,5.** Nenhum texto, inclusive o secundário, fica abaixo de 4,5:1 sobre a superfície em que está, em nenhum modo. Texto secundário usa `ink-muted`.
 
 ### Named Rules
 **A Regra da Paleta Fixa.** Só as primitivas do Paideia e as derivações dos modos. Mudar a paleta exige instrução explícita do Daniel.
@@ -192,7 +197,7 @@ As primitivas são as cores do Paideia e não mudam; as semânticas dão a cada 
 - **Leitura** (400, 1.125rem, 1.7, medida de 66 caracteres): texto longo e modo foco (`.t-leitura`).
 - **Corpo** (400, 1rem, 1.6): texto corrido (`.t-corpo`).
 - **Interface** (500, 0.875rem, 1.4): botões, abas, rótulos de controle (`.t-interface`).
-- **Nota** (400, 0.8125rem, 1.35, tinta a 70%): metadados e legendas (`.t-nota`).
+- **Nota** (400, 0.8125rem, 1.35, `ink-muted`): metadados e legendas (`.t-nota`).
 
 ### Named Rules
 **A Regra do Marcador Romano.** Toda seção se abre com algarismo romano e filete; nenhum rótulo pequeno acima do título.
@@ -221,6 +226,20 @@ Profundidade mínima: superfícies se separam do fundo pela cor e por bordas fin
 Raios discretos, de arquitetura: 2px a 10px (cartões 8px, botões 6px, campos 4px); pílula só em selos e no botão do Sócrates. Filete de 0,5px (`--rule-width`, `.filete`, `border-hair`) em dourado translúcido para marcar seções; bordas de 1px em `rule` para contornar superfícies. O templo é a forma-mãe: frontão triangular, colunas retas, base em degraus.
 
 ## Components
+
+Componentes base em `components/ui/`, todos nos três modos, com foco visível, teclado e ARIA. Vitrine com todos os estados: `/design/componentes` (só em desenvolvimento). Em aparelhos de toque, o alvo mínimo é de 44px, e o hover só vale onde há mouse (`hoverOnlyWhenSupported`). As classes antigas `.btn-*`, `.card` e `.label-caps` e os componentes de `primitives.tsx` continuam até as telas serem migradas.
+
+| Componente | Arquivo | Uso |
+|---|---|---|
+| `Botao`, `classesBotao` | `botao.tsx` | Variantes primário, secundário (contorno) e discreto (texto); tamanhos md e sm; estados hover, pressionado, foco, carregando (`aria-busy`) e desativado. `classesBotao` aplica o visual a um `Link`. |
+| `CampoTexto`, `AreaTexto`, `Selecao` | `campo.tsx` | Rótulo, ajuda e erro ligados por `aria-describedby`; `aria-invalid` no erro; 16px no celular. |
+| `Cartao`, `Painel` | `cartao.tsx` | Cartão: superfície contornada com sombra de contato. Painel: região plana aberta por filete. |
+| `CabecalhoSecao` | `cabecalho-secao.tsx` | Marcador romano com filete e título (h2 ou h3), com descrição e ação opcionais. |
+| `Selo`, `SeloEstadoObra`, `SeloGrau` | `selo.tsx` | Tons neutro, dourado, ação e contorno; estado da obra (só "semente" definido); grau de iniciação em romano (nomes dos graus em aberto). |
+| `AvisoProvider`, `useAviso` | `aviso.tsx` | Aviso discreto no rodapé (neutro, sucesso, erro com ação opcional); pausa com mouse ou foco; erro usa `role="alert"`. O provedor está no layout raiz. |
+| `Esqueleto`, `EsqueletoCartao`, `EsqueletoLista`, `EsqueletoGrade` | `esqueleto.tsx` | Carregamento no lugar do conteúdo, com `role="status"`. `app/(shell)/loading.tsx` usa a grade entre navegações. |
+| `Gaveta`, `Dialogo` | `sobreposicao.tsx` | Foco preso, Esc fecha, clique no fundo fecha, rolagem da página travada, foco devolvido a quem abriu. Gaveta: lateral, tela cheia no celular. Diálogo: central (base no celular); `alerta` para confirmações. |
+| `ColunaProgresso`, `ColunaSVG` | `coluna-progresso.tsx` | A coluna do templo como barra de progresso, sem número escrito; o leitor de tela ouve "vazia", "começando a encher", "mais da metade cheia" ou "cheia". `ColunaSVG` é a mesma coluna dentro de outro SVG (o templo a usa). |
 
 ### Buttons
 - **Shape:** cantos discretos (6px).
@@ -259,7 +278,8 @@ Botão circular fixo de pedra verde com borda dourada e gaveta lateral em `surfa
 ## Do's and Don'ts
 
 ### Do:
-- **Do** usar cores semânticas nas telas (`bg-canvas`, `bg-surface`, `text-ink`, `text-accent`, `bg-action`) e primitivas só na pedra fixa e no templo.
+- **Do** usar cores semânticas nas telas (`bg-canvas`, `bg-surface`, `text-ink`, `text-ink-muted`, `text-accent`, `bg-action`) e primitivas só na pedra fixa e no templo.
+- **Do** montar telas novas com os componentes de `components/ui/`.
 - **Do** abrir cada seção com o marcador romano e filete.
 - **Do** usar EB Garamond só em títulos e algarismos romanos, e Hanken Grotesk no resto.
 - **Do** manter o anel de foco visível em todo elemento interativo.

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { ColunaSVG } from "@/components/ui/coluna-progresso";
 
 export interface ColunaTemplo {
   id: string;
@@ -11,16 +12,14 @@ export interface ColunaTemplo {
   preenchimento: number; // 0 a 1, derivado em lib/templo.ts
 }
 
-// Geometria do templo (viewBox 700 × 420).
+// Geometria do templo (viewBox 700 × 420). A coluna vem de ColunaSVG.
 const CENTRO_PRIMEIRA = 98;
 const PASSO = 84;
-const FUSTE = { topo: 162, base: 338, meiaLargura: 21 };
 
 // Templo do Início: cada coluna é uma função pedagógica e se enche de dourado
 // de baixo para cima. Quando todas estão cheias, o frontão se acende.
 export function Templo({ colunas, aceso }: { colunas: ColunaTemplo[]; aceso: boolean }) {
   const [ativa, setAtiva] = useState<ColunaTemplo | null>(null);
-  const alturaFuste = FUSTE.base - FUSTE.topo;
 
   return (
     <figure className="mx-auto w-full max-w-2xl">
@@ -47,7 +46,6 @@ export function Templo({ colunas, aceso }: { colunas: ColunaTemplo[]; aceso: boo
         {/* Colunas */}
         {colunas.map((c, i) => {
           const cx = CENTRO_PRIMEIRA + i * PASSO;
-          const cheio = alturaFuste * c.preenchimento;
           const destacada = ativa?.id === c.id;
           return (
             <Link
@@ -60,41 +58,7 @@ export function Templo({ colunas, aceso }: { colunas: ColunaTemplo[]; aceso: boo
               onBlur={() => setAtiva(null)}
             >
               <title>{`${c.numero}. ${c.nome}`}</title>
-              <g className="templo-subir" style={{ animationDelay: `calc(var(--motion-signature-stagger) * ${i})` }}>
-                {/* área de clique da coluna inteira */}
-                <rect x={cx - 34} y="150" width="68" height="198" className="fill-transparent" />
-                <rect
-                  x={cx - FUSTE.meiaLargura}
-                  y={FUSTE.topo}
-                  width={FUSTE.meiaLargura * 2}
-                  height={alturaFuste}
-                  className="fill-paideia-cream-100"
-                />
-                {cheio > 0 && (
-                  <rect
-                    x={cx - FUSTE.meiaLargura}
-                    y={FUSTE.base - cheio}
-                    width={FUSTE.meiaLargura * 2}
-                    height={cheio}
-                    className="fill-paideia-gold-400"
-                  />
-                )}
-                <line x1={cx - 8} y1={FUSTE.topo + 4} x2={cx - 8} y2={FUSTE.base - 4} className="stroke-paideia-green-800/15 stroke-[1.5]" />
-                <line x1={cx + 8} y1={FUSTE.topo + 4} x2={cx + 8} y2={FUSTE.base - 4} className="stroke-paideia-green-800/15 stroke-[1.5]" />
-                <rect
-                  x={cx - FUSTE.meiaLargura}
-                  y={FUSTE.topo}
-                  width={FUSTE.meiaLargura * 2}
-                  height={alturaFuste}
-                  className={cn(
-                    "fill-none transition-[stroke]",
-                    destacada ? "stroke-paideia-gold-600 stroke-[3]" : "stroke-paideia-green-800 stroke-[2]"
-                  )}
-                />
-                {/* capitel e base da coluna */}
-                <rect x={cx - 30} y="150" width="60" height="12" className="fill-paideia-cream-50 stroke-paideia-green-800 stroke-[2]" />
-                <rect x={cx - 27} y="338" width="54" height="10" className="fill-paideia-cream-50 stroke-paideia-green-800 stroke-[2]" />
-              </g>
+              <ColunaSVG cx={cx} preenchimento={c.preenchimento} destacada={destacada} animar ordem={i} />
               <text
                 x={cx}
                 y="406"
