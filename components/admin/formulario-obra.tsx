@@ -7,6 +7,7 @@ import { AreaTexto, CampoTexto, Selecao } from "@/components/ui/campo";
 import { Botao } from "@/components/ui/botao";
 import { Interruptor } from "@/components/ui/interruptor";
 import { useAviso } from "@/components/ui/aviso";
+import { useAvisoDeSaida } from "@/components/admin/use-aviso-saida";
 import { salvarObra, despublicarObra } from "@/app/(shell)/admin/obras/actions";
 import { LIMITES_OBRA, validarObra, type DadosObra, type ErrosObra, type ResultadoSalvarObra } from "@/lib/validacao-obra";
 import { ERRO_CONEXAO } from "@/lib/acoes";
@@ -45,31 +46,7 @@ export function FormularioObra({
     if (tentou) setErros(validarObra(dados));
   }, [dados, tentou]);
 
-  // Aviso de saída com alterações não salvas: ao fechar ou recarregar a aba,
-  // e ao seguir um link interno do app.
-  useEffect(() => {
-    if (!sujo) return;
-    const antesDeSair = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-      e.returnValue = "";
-    };
-    const aoClicar = (e: MouseEvent) => {
-      const link = (e.target as Element | null)?.closest?.("a[href]") as HTMLAnchorElement | null;
-      if (!link || link.target === "_blank" || e.defaultPrevented) return;
-      const destino = new URL(link.href, window.location.href);
-      if (destino.origin !== window.location.origin || destino.pathname === window.location.pathname) return;
-      if (!window.confirm(MENSAGEM_SAIDA)) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    };
-    window.addEventListener("beforeunload", antesDeSair);
-    document.addEventListener("click", aoClicar, true);
-    return () => {
-      window.removeEventListener("beforeunload", antesDeSair);
-      document.removeEventListener("click", aoClicar, true);
-    };
-  }, [sujo]);
+  useAvisoDeSaida(sujo, MENSAGEM_SAIDA);
 
   const mudar = <K extends keyof DadosObra>(campo: K, valor: DadosObra[K]) => setDados((d) => ({ ...d, [campo]: valor }));
 
