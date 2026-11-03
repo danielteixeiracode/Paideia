@@ -61,6 +61,9 @@ export function Sidebar({
         {isAdmin && (
           <>
             <div className="mx-3 my-3 h-px bg-white/10" />
+            <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-paideia-gold-400/80">
+              Admin
+            </p>
             {NAV_ADMIN.map((item) => {
               const active = pathname.startsWith(item.href);
               return (
@@ -90,7 +93,7 @@ export function Sidebar({
               <Flame className="h-3.5 w-3.5" /> Constância: {constanciaDias} dias
             </span>
             <span className="rounded-full bg-paideia-gold-500/20 px-2 py-0.5 text-[10px] font-semibold text-paideia-gold-300">
-              Trivium
+              Paideia
             </span>
           </div>
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">

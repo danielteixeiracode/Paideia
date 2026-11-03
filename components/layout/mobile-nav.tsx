@@ -2,16 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid, CalendarDays, Landmark, MessageSquareQuote, CalendarRange } from "lucide-react";
+import { NAV_ALUNO } from "@/lib/nav";
 import { cn } from "@/lib/utils";
-
-const ITEMS = [
-  { href: "/inicio", label: "Início", icon: LayoutGrid },
-  { href: "/hoje", label: "Hoje", icon: CalendarDays },
-  { href: "/carteira", label: "Carteira", icon: Landmark },
-  { href: "/socrates", label: "Sócrates", icon: MessageSquareQuote },
-  { href: "/planejamento", label: "Semana", icon: CalendarRange },
-];
 
 export function MobileNav() {
   const pathname = usePathname();
@@ -20,8 +12,8 @@ export function MobileNav() {
       className="fixed inset-x-0 bottom-0 z-30 flex justify-around border-t border-paideia-cream-300 bg-paideia-green-900 px-1 lg:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
-      {ITEMS.map((item) => {
-        const active = pathname === item.href;
+      {NAV_ALUNO.map((item) => {
+        const active = pathname === item.href || pathname.startsWith(item.href + "/");
         return (
           <Link
             key={item.href}

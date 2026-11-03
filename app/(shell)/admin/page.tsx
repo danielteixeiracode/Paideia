@@ -7,16 +7,16 @@ export default async function AdminPage() {
 
   const [
     { count: totalUsuarios },
-    { count: totalAtivos },
-    { count: totalEixos },
+    { count: totalObras },
+    { count: totalExercicios },
     { count: totalConversas },
-    { count: totalCarteiraItens },
+    { count: totalFrutos },
   ] = await Promise.all([
     supabase.from("perfis").select("id", { count: "exact", head: true }),
-    supabase.from("ativos").select("id", { count: "exact", head: true }),
-    supabase.from("eixos").select("id", { count: "exact", head: true }),
+    supabase.from("obras").select("id", { count: "exact", head: true }),
+    supabase.from("exercicios").select("id", { count: "exact", head: true }),
     supabase.from("conversas_socrates").select("id", { count: "exact", head: true }),
-    supabase.from("carteira_itens").select("id", { count: "exact", head: true }),
+    supabase.from("frutos").select("id", { count: "exact", head: true }),
   ]);
 
   return (
@@ -25,7 +25,7 @@ export default async function AdminPage() {
         <Eyebrow>Administratio Paideiae</Eyebrow>
         <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Painel Administrativo</h1>
         <p className="mt-1 text-sm text-paideia-ink/60">
-          Gestão da estrutura pedagógica, do catálogo de ativos e da configuração do Sócrates.
+          Gestão das obras, dos exercícios, dos usuários e da configuração do Sócrates.
         </p>
       </div>
 
@@ -33,10 +33,10 @@ export default async function AdminPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <StatCard label="Discípulos" value={totalUsuarios ?? 0} />
-        <StatCard label="Ativos no Catálogo" value={totalAtivos ?? 0} />
-        <StatCard label="Eixos Formativos" value={totalEixos ?? 0} />
+        <StatCard label="Obras" value={totalObras ?? 0} />
+        <StatCard label="Exercícios" value={totalExercicios ?? 0} />
         <StatCard label="Diálogos Socráticos" value={totalConversas ?? 0} />
-        <StatCard label="Itens em Carteiras" value={totalCarteiraItens ?? 0} />
+        <StatCard label="Frutos" value={totalFrutos ?? 0} />
       </div>
     </div>
   );

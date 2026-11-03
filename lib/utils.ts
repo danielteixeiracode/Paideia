@@ -59,3 +59,9 @@ export function addDays(date: Date, days: number) {
 export function toISODate(date: Date) {
   return date.toISOString().slice(0, 10);
 }
+
+const ROMANOS = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
+
+export function romano(n: number) {
+  return ROMANOS[n] ?? String(n);
+}

@@ -1,17 +1,12 @@
-import { Languages, Compass, BrainCircuit } from "lucide-react";
+import { Landmark, BrainCircuit } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { AuthCard } from "@/components/auth/auth-card";
 
 const RECURSOS = [
   {
-    icone: Languages,
-    titulo: "Trivium",
-    descricao: "Gramática, Dialética e Retórica para dominar o pensamento ordenado.",
-  },
-  {
-    icone: Compass,
-    titulo: "Quadrivium",
-    descricao: "Aritmética, Geometria, Música e Astronomia para decifrar o cosmos.",
+    icone: Landmark,
+    titulo: "Paideia",
+    descricao: "Formação clássica com o mínimo de leitura e a máxima profundidade.",
   },
   {
     icone: BrainCircuit,
@@ -32,7 +27,7 @@ export default function LoginPage() {
 
         <div className="mb-6 flex justify-center">
           <span className="label-caps rounded-full border border-paideia-cream-300 bg-paideia-cream-50 px-4 py-1.5">
-            Trivium • Quadrivium
+            Paideia
           </span>
         </div>
 
@@ -52,7 +47,7 @@ export default function LoginPage() {
 
         <AuthCard />
 
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
           {RECURSOS.map((r) => (
             <div key={r.titulo} className="rounded-xl border border-paideia-cream-300 bg-white p-5 text-center shadow-card">
               <div className="mx-auto mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-paideia-cream-100">

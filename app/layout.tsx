@@ -21,7 +21,7 @@ const body = Libre_Franklin({
 export const metadata: Metadata = {
   title: "Paideia — Formação Clássica",
   description:
-    "A arte milenar da autoformação integral. Trivium, Quadrivium e Diálogo Socrático numa única academia.",
+    "Paideia — formação clássica com o mínimo de leitura e a máxima profundidade.",
   manifest: "/manifest.json",
   icons: {
     icon: "/icons/icon-192.png",

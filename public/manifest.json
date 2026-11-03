@@ -1,7 +1,7 @@
 {
   "name": "Paideia — Formação Clássica",
   "short_name": "Paideia",
-  "description": "Academia de autoformação clássica: Trivium, Quadrivium e Diálogo Socrático.",
+  "description": "Paideia — formação clássica com o mínimo de leitura e a máxima profundidade.",
   "start_url": "/inicio",
   "scope": "/",
   "display": "standalone",
