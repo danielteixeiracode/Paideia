@@ -34,7 +34,7 @@ export default async function EditarExercicioPage({ params }: { params: { id: st
   return (
     <div className="space-y-8">
       <header className="filete pt-4">
-        <Link href="/admin/exercicios" className="t-nota text-accent underline-offset-4 hover:underline">
+        <Link href="/admin/exercicios" className="alvo-toque t-nota text-accent underline-offset-4 hover:underline">
           Voltar aos exercícios
         </Link>
         <div className="mt-2 flex flex-wrap items-baseline gap-3">

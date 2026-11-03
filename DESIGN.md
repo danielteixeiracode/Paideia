@@ -207,7 +207,7 @@ As primitivas são as cores do Paideia e não mudam; as semânticas dão a cada 
 
 ## Layout
 
-Escala de espaço de 4px (`--space-1` a `--space-8`: 4, 8, 12, 16, 24, 32, 48, 64px). Gutter de 16px no celular, 24px a partir de 640px e 32px a partir de 1024px; respiro entre seções de 32px, e 48px no desktop. Grade de 4 colunas no celular, 8 no tablet e 12 no desktop (`.grade`), com espaçamento igual ao gutter. Sem menu lateral: o conteúdo de toda tela autenticada fica centralizado no container `pagina` (72rem), com o gutter dos lados; o cabeçalho usa o mesmo container. Telas de altura fixa descontam `--header-height` (3.5rem no celular, 6.5rem a partir de 768px, zero no modo foco) e `--shell-respiro` (7.5rem no celular, 4rem a partir de 768px). Texto longo com medida de 66 caracteres.
+Escala de espaço de 4px (`--space-1` a `--space-8`: 4, 8, 12, 16, 24, 32, 48, 64px). Gutter de 16px no celular, 24px a partir de 640px e 32px a partir de 1024px; respiro entre seções de 32px, e 48px no desktop. Grade de 4 colunas no celular, 8 no tablet e 12 no desktop (`.grade`), com espaçamento igual ao gutter. Sem menu lateral: o conteúdo de toda tela autenticada fica centralizado no container `pagina` (72rem), com o gutter dos lados; o cabeçalho usa o mesmo container. Telas de altura fixa descontam `--header-height` (3.5rem no celular, 6.5rem a partir de 768px, zero no modo foco) e `--shell-respiro` (9.5rem no celular, 4rem a partir de 768px). No celular o `main` termina com 128px de respiro (`pb-32`), para a barra inferior e o botão flutuante do Sócrates nunca cobrirem o fim do conteúdo. Texto longo com medida de 66 caracteres.
 
 No modo foco, o cabeçalho, a barra do celular e o botão do Sócrates somem, e o conteúdo se centraliza na medida de leitura. A saída é um texto discreto no canto ("Sair do modo foco") e a tecla Esc.
 
@@ -228,7 +228,7 @@ Raios discretos, de arquitetura: 2px a 10px (cartões 8px, botões 6px, campos 4
 
 ## Components
 
-Componentes base em `components/ui/`, todos nos três modos, com foco visível, teclado e ARIA. Vitrine com todos os estados: `/design/componentes` (só em desenvolvimento). Em aparelhos de toque, o alvo mínimo é de 44px, e o hover só vale onde há mouse (`hoverOnlyWhenSupported`). As classes antigas (`.btn-*`, `.card`, `.label-caps`) e os componentes de `primitives.tsx` (Card, Badge, Eyebrow, ProgressBar, EmptyState) foram apagados: todas as telas usam os componentes desta lista.
+Componentes base em `components/ui/`, todos nos três modos, com foco visível, teclado e ARIA. Vitrine com todos os estados: `/design/componentes` (só em desenvolvimento). Em aparelhos de toque, o alvo mínimo é de 44px, e o hover só vale onde há mouse (`hoverOnlyWhenSupported`). Links e controles pequenos que não podem crescer no desenho (atalho do `TituloBloco`, "Voltar" do admin, `Interruptor`, "Sair do modo foco") levam `.alvo-toque`: no toque, uma área invisível centrada de 44×44px. Única exceção: as colunas do templo (Início e Funções), sete colunas numa largura de celular dão de 31 a 42px; ficam acima dos 24px do WCAG 2.5.8 e cada função também se abre pela aba Funções. `cn` (`lib/utils.ts`) usa um tailwind-merge que conhece os tokens próprios (tamanhos de fonte, `border-hair`, sombras); sem isso, `text-interface` apagava `text-on-action` e o botão primário perdia o contraste. As classes antigas (`.btn-*`, `.card`, `.label-caps`) e os componentes de `primitives.tsx` (Card, Badge, Eyebrow, ProgressBar, EmptyState) foram apagados: todas as telas usam os componentes desta lista.
 
 | Componente | Arquivo | Uso |
 |---|---|---|
@@ -251,6 +251,7 @@ Componentes base em `components/ui/`, todos nos três modos, com foco visível, 
 | `Colunata` | `../corpo/colunata.tsx` | As sete funções como colunas; as que a obra exercita acesas no ouro em relevo (`.ouro-relevo`), as outras apagadas. Pequena (sem links, dentro de cartão clicável, cada coluna `role="img"` com `aria-label`) ou grande (cada coluna é link para a função, com o romano embaixo). |
 | `ExercicioItem` | `../corpo/exercicio-item.tsx` | Linha de exercício: título, método em `Selo` contorno, "Só desta obra" quando específico, enunciado na medida de leitura e ligações para função e obra; separado por filete (`divide-y-hair`). |
 | `Contador` | `contador.tsx` | Número que conta até o valor no momento de assinatura (uma vez por sessão, nunca com movimento reduzido); algarismos tabulares. |
+| `PaginaEspecial` | `pagina-especial.tsx` | 404 e erro: marcador ("404" ou "Erro"), título em serifa, filete, uma frase direta e "Voltar ao Início" (com "Tentar de novo" no erro). Usada em `app/not-found.tsx`, `app/error.tsx`, `app/(shell)/not-found.tsx` e `app/(shell)/error.tsx`; dentro do app a moldura continua. `app/global-error.tsx` repete o desenho sem componentes, porque substitui o layout raiz. |
 | `ColunaProgresso`, `ColunaSVG` | `coluna-progresso.tsx` | A coluna do templo como barra de progresso, sem número escrito; o leitor de tela ouve "vazia", "começando a encher", "mais da metade cheia" ou "cheia". `ColunaSVG` é a mesma coluna dentro de outro SVG, com proporções ajustáveis (`geometria`); o templo-selo a usa. |
 
 ### Buttons
@@ -336,12 +337,18 @@ Botão circular fixo de pedra verde com borda dourada e gaveta lateral em `surfa
 ### Service worker e offline
 `public/sw.js` guarda em cache só arquivos estáticos (`/_next/static`, ícones, manifest, fontes) e `public/offline.html`. Páginas são sempre pedidas à rede; sem rede, aparece a página offline (paleta do Paideia, claro e escuro do sistema, sem dado de ninguém). A API e páginas com login nunca vão para o cache. Ao ativar, a versão nova apaga as caches antigas (a v1 guardava páginas). O manifest e o `themeColor` usam green-900 (`#11271F`).
 
+### Páginas especiais
+404, erro e erro global seguem `PaginaEspecial` (ver Components). Tom sóbrio, sem pedir desculpa, sempre com o caminho de volta ao Início. `/design` e `/design/componentes` respondem 404 em produção.
+
+### Acessibilidade (auditoria da etapa 7b)
+Medido no Edge, com conta de teste temporária, em 360, 390, 768 e 1280px nos três modos, em todas as telas do aluno e do admin: nenhuma rolagem horizontal; contraste de todo texto ≥ 4,5:1 (3:1 no texto grande); campos com 16px no toque; marcos `header`, `nav` e `main` com um `h1` por tela; link de pular como primeiro item do teclado; anel de foco em todo item da ordem do Tab; paleta, menu da conta e gaveta do Sócrates prendem o foco, fecham com Esc e devolvem o foco; Esc sai do modo foco. Telas que dependem de dados (ficha de obra, edição de obra e de exercício, cartões, frutos, conversa com mensagens) ficam para conferir manualmente.
+
 ### Movimento
 - **Entrada de tela** (`app/(shell)/template.tsx`, `.anim-pagina`): fade com deslocamento de 6px, 225ms, no movimento discreto; começa quando a tela já chegou, nunca atrasa a navegação; nenhuma animação com movimento reduzido. O Next 14 ainda não integra a View Transitions API.
 - **Resposta imediata:** ações do aluno são otimistas (`CarteiraBotao`, "Guardar esta obra" da paleta, `FormularioOtimista` nas Configurações): a interface muda no clique com um aviso, e volta ao estado anterior com aviso de erro se o servidor falhar. As ações devolvem `ResultadoAcao` (`lib/acoes.ts`).
 - **Discreto** (`--motion-subtle-duration` 180ms, `--motion-subtle-ease` `cubic-bezier(0.22, 1, 0.36, 1)`; utilitários `duration-discreto ease-discreto`): respostas a ações, como hover, abrir e confirmar.
 - **Assinatura** (`--motion-signature-duration` 1100ms, `--motion-signature-ease` `cubic-bezier(0.16, 1, 0.3, 1)`): só no Início. As colunas do templo sobem em sequência (90ms entre elas) e os números (`Contador`) contam até o valor, uma vez por sessão: o script do `<head>` marca `data-assinatura="vista"` no `<html>` a partir do `sessionStorage`, e então tudo aparece pronto. Os números ficam ocultos até o contador assumir, para não aparecerem prontos e voltarem a zero.
-- **Movimento reduzido:** com `prefers-reduced-motion: reduce`, todas as durações caem para 0,01ms e o templo aparece montado.
+- **Movimento reduzido:** com `prefers-reduced-motion: reduce`, todas as durações caem para 0,01ms e o templo aparece montado (medido: nenhuma animação com duração em Início, Obras, Funções, Carteira e Sócrates). Sem redução, o templo sobe na primeira visita ao Início e não volta a subir na mesma sessão.
 
 ## Do's and Don'ts
 

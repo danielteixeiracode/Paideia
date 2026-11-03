@@ -28,7 +28,7 @@ export function TituloBloco({
         {titulo}
       </Titulo>
       {href && link && (
-        <Link href={href} className="t-nota text-accent underline-offset-4 hover:underline">
+        <Link href={href} className="alvo-toque t-nota text-accent underline-offset-4 hover:underline">
           {link}
         </Link>
       )}

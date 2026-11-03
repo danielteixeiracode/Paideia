@@ -31,7 +31,7 @@ export function Colunata({
       <span aria-hidden className={cn("block rounded-sm bg-rule-strong/70", grande ? "h-1" : "h-0.5")} />
       <ul
         aria-label="Funções pedagógicas desta obra"
-        className={cn("flex items-end", grande ? "gap-2 pt-1 sm:gap-3" : "gap-1 pt-0.5")}
+        className={cn("flex items-end", grande ? "gap-0.5 pt-1 min-[400px]:gap-2 sm:gap-3" : "gap-1 pt-0.5")}
       >
         {ordenadas.map((f) => {
           const acesa = acesas.has(f.id);

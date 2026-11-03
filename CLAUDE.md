@@ -67,6 +67,10 @@ Os dados de supabase/seeds/exemplo-corpo.sql são de teste e não representam a 
 
 Service worker (public/sw.js): guarda em cache só arquivos estáticos e a página offline (public/offline.html); páginas que exigem login e a API nunca vão para o cache.
 
+Páginas especiais no padrão novo: 404, erro e erro global (`components/ui/pagina-especial.tsx`), com caminho de volta ao Início; /design e /design/componentes só existem em desenvolvimento. Auditoria final (etapa 7b) feita em 360/390/768/1280px nos três modos: sem rolagem horizontal, contraste ≥ 4,5:1, alvos de toque de 44px (exceto as colunas do templo, acima de 24px), teclado e foco conferidos, movimento reduzido sem animação. Chaves secretas só no servidor: `SUPABASE_SERVICE_ROLE_KEY` não é usada pelo app (só pelos testes e2e) e `ANTHROPIC_API_KEY` só em app/api/socrates. Type-check, lint e build de produção passam.
+
+Conferir manualmente (dependem de dados e de login): ficha de obra, edição de obra e de exercício no admin, cartões de obra, sementes e frutos na Carteira e uma conversa do Sócrates com mensagens.
+
 Pendências técnicas:
 - O app só roda localmente por enquanto; não há configuração de hospedagem.
 - O contexto do Sócrates ainda usa a Carteira antiga (carteira_itens e ativos).

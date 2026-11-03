@@ -211,7 +211,7 @@ export default async function InicioPage() {
 
         <section>
           <TituloBloco titulo="Épocas" href="/epocas" link="Épocas" />
-          <ul className="mt-4 grid grid-cols-7 gap-1.5" aria-label="As sete épocas">
+          <ul className="mt-4 grid grid-cols-7 gap-0.5 sm:gap-1.5" aria-label="As sete épocas">
             {epocas.map((e) => {
               const naCarteira = epocasNaCarteira.has(e.id);
               return (

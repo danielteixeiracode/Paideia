@@ -38,7 +38,7 @@ export default async function EditarObraPage({ params }: { params: { id: string 
   return (
     <div className="space-y-8">
       <header className="filete pt-4">
-        <Link href="/admin/obras" className="t-nota text-accent underline-offset-4 hover:underline">
+        <Link href="/admin/obras" className="alvo-toque t-nota text-accent underline-offset-4 hover:underline">
           Voltar às obras
         </Link>
         <div className="mt-2 flex flex-wrap items-baseline gap-3">

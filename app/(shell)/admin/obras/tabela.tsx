@@ -91,7 +91,7 @@ export function TabelaObras({ obras }: { obras: ObraAdmin[] }) {
           </Botao>
         </div>
       ) : (
-        <div className="overflow-x-auto">
+        <div className="relative overflow-x-auto">
           <table className="w-full min-w-[40rem] text-left">
             <caption className="sr-only">Obras do acervo</caption>
             <thead>

@@ -104,10 +104,11 @@
   --measure-page: 72rem;
 
   /* Estrutura do (shell): altura do cabeçalho e respiro vertical do conteúdo
-     (pt-6 em cima; embaixo pb-24 no celular, por causa da barra, e pb-10 a
-     partir de 768px). Telas de altura fixa, como /socrates, descontam isto. */
+     (pt-6 em cima; embaixo pb-32 no celular, por causa da barra e do botão
+     do Sócrates, e pb-10 a partir de 768px). Telas de altura fixa, como
+     /socrates, descontam isto. */
   --header-height: 3.5rem;
-  --shell-respiro: 7.5rem;
+  --shell-respiro: 9.5rem;
 
   /* Movimento. Discreto: respostas a ações (hover, abrir, confirmar).
      Assinatura: o único momento marcante, no templo. */
@@ -214,6 +215,23 @@ body {
   .scrollbar-thin::-webkit-scrollbar-thumb {
     background-color: rgb(var(--c-gold) / 0.7);
     border-radius: 999px;
+  }
+
+  /* Alvo de toque de 44px para links e botões pequenos, sem mudar o desenho:
+     no toque, uma área invisível centrada cresce até 44x44. */
+  .alvo-toque:not(.fixed, .absolute, .sticky) {
+    position: relative;
+  }
+  @media (pointer: coarse) {
+    .alvo-toque::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: max(100%, 44px);
+      height: max(100%, 44px);
+      transform: translate(-50%, -50%);
+    }
   }
 
   /* Grade de página por token (4/8/12 colunas). */

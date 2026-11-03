@@ -29,12 +29,12 @@ export function Cabecalho({ perfil }: { perfil: Perfil }) {
       {/* Primeiro item do teclado: pula a navegação e vai direto ao conteúdo. */}
       <a
         href="#conteudo"
-        className="sr-only rounded-md bg-action px-4 py-2 text-interface font-semibold text-on-action focus:not-sr-only focus:absolute focus:left-gutter focus:top-2 focus:z-50"
+        className="sr-only rounded-md bg-action px-4 py-2 text-interface font-semibold text-on-action focus:not-sr-only focus:absolute focus:left-gutter focus:top-1 focus:z-50 focus:inline-flex focus:min-h-11 focus:items-center"
       >
         Pular para o conteúdo
       </a>
       <div className="mx-auto flex h-14 max-w-pagina items-center gap-3 px-gutter max-md:border-b max-md:border-rule">
-        <Link href="/inicio" className="mr-auto flex items-center gap-2 rounded-md">
+        <Link href="/inicio" className="mr-auto flex min-h-11 items-center gap-2 rounded-md">
           <span className="flex h-8 w-8 items-center justify-center rounded-md border border-rule-strong/70 text-gold-ink">
             <MarcaTemplo className="h-[18px] w-[18px]" />
           </span>

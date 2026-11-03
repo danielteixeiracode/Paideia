@@ -14,7 +14,7 @@ export default async function NovoExercicioPage() {
   return (
     <div className="space-y-8">
       <header className="filete pt-4">
-        <Link href="/admin/exercicios" className="t-nota text-accent underline-offset-4 hover:underline">
+        <Link href="/admin/exercicios" className="alvo-toque t-nota text-accent underline-offset-4 hover:underline">
           Voltar aos exercícios
         </Link>
         <h1 className="t-titulo mt-2">Novo exercício</h1>

@@ -14,7 +14,7 @@ export default async function NovaObraPage() {
   return (
     <div className="space-y-8">
       <header className="filete pt-4">
-        <Link href="/admin/obras" className="t-nota text-accent underline-offset-4 hover:underline">
+        <Link href="/admin/obras" className="alvo-toque t-nota text-accent underline-offset-4 hover:underline">
           Voltar às obras
         </Link>
         <h1 className="t-titulo mt-2">Nova obra</h1>

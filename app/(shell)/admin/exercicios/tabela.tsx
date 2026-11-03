@@ -117,7 +117,7 @@ export function TabelaExercicios({
           </Botao>
         </div>
       ) : (
-        <div className="overflow-x-auto">
+        <div className="relative overflow-x-auto">
           <table className="w-full min-w-[44rem] text-left">
             <caption className="sr-only">Exercícios</caption>
             <thead>

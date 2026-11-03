@@ -33,7 +33,7 @@ export function Interruptor({
         disabled={disabled}
         onClick={() => aoMudar(!ligado)}
         className={cn(
-          "relative mt-0.5 inline-flex h-6 w-11 shrink-0 items-center rounded-full border transition-colors duration-discreto ease-discreto disabled:opacity-50",
+          "alvo-toque relative mt-0.5 inline-flex h-6 w-11 shrink-0 items-center rounded-full border transition-colors duration-discreto ease-discreto disabled:opacity-50",
           ligado ? "border-action bg-action" : "border-rule bg-muted"
         )}
       >
