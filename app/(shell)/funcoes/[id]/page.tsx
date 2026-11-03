@@ -1,99 +1,117 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requirePerfil } from "@/lib/data/session";
-import { Card, Eyebrow, EmptyState } from "@/components/ui/primitives";
-import { ExercicioItem } from "@/components/corpo/exercicio-item";
 import { ContextoTela } from "@/components/socrates/contexto-tela";
-import type { Exercicio, FuncaoPedagogica, Obra } from "@/types/database";
+import { ColunaProgresso } from "@/components/ui/coluna-progresso";
+import { TituloBloco } from "@/components/ui/titulo-bloco";
+import { NavegacaoLivro } from "@/components/ui/navegacao-livro";
+import { CartaoObra } from "@/components/corpo/cartao-obra";
+import { ListaAtividade, type EventoAtividade } from "@/components/corpo/lista-atividade";
+import { CAMPOS_CARTAO_OBRA, paraObraLista, type ObraBanco } from "@/lib/data/obras";
+import { preenchimentoColuna } from "@/lib/templo";
+import { romano } from "@/lib/utils";
+import { ExerciciosDaFuncao, type ExercicioDaFuncao } from "./exercicios";
+
+type Funcao = { id: string; numero: number; nome: string; o_que_forma: string | null; descricao: string | null };
 
 export default async function FuncaoPage({ params }: { params: { id: string } }) {
-  const { supabase } = await requirePerfil();
+  const { supabase, perfil } = await requirePerfil();
 
   const { data } = await supabase
     .from("funcoes_pedagogicas")
-    .select("*")
+    .select("id, numero, nome, o_que_forma, descricao")
     .eq("id", params.id)
     .maybeSingle();
   if (!data) notFound();
-  const funcao = data as FuncaoPedagogica;
+  const funcao = data as Funcao;
 
-  const [{ data: ligacoes }, { data: exerciciosData }] = await Promise.all([
-    supabase
-      .from("obra_funcoes")
-      .select("nota, obra:obras(*)")
-      .eq("funcao_id", funcao.id),
+  // Pela sessão do aluno (RLS): conteúdo publicado, a Carteira e os eventos dele.
+  const [todasR, ligacoesR, exerciciosR, carteiraR, totalEventosR, eventosR] = await Promise.all([
+    supabase.from("funcoes_pedagogicas").select("id, numero, nome").order("numero"),
+    supabase.from("obra_funcoes").select(`nota, obra:obras(${CAMPOS_CARTAO_OBRA})`).eq("funcao_id", funcao.id),
     supabase
       .from("exercicios")
       .select("*, obra:obras(id, titulo, ativo)")
       .eq("funcao_id", funcao.id)
       .eq("ativo", true)
       .order("ordem"),
+    supabase.from("carteira_obras").select("obra_id").eq("user_id", perfil.id),
+    supabase.from("registro_eventos").select("id", { count: "exact", head: true }).eq("user_id", perfil.id).eq("funcao_id", funcao.id),
+    supabase
+      .from("registro_eventos")
+      .select("id, tipo, criado_em, obra:obras(titulo), funcao:funcoes_pedagogicas(numero, nome), exercicio:exercicios(titulo)")
+      .eq("user_id", perfil.id)
+      .eq("funcao_id", funcao.id)
+      .order("criado_em", { ascending: false })
+      .limit(6),
   ]);
 
-  const obras = ((ligacoes ?? []) as unknown as { nota: string | null; obra: Obra | null }[])
+  const todas = (todasR.data ?? []) as { id: string; numero: number; nome: string }[];
+  const naCarteira = new Set(((carteiraR.data ?? []) as { obra_id: string }[]).map((c) => c.obra_id));
+  const obras = ((ligacoesR.data ?? []) as unknown as { nota: string | null; obra: ObraBanco | null }[])
     .filter((l) => l.obra?.ativo)
-    .sort((a, b) => a.obra!.ordem - b.obra!.ordem || a.obra!.titulo.localeCompare(b.obra!.titulo));
+    .map((l) => ({ nota: l.nota, obra: paraObraLista(l.obra!, naCarteira) }))
+    .sort((a, b) => a.obra.titulo.localeCompare(b.obra.titulo, "pt-BR"));
 
-  const exercicios = (exerciciosData ?? []) as unknown as (Exercicio & {
-    obra: { id: string; titulo: string; ativo: boolean } | null;
-  })[];
+  // Exercícios de obras não publicadas ficam de fora; os de obra publicada
+  // aparecem como "só desta obra".
+  const exercicios: ExercicioDaFuncao[] = ((exerciciosR.data ?? []) as unknown as (Omit<ExercicioDaFuncao, "obra"> & { obra: { id: string; titulo: string; ativo: boolean } | null })[])
+    .filter((e) => !e.obra_id || e.obra?.ativo)
+    .map((e) => ({ ...e, obra: e.obra ? { id: e.obra.id, titulo: e.obra.titulo } : null }));
+
+  const eventos = totalEventosR.count ?? 0;
+  const atividade = (eventosR.data ?? []) as unknown as EventoAtividade[];
+
+  const indice = todas.findIndex((f) => f.id === funcao.id);
+  const vizinha = (f?: { id: string; numero: number; nome: string }) => (f ? { href: `/funcoes/${f.id}`, numero: f.numero, nome: f.nome } : null);
 
   return (
-    <div className="space-y-6">
+    <article className="space-y-12">
       <ContextoTela tipo="funcao" id={funcao.id} />
-      <div>
-        <Link href="/funcoes" className="text-xs font-semibold text-accent hover:underline">
-          ← Funções
-        </Link>
-        <Eyebrow className="mt-3">Função {funcao.numero}</Eyebrow>
-        <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">{funcao.nome}</h1>
-      </div>
 
-      {(funcao.o_que_forma || funcao.descricao) && (
-        <Card className="space-y-2">
-          {funcao.o_que_forma && (
-            <div>
-              <Eyebrow>O que forma</Eyebrow>
-              <p className="mt-1 text-sm leading-relaxed text-ink/80">{funcao.o_que_forma}</p>
-            </div>
-          )}
-          {funcao.descricao && <p className="text-sm leading-relaxed text-ink/70">{funcao.descricao}</p>}
-        </Card>
-      )}
+      <header className="grid gap-8 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+        <div className="min-w-0">
+          <div className="marcador max-w-md" aria-hidden>
+            {romano(funcao.numero)}
+          </div>
+          <h1 className="t-display mt-3">
+            <span className="sr-only">Função {funcao.numero}: </span>
+            {funcao.nome}
+          </h1>
+          {funcao.o_que_forma && <p className="t-leitura mt-4">{funcao.o_que_forma}</p>}
+          {funcao.descricao && <p className="t-corpo mt-3 max-w-leitura text-ink-muted">{funcao.descricao}</p>}
+        </div>
+        <figure className="flex flex-col items-center">
+          <ColunaProgresso valor={preenchimentoColuna(eventos)} rotulo={`Sua coluna em ${funcao.nome}`} className="w-16" />
+          <figcaption className="t-nota mt-2">{eventos === 1 ? "1 evento seu" : `${eventos} eventos seus`}</figcaption>
+        </figure>
+      </header>
 
-      <section className="space-y-3">
-        <p className="font-serif text-lg font-semibold">Obras que exercitam esta função</p>
+      <section className="space-y-5">
+        <TituloBloco titulo="Obras que carregam esta função" grande href="/obras" link="Todas as obras" />
         {obras.length === 0 ? (
-          <EmptyState titulo="Nenhuma obra ligada a esta função ainda" />
+          <p className="t-corpo text-ink-muted">Nenhuma obra publicada exercita esta função ainda.</p>
         ) : (
-          <ul className="grid gap-3 sm:grid-cols-2">
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {obras.map(({ obra, nota }) => (
-              <li key={obra!.id}>
-                <Link href={`/obras/${obra!.id}`} className="block">
-                  <Card className="h-full transition hover:border-paideia-gold-400">
-                    <p className="font-serif text-base font-semibold">{obra!.titulo}</p>
-                    {obra!.autor && <p className="text-sm text-ink/60">{obra!.autor}</p>}
-                    {nota && <p className="mt-1.5 text-sm text-ink/70">{nota}</p>}
-                  </Card>
-                </Link>
+              <li key={obra.id}>
+                <CartaoObra obra={obra} funcoes={todas} nota={nota} />
               </li>
             ))}
           </ul>
         )}
       </section>
 
-      <section className="space-y-3">
-        <p className="font-serif text-lg font-semibold">Exercícios</p>
-        {exercicios.length === 0 ? (
-          <EmptyState titulo="Nenhum exercício desta função ainda" />
-        ) : (
-          <ul className="divide-y-hair divide-rule-strong/40">
-            {exercicios.map((e) => (
-              <ExercicioItem key={e.id} exercicio={e} obra={e.obra?.ativo ? e.obra : null} />
-            ))}
-          </ul>
-        )}
+      <section className="space-y-5">
+        <TituloBloco titulo="Exercícios" grande />
+        <ExerciciosDaFuncao exercicios={exercicios} />
       </section>
-    </div>
+
+      <section className="space-y-3">
+        <TituloBloco titulo="Sua atividade nesta função" grande />
+        <ListaAtividade eventos={atividade} vazio="Você ainda não registrou nada nesta função." />
+      </section>
+
+      <NavegacaoLivro rotulo="Funções" anterior={vizinha(todas[indice - 1])} proxima={vizinha(todas[indice + 1])} />
+    </article>
   );
 }

@@ -40,7 +40,20 @@ function eventosPorExtenso(n: number) {
 // Cada coluna é uma função pedagógica e se enche de dourado de baixo para
 // cima. Com as sete cheias, o frontão se acende. Mouse e teclado mostram a
 // função na legenda; no toque, o primeiro toque mostra e o segundo abre.
-export function Templo({ colunas, aceso, totalEventos }: { colunas: ColunaTemplo[]; aceso: boolean; totalEventos: number }) {
+export function Templo({
+  colunas,
+  aceso,
+  totalEventos,
+  tamanho = "selo",
+}: {
+  colunas: ColunaTemplo[];
+  aceso: boolean;
+  totalEventos: number;
+  // "selo": no Início, com o momento de assinatura. "grande": em Funções,
+  // como navegação, já montado (o momento de assinatura é um só).
+  tamanho?: "selo" | "grande";
+}) {
+  const assinatura = tamanho === "selo";
   const [ativa, setAtiva] = useState<ColunaTemplo | null>(null);
   const ativaRef = useRef<ColunaTemplo | null>(null);
   ativaRef.current = ativa;
@@ -50,7 +63,7 @@ export function Templo({ colunas, aceso, totalEventos }: { colunas: ColunaTemplo
   // depois que as colunas subiram (ou ao sair do Início), para que a próxima
   // visita nesta aba já encontre o templo pronto.
   useEffect(() => {
-    if (assinaturaJaVista()) return;
+    if (!assinatura || assinaturaJaVista()) return;
     registrarAssinatura();
     const montadoEm = Date.now();
     const espera = window.setTimeout(marcarAssinaturaVista, 2500);
@@ -59,10 +72,10 @@ export function Templo({ colunas, aceso, totalEventos }: { colunas: ColunaTemplo
       // A montagem dupla do React em desenvolvimento desmonta na hora; não conta.
       if (Date.now() - montadoEm > 300) marcarAssinaturaVista();
     };
-  }, []);
+  }, [assinatura]);
 
   return (
-    <figure className="mx-auto w-[240px] lg:mx-0 lg:w-[220px]">
+    <figure className={cn("mx-auto", assinatura ? "w-[240px] lg:mx-0 lg:w-[220px]" : "w-full max-w-[420px]")}>
       <svg viewBox="0 0 240 196" className="h-auto w-full" role="group" aria-label="Templo das sete funções pedagógicas">
         <DefsOuro />
         {/* Frontão */}
@@ -101,7 +114,7 @@ export function Templo({ colunas, aceso, totalEventos }: { colunas: ColunaTemplo
                 toque.current = { tipo: "", jaAtiva: false };
               }}
             >
-              <ColunaSVG cx={cx} preenchimento={c.preenchimento} destacada={destacada} animar ordem={i} geometria={GEOMETRIA} />
+              <ColunaSVG cx={cx} preenchimento={c.preenchimento} destacada={destacada} animar={assinatura} ordem={i} geometria={GEOMETRIA} />
               <text
                 x={cx}
                 y="186"
@@ -134,7 +147,7 @@ export function Templo({ colunas, aceso, totalEventos }: { colunas: ColunaTemplo
           <>
             <span className="text-nota font-semibold text-ink">A formação</span>
             <span className="t-nota">
-              <Contador valor={totalEventos} /> {totalEventos === 1 ? "evento" : "eventos"}
+              {assinatura ? <Contador valor={totalEventos} /> : totalEventos} {totalEventos === 1 ? "evento" : "eventos"}
             </span>
           </>
         )}

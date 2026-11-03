@@ -12,7 +12,7 @@ export function ExercicioItem({
   obra,
   especifico = false,
 }: {
-  exercicio: Exercicio;
+  exercicio: Pick<Exercicio, "titulo" | "metodo" | "enunciado">;
   funcao?: { id: string; nome: string } | null;
   obra?: { id: string; titulo: string } | null;
   // Escrito só para esta obra (e não geral da função).

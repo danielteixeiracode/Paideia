@@ -1,22 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { Search } from "lucide-react";
-import { Cartao } from "@/components/ui/cartao";
-import { Selo } from "@/components/ui/selo";
 import { Botao } from "@/components/ui/botao";
-import { Colunata, type FuncaoColunata } from "@/components/corpo/colunata";
+import type { FuncaoColunata } from "@/components/corpo/colunata";
+import { CartaoObra, type ObraLista } from "@/components/corpo/cartao-obra";
 import { cn, romano } from "@/lib/utils";
 
-export interface ObraLista {
-  id: string;
-  titulo: string;
-  autor: string | null;
-  epoca: { id: string; numero: number; nome: string } | null;
-  funcoes: string[]; // ids das funções que a obra carrega
-  naCarteira: boolean;
-}
 
 type EpocaFiltro = { id: string; numero: number; nome: string };
 
@@ -126,40 +116,12 @@ export function ExploradorObras({
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {visiveis.map((o) => (
             <li key={o.id}>
-              <CartaoObra obra={o} funcoes={funcoes} />
+              <CartaoObra obra={o} funcoes={funcoes} nivel={2} />
             </li>
           ))}
         </ul>
       )}
     </div>
-  );
-}
-
-function CartaoObra({ obra, funcoes }: { obra: ObraLista; funcoes: FuncaoColunata[] }) {
-  return (
-    <Link href={`/obras/${obra.id}`} className="group block h-full rounded-2xl">
-      <Cartao
-        as="article"
-        className="flex h-full flex-col transition-colors duration-discreto ease-discreto group-hover:border-rule-strong/70 group-hover:bg-sunken"
-      >
-        <div className="flex items-center justify-between gap-3">
-          {obra.epoca ? (
-            <span className="t-nota">
-              <span className="t-romano mr-1 text-gold-ink">{romano(obra.epoca.numero)}</span>
-              {obra.epoca.nome}
-            </span>
-          ) : (
-            <span className="t-nota">Sem época</span>
-          )}
-          {obra.naCarteira && <Selo tom="acao">Na Carteira</Selo>}
-        </div>
-        <h2 className="mt-3 font-serif text-xl font-medium leading-snug text-ink group-hover:underline group-hover:decoration-rule-strong group-hover:underline-offset-4">
-          {obra.titulo}
-        </h2>
-        {obra.autor && <p className="t-nota mt-1">{obra.autor}</p>}
-        <Colunata funcoes={funcoes} acesas={new Set(obra.funcoes)} className="mt-auto pt-5" />
-      </Cartao>
-    </Link>
   );
 }
 

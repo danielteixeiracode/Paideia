@@ -4,6 +4,7 @@ import { Templo, type ColunaTemplo } from "@/components/corpo/templo";
 import { ResponderSocrates } from "@/components/corpo/responder-socrates";
 import { Cartao } from "@/components/ui/cartao";
 import { TituloBloco } from "@/components/ui/titulo-bloco";
+import { ListaAtividade } from "@/components/corpo/lista-atividade";
 import { Contador } from "@/components/ui/contador";
 import { classesBotao } from "@/components/ui/botao";
 import { preenchimentoColuna, frontaoAceso } from "@/lib/templo";
@@ -239,21 +240,9 @@ export default async function InicioPage() {
 
       <section>
         <TituloBloco titulo="Atividade recente" href="/carteira" link="Carteira" />
-        {recentes.length === 0 ? (
-          <p className="t-corpo mt-4 text-ink-muted">Nada registrado ainda. O que você fizer no Paideia aparece aqui.</p>
-        ) : (
-          <ol className="mt-2 divide-y-hair divide-rule-strong/40">
-            {recentes.map((e) => (
-              <li key={e.id} className="flex items-baseline gap-3 py-3">
-                <span className="t-romano w-8 shrink-0 text-nota text-gold-ink">{e.funcao ? romano(e.funcao.numero) : ""}</span>
-                <span className="min-w-0 flex-1 text-interface text-ink">{descreverEvento(e)}</span>
-                <time dateTime={e.criado_em} className="t-nota shrink-0">
-                  {quandoRelativo(e.criado_em, agora)}
-                </time>
-              </li>
-            ))}
-          </ol>
-        )}
+        <div className="mt-2">
+          <ListaAtividade eventos={recentes} agora={agora} vazio="Nada registrado ainda. O que você fizer no Paideia aparece aqui." />
+        </div>
       </section>
     </div>
   );

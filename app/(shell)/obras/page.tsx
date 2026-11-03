@@ -1,14 +1,8 @@
 import Link from "next/link";
 import { requirePerfil } from "@/lib/data/session";
-import { ExploradorObras, type ObraLista } from "./explorador";
-
-type ObraBanco = {
-  id: string;
-  titulo: string;
-  autor: string | null;
-  epoca: { id: string; numero: number; nome: string } | null;
-  obra_funcoes: { funcao_id: string }[];
-};
+import { ExploradorObras } from "./explorador";
+import type { ObraLista } from "@/components/corpo/cartao-obra";
+import { CAMPOS_CARTAO_OBRA, paraObraLista, type ObraBanco } from "@/lib/data/obras";
 
 export default async function ObrasPage() {
   const { supabase, perfil } = await requirePerfil();
@@ -17,7 +11,7 @@ export default async function ObrasPage() {
   const [obrasR, funcoesR, epocasR, carteiraR] = await Promise.all([
     supabase
       .from("obras")
-      .select("id, titulo, autor, epoca:epocas(id, numero, nome), obra_funcoes(funcao_id)")
+      .select(CAMPOS_CARTAO_OBRA)
       .eq("ativo", true)
       .order("ordem")
       .order("titulo"),
@@ -27,14 +21,7 @@ export default async function ObrasPage() {
   ]);
 
   const naCarteira = new Set(((carteiraR.data ?? []) as { obra_id: string }[]).map((c) => c.obra_id));
-  const obras: ObraLista[] = ((obrasR.data ?? []) as unknown as ObraBanco[]).map((o) => ({
-    id: o.id,
-    titulo: o.titulo,
-    autor: o.autor,
-    epoca: o.epoca,
-    funcoes: o.obra_funcoes.map((l) => l.funcao_id),
-    naCarteira: naCarteira.has(o.id),
-  }));
+  const obras: ObraLista[] = ((obrasR.data ?? []) as unknown as ObraBanco[]).map((o) => paraObraLista(o, naCarteira));
 
   return (
     <div className="space-y-10">
