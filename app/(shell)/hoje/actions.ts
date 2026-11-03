@@ -29,7 +29,6 @@ export async function concluirAtividade(atividadeId: string) {
     user_id: user.id,
     atividade_id: atividadeId,
     ativo_id: atividade.ativo_id,
-    etapa_id: atividade.etapa_id,
     eixo_id: atividade.eixo_id,
     data: atividade.data,
     duracao_min: atividade.duracao_min,

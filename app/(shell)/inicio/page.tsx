@@ -1,34 +1,22 @@
 import Link from "next/link";
-import { PlayCircle, MessageSquareQuote, Network, Flag, ArrowRight } from "lucide-react";
+import { PlayCircle, MessageSquareQuote, ArrowRight } from "lucide-react";
 import { requirePerfil } from "@/lib/data/session";
 import { getDashboardData } from "@/lib/data/dashboard";
-import { Card, Eyebrow, ProgressBar, Badge } from "@/components/ui/primitives";
+import { Card, Eyebrow, Badge } from "@/components/ui/primitives";
 import { formatHoras, nomeDiaSemanaCurto, toISODate, addDays, startOfWeek } from "@/lib/utils";
 
 export default async function InicioPage() {
   const { supabase, perfil } = await requirePerfil();
-  const { eixos, progressoTrilha, carteira, atividadesHoje, frequencia } = await getDashboardData(
+  const { eixos, carteira, atividadesHoje, frequencia } = await getDashboardData(
     supabase,
     perfil.id
   );
 
-  const focoAtual = progressoTrilha.find((p) => p.foco_atual) ?? progressoTrilha[0];
   const atividadePrioritaria = atividadesHoje.find((a) => a.prioritaria) ?? atividadesHoje[0];
 
   const concluidasHoje = atividadesHoje.filter((a) => a.status === "concluida").length;
   const metaDiariaPct =
     atividadesHoje.length > 0 ? Math.round((concluidasHoje / atividadesHoje.length) * 100) : 0;
-
-  function eixoStats(eixoId: string) {
-    const rows = progressoTrilha.filter((p) => p.etapa?.eixo_id === eixoId);
-    const media = rows.length
-      ? Math.round(rows.reduce((s, r) => s + Number(r.percentual), 0) / rows.length)
-      : 0;
-    return { rows, media };
-  }
-
-  const trivium = eixos.find((e) => e.slug === "trivium");
-  const quadrivium = eixos.find((e) => e.slug === "quadrivium");
 
   const ativosPorEixo = new Map<string, number>();
   for (const item of carteira) {
@@ -45,70 +33,23 @@ export default async function InicioPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-        <div>
-          <Eyebrow className="mb-2">
-            Ano Acadêmico {new Date().getFullYear()} • Período Matutino
-          </Eyebrow>
-          <h1 className="font-serif text-2xl font-semibold text-paideia-ink sm:text-3xl">
-            Salve, {perfil.nome.split(" ")[0]}.{" "}
-            <span className="font-serif font-bold text-paideia-green-700">
-              Seu ritmo formativo está em equilíbrio.
-            </span>
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm text-paideia-ink/60">
-            Hoje a mente concentra-se no rigor da forma racional antes de contemplar a harmonia dos
-            números celestes.
-          </p>
-        </div>
-
-        {focoAtual?.etapa && (
-          <Card className="w-full shrink-0 lg:w-72">
-            <Eyebrow>Estágio do Trivium</Eyebrow>
-            <p className="mt-1 font-serif text-lg font-semibold">{focoAtual.etapa.titulo}</p>
-            <div className="mt-3 flex items-center gap-2">
-              <ProgressBar value={Number(focoAtual.percentual)} className="flex-1" />
-              <span className="text-sm font-semibold text-paideia-green-800">
-                {Math.round(Number(focoAtual.percentual))}%
-              </span>
-            </div>
-          </Card>
-        )}
+      <div>
+        <Eyebrow className="mb-2">
+          Ano Acadêmico {new Date().getFullYear()} • Período Matutino
+        </Eyebrow>
+        <h1 className="font-serif text-2xl font-semibold text-paideia-ink sm:text-3xl">
+          Salve, {perfil.nome.split(" ")[0]}.{" "}
+          <span className="font-serif font-bold text-paideia-green-700">
+            Seu ritmo formativo está em equilíbrio.
+          </span>
+        </h1>
+        <p className="mt-2 max-w-2xl text-sm text-paideia-ink/60">
+          Hoje a mente concentra-se no rigor da forma racional antes de contemplar a harmonia dos
+          números celestes.
+        </p>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-2">
-        <Card>
-          <div className="mb-4 flex items-center justify-between">
-            <div>
-              <p className="font-serif text-lg font-semibold">Trilha das Sete Artes Liberais</p>
-              <Eyebrow className="mt-0.5">Grau Atual: Trivium</Eyebrow>
-            </div>
-            <Link href="/trilha" className="flex items-center gap-1 text-xs font-semibold text-paideia-green-800 hover:underline">
-              Plano Integral <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-
-          {trivium && (
-            <EixoResumo nome="Eixo I: Trivium" media={eixoStats(trivium.id).media} rows={eixoStats(trivium.id).rows} />
-          )}
-          {quadrivium && (
-            <EixoResumo nome="Eixo II: Quadrivium" media={eixoStats(quadrivium.id).media} rows={eixoStats(quadrivium.id).rows} className="mt-5" />
-          )}
-
-          <div className="mt-5 flex items-center justify-between gap-3 rounded-xl border border-paideia-gold-300 bg-paideia-cream-50 p-4">
-            <div className="flex items-center gap-2.5">
-              <Flag className="h-4 w-4 text-paideia-gold-600" />
-              <div>
-                <Eyebrow>Próxima Meta de Formatura</Eyebrow>
-                <p className="font-serif text-sm font-semibold">Domínio do Silogismo e Falácias Informais</p>
-              </div>
-            </div>
-            <Link href="/trilha" className="btn-secondary shrink-0 px-3 py-1.5 text-xs">
-              Continuar
-            </Link>
-          </div>
-        </Card>
-
+      <div>
         <Card>
           <div className="mb-4 flex items-center justify-between">
             <div>
@@ -181,19 +122,7 @@ export default async function InicioPage() {
         )}
       </Card>
 
-      <div className="grid gap-5 lg:grid-cols-2">
-        <Link href="/mapa" className="block rounded-2xl bg-paideia-green-900 p-6 text-paideia-cream-100 shadow-card transition hover:bg-paideia-green-800">
-          <Badge tone="gold" className="mb-3">Cartografia Intelectual</Badge>
-          <p className="font-serif text-xl font-semibold">Mapa dos Estudos • Os Três Trilhos</p>
-          <p className="mt-2 text-sm text-paideia-cream-100/70">
-            Literatura, filosofia-teologia e pensamento moderno percorrendo a mesma curva: a ordem
-            originária, a crise que a rompe e a restauração do sentido.
-          </p>
-          <span className="btn-secondary mt-5 inline-flex bg-white/10 text-paideia-cream-50 hover:bg-white/20">
-            <Network className="h-4 w-4" /> Percorrer os Três Trilhos
-          </span>
-        </Link>
-
+      <div>
         <Card>
           <div className="mb-3 flex items-center justify-between">
             <p className="font-serif text-lg font-semibold">Vigília e Constância</p>
@@ -251,42 +180,6 @@ export default async function InicioPage() {
           Abrir Diálogo <ArrowRight className="h-3.5 w-3.5" />
         </Link>
       </Card>
-    </div>
-  );
-}
-
-function EixoResumo({
-  nome,
-  media,
-  rows,
-  className,
-}: {
-  nome: string;
-  media: number;
-  rows: { etapa?: { titulo: string } | null; percentual: number }[];
-  className?: string;
-}) {
-  return (
-    <div className={className}>
-      <div className="mb-2 flex items-center justify-between text-xs font-semibold">
-        <span>{nome}</span>
-        <span className="text-paideia-ink/50">Média: {media}%</span>
-      </div>
-      {rows.length === 0 ? (
-        <p className="text-xs text-paideia-ink/40">Nenhuma etapa iniciada neste eixo.</p>
-      ) : (
-        <div className="space-y-2.5">
-          {rows.slice(0, 3).map((r, i) => (
-            <div key={i}>
-              <div className="mb-1 flex items-center justify-between text-xs">
-                <span className="truncate pr-2">{r.etapa?.titulo}</span>
-                <span className="font-semibold">{Math.round(Number(r.percentual))}%</span>
-              </div>
-              <ProgressBar value={Number(r.percentual)} />
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }

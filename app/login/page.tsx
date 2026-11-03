@@ -32,7 +32,7 @@ export default function LoginPage() {
 
         <div className="mb-6 flex justify-center">
           <span className="label-caps rounded-full border border-paideia-cream-300 bg-paideia-cream-50 px-4 py-1.5">
-            Trivium • Quadrivium • Dialética
+            Trivium • Quadrivium
           </span>
         </div>
 

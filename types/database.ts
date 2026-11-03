@@ -5,7 +5,6 @@ export type PapelUsuario = "aluno" | "administrador";
 export type TipoAtivo = "livro" | "curso" | "exercicio" | "tratado" | "audio" | "interativo";
 export type NivelAtivo = "iniciante" | "intermediario" | "avancado";
 export type StatusCarteira = "planejado" | "em_andamento" | "concluido" | "pausado";
-export type StatusEtapa = "bloqueada" | "disponivel" | "em_andamento" | "concluida";
 export type PeriodoDia = "matutino" | "vespertino" | "noturno";
 export type StatusAtividade = "pendente" | "em_andamento" | "concluida" | "atrasada";
 export type ModoSocrates = "maieutico" | "exegese" | "exame";
@@ -46,38 +45,6 @@ export interface Capacidade {
   ativo: boolean;
 }
 
-export interface Trilha {
-  id: string;
-  nome: string;
-  descricao: string | null;
-  subtitulo: string | null;
-  ordem: number;
-  ativo: boolean;
-}
-
-export interface EtapaTrilha {
-  id: string;
-  trilha_id: string;
-  eixo_id: string;
-  capacidade_id: string | null;
-  etapa_anterior_id: string | null;
-  codigo: string;
-  titulo: string;
-  descricao: string | null;
-  carga_horas_estimada: number;
-  selo_titulo: string | null;
-  ordem: number;
-  ativo: boolean;
-}
-
-export interface CapacidadeEtapa {
-  id: string;
-  etapa_id: string;
-  nome: string;
-  descricao: string | null;
-  ordem: number;
-}
-
 export interface Ativo {
   id: string;
   titulo: string;
@@ -86,7 +53,6 @@ export interface Ativo {
   tipo: TipoAtivo;
   eixo_id: string | null;
   capacidade_id: string | null;
-  etapa_id: string | null;
   descricao: string | null;
   imagem_url: string | null;
   duracao_estimada_horas: number;
@@ -129,28 +95,6 @@ export interface CarteiraItem {
   ativo_ref?: Ativo;
 }
 
-export interface ProgressoTrilha {
-  id: string;
-  user_id: string;
-  etapa_id: string;
-  status: StatusEtapa;
-  percentual: number;
-  horas_investidas: number;
-  foco_atual: boolean;
-  data_inicio: string | null;
-  data_conclusao: string | null;
-  atualizado_em: string;
-  etapa?: EtapaTrilha;
-}
-
-export interface ProgressoCapacidade {
-  id: string;
-  user_id: string;
-  capacidade_etapa_id: string;
-  dominada: boolean;
-  data_dominio: string | null;
-}
-
 export interface PlanejamentoSemanal {
   id: string;
   user_id: string;
@@ -166,7 +110,6 @@ export interface AtividadePlanejada {
   planejamento_id: string | null;
   ativo_id: string | null;
   carteira_item_id: string | null;
-  etapa_id: string | null;
   eixo_id: string | null;
   titulo: string;
   descricao: string | null;
@@ -186,7 +129,6 @@ export interface RegistroEstudo {
   user_id: string;
   atividade_id: string | null;
   ativo_id: string | null;
-  etapa_id: string | null;
   eixo_id: string | null;
   data: string;
   duracao_min: number;
@@ -234,30 +176,15 @@ export interface Notificacao {
   criado_em: string;
 }
 
-export interface ProgressoTrilhoEtapa {
-  id: string;
-  user_id: string;
-  trilho_id: string;
-  etapa_id: string;
-  status: "nao_iniciado" | "em_andamento" | "concluido";
-  atualizado_em: string;
-}
-
 export interface Database {
   public: {
     Tables: {
       perfis: { Row: Perfil; Insert: Partial<Perfil>; Update: Partial<Perfil> };
       eixos: { Row: Eixo; Insert: Partial<Eixo>; Update: Partial<Eixo> };
       capacidades: { Row: Capacidade; Insert: Partial<Capacidade>; Update: Partial<Capacidade> };
-      trilhas: { Row: Trilha; Insert: Partial<Trilha>; Update: Partial<Trilha> };
-      etapas_trilha: { Row: EtapaTrilha; Insert: Partial<EtapaTrilha>; Update: Partial<EtapaTrilha> };
-      capacidades_etapa: { Row: CapacidadeEtapa; Insert: Partial<CapacidadeEtapa>; Update: Partial<CapacidadeEtapa> };
       ativos: { Row: Ativo; Insert: Partial<Ativo>; Update: Partial<Ativo> };
       config_socrates: { Row: ConfigSocrates; Insert: Partial<ConfigSocrates>; Update: Partial<ConfigSocrates> };
       carteira_itens: { Row: CarteiraItem; Insert: Partial<CarteiraItem>; Update: Partial<CarteiraItem> };
-      progresso_trilha: { Row: ProgressoTrilha; Insert: Partial<ProgressoTrilha>; Update: Partial<ProgressoTrilha> };
-      progresso_capacidade: { Row: ProgressoCapacidade; Insert: Partial<ProgressoCapacidade>; Update: Partial<ProgressoCapacidade> };
-      progresso_trilho_etapa: { Row: ProgressoTrilhoEtapa; Insert: Partial<ProgressoTrilhoEtapa>; Update: Partial<ProgressoTrilhoEtapa> };
       planejamento_semanal: { Row: PlanejamentoSemanal; Insert: Partial<PlanejamentoSemanal>; Update: Partial<PlanejamentoSemanal> };
       atividades_planejadas: { Row: AtividadePlanejada; Insert: Partial<AtividadePlanejada>; Update: Partial<AtividadePlanejada> };
       registros_estudo: { Row: RegistroEstudo; Insert: Partial<RegistroEstudo>; Update: Partial<RegistroEstudo> };

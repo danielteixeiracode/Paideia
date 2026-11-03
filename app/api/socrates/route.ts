@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Diálogo não encontrado." }, { status: 404 });
   }
 
-  const [{ data: historico }, { data: config }, { data: carteira }, { data: progressoTrilha }, { data: perfil }] =
+  const [{ data: historico }, { data: config }, { data: carteira }, { data: perfil }] =
     await Promise.all([
       supabase
         .from("mensagens_socrates")
@@ -49,12 +49,6 @@ export async function POST(request: Request) {
         .eq("user_id", user.id)
         .neq("status", "concluido")
         .limit(8),
-      supabase
-        .from("progresso_trilha")
-        .select("status, percentual, foco_atual, etapa:etapas_trilha(titulo, codigo)")
-        .eq("user_id", user.id)
-        .order("atualizado_em", { ascending: false })
-        .limit(5),
       supabase.from("perfis").select("nome, grau_atual").eq("id", user.id).single(),
     ]);
 
@@ -68,17 +62,10 @@ export async function POST(request: Request) {
     .map((c: any) => `- ${c.ativo_ref?.titulo} (${c.ativo_ref?.autor ?? "autor desconhecido"}) — ${Math.round(c.progresso_percentual)}% concluído`)
     .join("\n");
 
-  const trilhaTexto = (progressoTrilha ?? [])
-    .map((p: any) => `- ${p.etapa?.codigo} ${p.etapa?.titulo} — ${Math.round(p.percentual)}%${p.foco_atual ? " (foco atual)" : ""}`)
-    .join("\n");
-
   const contexto = `Discípulo: ${perfil?.nome ?? "desconhecido"} (${perfil?.grau_atual ?? "grau não definido"})
 
 Carteira Intelectual (ativos em andamento/planejados):
-${carteiraTexto || "Nenhum ativo em andamento."}
-
-Trilha de Formação (progresso recente):
-${trilhaTexto || "Nenhuma etapa iniciada."}`;
+${carteiraTexto || "Nenhum ativo em andamento."}`;
 
   const systemPrompt = `${config?.system_prompt ?? "Você é Sócrates, mentor da Paideia. Conduza pelo método maiêutico."}\n\n---\nCONTEXTO DO DISCÍPULO:\n${contexto}`;
 

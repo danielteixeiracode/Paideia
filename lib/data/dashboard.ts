@@ -8,16 +8,11 @@ export async function getDashboardData(supabase: SB, userId: string) {
 
   const [
     { data: eixos },
-    { data: progressoTrilha },
     { data: carteira },
     { data: atividadesHoje },
     { data: frequencia },
   ] = await Promise.all([
     supabase.from("eixos").select("*").eq("ativo", true).order("ordem"),
-    supabase
-      .from("progresso_trilha")
-      .select("*, etapa:etapas_trilha(*, eixo:eixos(*))")
-      .eq("user_id", userId),
     supabase.from("carteira_itens").select("*, ativo_ref:ativos(*)").eq("user_id", userId),
     supabase
       .from("atividades_planejadas")
@@ -34,7 +29,6 @@ export async function getDashboardData(supabase: SB, userId: string) {
 
   return {
     eixos: eixos ?? [],
-    progressoTrilha: progressoTrilha ?? [],
     carteira: carteira ?? [],
     atividadesHoje: atividadesHoje ?? [],
     frequencia: frequencia ?? [],

@@ -10,8 +10,6 @@ create type papel_usuario as enum ('aluno', 'administrador');
 create type tipo_ativo as enum ('livro', 'curso', 'exercicio', 'tratado', 'audio', 'interativo');
 create type nivel_ativo as enum ('iniciante', 'intermediario', 'avancado');
 create type status_carteira as enum ('planejado', 'em_andamento', 'concluido', 'pausado');
-create type status_etapa as enum ('bloqueada', 'disponivel', 'em_andamento', 'concluida');
-create type status_trilho_etapa as enum ('nao_iniciado', 'em_andamento', 'concluido');
 create type periodo_dia as enum ('matutino', 'vespertino', 'noturno');
 create type status_atividade as enum ('pendente', 'em_andamento', 'concluida', 'atrasada');
 create type modo_socrates as enum ('maieutico', 'exegese', 'exame');
@@ -58,38 +56,6 @@ create table capacidades (
   ativo boolean not null default true
 );
 
-create table trilhas (
-  id uuid primary key default gen_random_uuid(),
-  nome text not null,                 -- ex: Trilha das Sete Artes Liberais
-  descricao text,
-  subtitulo text,
-  ordem int not null default 0,
-  ativo boolean not null default true
-);
-
-create table etapas_trilha (
-  id uuid primary key default gen_random_uuid(),
-  trilha_id uuid not null references trilhas(id) on delete cascade,
-  eixo_id uuid not null references eixos(id) on delete restrict,
-  capacidade_id uuid references capacidades(id) on delete set null,
-  etapa_anterior_id uuid references etapas_trilha(id) on delete set null,
-  codigo text not null,               -- ex: "ETAPA 04"
-  titulo text not null,
-  descricao text,
-  carga_horas_estimada numeric(5,2) default 0,
-  selo_titulo text,                   -- ex: "Selo de Mestria Categorial"
-  ordem int not null default 0,
-  ativo boolean not null default true
-);
-
-create table capacidades_etapa (
-  id uuid primary key default gen_random_uuid(),
-  etapa_id uuid not null references etapas_trilha(id) on delete cascade,
-  nome text not null,
-  descricao text,
-  ordem int not null default 0
-);
-
 create table ativos (
   id uuid primary key default gen_random_uuid(),
   titulo text not null,
@@ -98,7 +64,6 @@ create table ativos (
   tipo tipo_ativo not null default 'livro',
   eixo_id uuid references eixos(id) on delete set null,
   capacidade_id uuid references capacidades(id) on delete set null,
-  etapa_id uuid references etapas_trilha(id) on delete set null,
   descricao text,
   imagem_url text,
   duracao_estimada_horas numeric(6,2) default 0,
@@ -146,42 +111,6 @@ create table carteira_itens (
   unique (user_id, ativo_id)
 );
 
-create table progresso_trilha (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references perfis(id) on delete cascade,
-  etapa_id uuid not null references etapas_trilha(id) on delete cascade,
-  status status_etapa not null default 'bloqueada',
-  percentual numeric(5,2) not null default 0,
-  horas_investidas numeric(6,2) not null default 0,
-  foco_atual boolean not null default false,
-  data_inicio date,
-  data_conclusao date,
-  atualizado_em timestamptz not null default now(),
-  unique (user_id, etapa_id)
-);
-
-create table progresso_capacidade (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references perfis(id) on delete cascade,
-  capacidade_etapa_id uuid not null references capacidades_etapa(id) on delete cascade,
-  dominada boolean not null default false,
-  data_dominio date,
-  unique (user_id, capacidade_etapa_id)
-);
-
--- Progresso do aluno nos Três Trilhos (Mapa dos Estudos). O cânone dos trilhos e
--- suas etapas vive em lib/trilhos.ts; aqui guardamos apenas o estado por aluno,
--- referenciado pelos slugs estáveis daquele arquivo.
-create table progresso_trilho_etapa (
-  id uuid primary key default gen_random_uuid(),
-  user_id uuid not null references perfis(id) on delete cascade,
-  trilho_id text not null,
-  etapa_id text not null,
-  status status_trilho_etapa not null default 'nao_iniciado',
-  atualizado_em timestamptz not null default now(),
-  unique (user_id, etapa_id)
-);
-
 create table planejamento_semanal (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references perfis(id) on delete cascade,
@@ -198,7 +127,6 @@ create table atividades_planejadas (
   planejamento_id uuid references planejamento_semanal(id) on delete cascade,
   ativo_id uuid references ativos(id) on delete set null,
   carteira_item_id uuid references carteira_itens(id) on delete set null,
-  etapa_id uuid references etapas_trilha(id) on delete set null,
   eixo_id uuid references eixos(id) on delete set null,
   titulo text not null,
   descricao text,
@@ -217,7 +145,6 @@ create table registros_estudo (
   user_id uuid not null references perfis(id) on delete cascade,
   atividade_id uuid references atividades_planejadas(id) on delete set null,
   ativo_id uuid references ativos(id) on delete set null,
-  etapa_id uuid references etapas_trilha(id) on delete set null,
   eixo_id uuid references eixos(id) on delete set null,
   data date not null default current_date,
   duracao_min int not null default 0,
@@ -270,15 +197,12 @@ create table notificacoes (
 -- ÍNDICES
 -- ---------------------------------------------------------------------
 create index idx_carteira_itens_user on carteira_itens(user_id);
-create index idx_progresso_trilha_user on progresso_trilha(user_id);
-create index idx_progresso_trilho_etapa_user on progresso_trilho_etapa(user_id);
 create index idx_atividades_user_data on atividades_planejadas(user_id, data);
 create index idx_registros_estudo_user_data on registros_estudo(user_id, data);
 create index idx_constancia_user_data on constancia_diaria(user_id, data);
 create index idx_mensagens_conversa on mensagens_socrates(conversa_id, criado_em);
 create index idx_notificacoes_user_lida on notificacoes(user_id, lida);
 create index idx_ativos_eixo on ativos(eixo_id);
-create index idx_etapas_trilha on etapas_trilha(trilha_id, ordem);
 
 -- ---------------------------------------------------------------------
 -- TRIGGER: cria perfil automaticamente ao registrar no auth.users
@@ -307,10 +231,6 @@ $$ language plpgsql;
 
 create trigger trg_carteira_itens_upd before update on carteira_itens
   for each row execute procedure public.set_atualizado_em();
-create trigger trg_progresso_trilha_upd before update on progresso_trilha
-  for each row execute procedure public.set_atualizado_em();
-create trigger trg_progresso_trilho_etapa_upd before update on progresso_trilho_etapa
-  for each row execute procedure public.set_atualizado_em();
 create trigger trg_perfis_upd before update on perfis
   for each row execute procedure public.set_atualizado_em();
 create trigger trg_conversas_upd before update on conversas_socrates
@@ -332,15 +252,9 @@ $$ language sql security definer stable;
 alter table perfis enable row level security;
 alter table eixos enable row level security;
 alter table capacidades enable row level security;
-alter table trilhas enable row level security;
-alter table etapas_trilha enable row level security;
-alter table capacidades_etapa enable row level security;
 alter table ativos enable row level security;
 alter table config_socrates enable row level security;
 alter table carteira_itens enable row level security;
-alter table progresso_trilha enable row level security;
-alter table progresso_capacidade enable row level security;
-alter table progresso_trilho_etapa enable row level security;
 alter table planejamento_semanal enable row level security;
 alter table atividades_planejadas enable row level security;
 alter table registros_estudo enable row level security;
@@ -368,21 +282,6 @@ create policy "capacidades_write_admin" on capacidades for insert with check (pu
 create policy "capacidades_update_admin" on capacidades for update using (public.is_admin());
 create policy "capacidades_delete_admin" on capacidades for delete using (public.is_admin());
 
-create policy "trilhas_select_auth" on trilhas for select using (auth.role() = 'authenticated');
-create policy "trilhas_write_admin" on trilhas for insert with check (public.is_admin());
-create policy "trilhas_update_admin" on trilhas for update using (public.is_admin());
-create policy "trilhas_delete_admin" on trilhas for delete using (public.is_admin());
-
-create policy "etapas_trilha_select_auth" on etapas_trilha for select using (auth.role() = 'authenticated');
-create policy "etapas_trilha_write_admin" on etapas_trilha for insert with check (public.is_admin());
-create policy "etapas_trilha_update_admin" on etapas_trilha for update using (public.is_admin());
-create policy "etapas_trilha_delete_admin" on etapas_trilha for delete using (public.is_admin());
-
-create policy "capacidades_etapa_select_auth" on capacidades_etapa for select using (auth.role() = 'authenticated');
-create policy "capacidades_etapa_write_admin" on capacidades_etapa for insert with check (public.is_admin());
-create policy "capacidades_etapa_update_admin" on capacidades_etapa for update using (public.is_admin());
-create policy "capacidades_etapa_delete_admin" on capacidades_etapa for delete using (public.is_admin());
-
 create policy "ativos_select_auth" on ativos for select using (auth.role() = 'authenticated');
 create policy "ativos_write_admin" on ativos for insert with check (public.is_admin());
 create policy "ativos_update_admin" on ativos for update using (public.is_admin());
@@ -396,18 +295,6 @@ create policy "config_socrates_update_admin" on config_socrates for update using
 create policy "carteira_itens_all_own" on carteira_itens for all
   using (user_id = auth.uid()) with check (user_id = auth.uid());
 create policy "carteira_itens_select_admin" on carteira_itens for select using (public.is_admin());
-
-create policy "progresso_trilha_all_own" on progresso_trilha for all
-  using (user_id = auth.uid()) with check (user_id = auth.uid());
-create policy "progresso_trilha_select_admin" on progresso_trilha for select using (public.is_admin());
-
-create policy "progresso_capacidade_all_own" on progresso_capacidade for all
-  using (user_id = auth.uid()) with check (user_id = auth.uid());
-create policy "progresso_capacidade_select_admin" on progresso_capacidade for select using (public.is_admin());
-
-create policy "progresso_trilho_etapa_all_own" on progresso_trilho_etapa for all
-  using (user_id = auth.uid()) with check (user_id = auth.uid());
-create policy "progresso_trilho_etapa_select_admin" on progresso_trilho_etapa for select using (public.is_admin());
 
 create policy "planejamento_semanal_all_own" on planejamento_semanal for all
   using (user_id = auth.uid()) with check (user_id = auth.uid());

@@ -30,7 +30,6 @@ export async function atualizarEixo(id: string, formData: FormData) {
 
   await supabase.from("eixos").update(payload).eq("id", id);
   revalidatePath("/admin/eixos");
-  revalidatePath("/mapa");
   revalidatePath("/biblioteca");
 }
 
@@ -62,7 +61,6 @@ export async function atualizarCapacidade(id: string, formData: FormData) {
 
   await supabase.from("capacidades").update({ nome, descricao }).eq("id", id);
   revalidatePath("/admin/eixos");
-  revalidatePath("/mapa");
 }
 
 export async function removerCapacidade(id: string) {
@@ -70,7 +68,6 @@ export async function removerCapacidade(id: string) {
   const supabase = createClient();
   await supabase.from("capacidades").delete().eq("id", id);
   revalidatePath("/admin/eixos");
-  revalidatePath("/mapa");
 }
 
 export async function criarAtivo(formData: FormData) {
@@ -128,84 +125,6 @@ export async function removerAtivo(id: string) {
   await supabase.from("ativos").delete().eq("id", id);
   revalidatePath("/admin/ativos");
   revalidatePath("/biblioteca");
-}
-
-export async function criarTrilha(formData: FormData) {
-  await requireAdmin();
-  const supabase = createClient();
-  const nome = String(formData.get("nome") ?? "").trim();
-  const descricao = String(formData.get("descricao") ?? "").trim() || null;
-  if (!nome) return;
-  await supabase.from("trilhas").insert({ nome, descricao, ordem: 99 });
-  revalidatePath("/admin/trilhas");
-}
-
-export async function atualizarTrilha(id: string, formData: FormData) {
-  await requireAdmin();
-  const supabase = createClient();
-  const nome = String(formData.get("nome") ?? "").trim();
-  const descricao = String(formData.get("descricao") ?? "").trim() || null;
-  if (!id || !nome) return;
-
-  await supabase.from("trilhas").update({ nome, descricao }).eq("id", id);
-  revalidatePath("/admin/trilhas");
-  revalidatePath("/trilha");
-}
-
-export async function removerTrilha(id: string) {
-  await requireAdmin();
-  const supabase = createClient();
-  // Cascateia: apaga as etapas da trilha e o progresso dos alunos nelas.
-  await supabase.from("trilhas").delete().eq("id", id);
-  revalidatePath("/admin/trilhas");
-  revalidatePath("/trilha");
-}
-
-export async function criarEtapa(formData: FormData) {
-  await requireAdmin();
-  const supabase = createClient();
-  const payload = {
-    trilha_id: String(formData.get("trilha_id") ?? ""),
-    eixo_id: String(formData.get("eixo_id") ?? ""),
-    codigo: String(formData.get("codigo") ?? "").trim(),
-    titulo: String(formData.get("titulo") ?? "").trim(),
-    descricao: String(formData.get("descricao") ?? "").trim() || null,
-    carga_horas_estimada: Number(formData.get("carga_horas_estimada") ?? 0),
-    selo_titulo: String(formData.get("selo_titulo") ?? "").trim() || null,
-    ordem: Number(formData.get("ordem") ?? 99),
-  };
-  if (!payload.trilha_id || !payload.eixo_id || !payload.titulo) return;
-
-  await supabase.from("etapas_trilha").insert(payload);
-  revalidatePath("/admin/trilhas");
-  revalidatePath("/trilha");
-}
-
-export async function atualizarEtapa(id: string, formData: FormData) {
-  await requireAdmin();
-  const supabase = createClient();
-  const payload = {
-    eixo_id: String(formData.get("eixo_id") ?? ""),
-    codigo: String(formData.get("codigo") ?? "").trim(),
-    titulo: String(formData.get("titulo") ?? "").trim(),
-    descricao: String(formData.get("descricao") ?? "").trim() || null,
-    carga_horas_estimada: Number(formData.get("carga_horas_estimada") ?? 0),
-    selo_titulo: String(formData.get("selo_titulo") ?? "").trim() || null,
-    ordem: Number(formData.get("ordem") ?? 99),
-  };
-  if (!id || !payload.eixo_id || !payload.titulo) return;
-
-  await supabase.from("etapas_trilha").update(payload).eq("id", id);
-  revalidatePath("/admin/trilhas");
-  revalidatePath("/trilha");
-}
-
-export async function removerEtapa(id: string) {
-  await requireAdmin();
-  const supabase = createClient();
-  await supabase.from("etapas_trilha").delete().eq("id", id);
-  revalidatePath("/admin/trilhas");
-  revalidatePath("/trilha");
 }
 
 export async function atualizarConfigSocrates(formData: FormData) {
