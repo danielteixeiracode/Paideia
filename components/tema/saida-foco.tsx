@@ -25,7 +25,7 @@ export function SaidaFoco() {
     <button
       type="button"
       onClick={() => definir(temaDoSistema())}
-      className="fixed right-4 top-4 z-50 text-nota text-ink/50 transition-colors duration-discreto ease-discreto hover:text-ink"
+      className="fixed right-4 top-4 z-50 text-nota text-ink-muted transition-colors duration-discreto ease-discreto hover:text-ink"
     >
       Sair do modo foco (Esc)
     </button>

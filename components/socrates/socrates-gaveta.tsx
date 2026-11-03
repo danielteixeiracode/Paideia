@@ -1,17 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { MessageSquareQuote, X, Loader2 } from "lucide-react";
+import { MessageSquareQuote, Loader2 } from "lucide-react";
 import { ChatWindow } from "@/components/socrates/chat-window";
 import { useContextoTela } from "@/components/socrates/contexto-tela";
+import { Gaveta } from "@/components/ui/sobreposicao";
 import { abrirConversaAtual } from "@/app/(shell)/socrates/actions";
-import { cn } from "@/lib/utils";
 import type { MensagemSocrates } from "@/types/database";
 
 // Botão fixo + gaveta lateral com o mesmo chat e a mesma conversa de /socrates.
 // Vive no layout do (shell), então a conversa continua ao navegar entre telas.
+// Foco preso, Esc, clique fora e devolução do foco vêm do componente Gaveta.
 export function SocratesGaveta() {
   const pathname = usePathname();
   const contexto = useContextoTela();
@@ -19,19 +20,8 @@ export function SocratesGaveta() {
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [conversa, setConversa] = useState<{ conversaId: string; mensagens: MensagemSocrates[] } | null>(null);
-  const painelRef = useRef<HTMLDivElement>(null);
 
   const naPaginaDoSocrates = pathname === "/socrates" || pathname.startsWith("/socrates/");
-
-  useEffect(() => {
-    if (!aberta) return;
-    function onKey(e: KeyboardEvent) {
-      if (e.key === "Escape") setAberta(false);
-    }
-    window.addEventListener("keydown", onKey);
-    painelRef.current?.focus();
-    return () => window.removeEventListener("keydown", onKey);
-  }, [aberta]);
 
   useEffect(() => {
     if (naPaginaDoSocrates) setAberta(false);
@@ -47,7 +37,7 @@ export function SocratesGaveta() {
       if (!atual) throw new Error();
       setConversa(atual);
     } catch {
-      setErro("Não foi possível abrir o diálogo com Sócrates.");
+      setErro("Não foi possível abrir o diálogo com Sócrates. Feche e tente de novo.");
     } finally {
       setCarregando(false);
     }
@@ -57,69 +47,45 @@ export function SocratesGaveta() {
 
   return (
     <>
+      {/* Fica na página mesmo com a gaveta aberta, para receber o foco de volta. */}
       <button
         type="button"
         onClick={abrir}
         aria-label="Conversar com Sócrates"
-        className={cn(
-          "fixed right-4 z-30 flex h-12 w-12 items-center justify-center rounded-full border border-paideia-gold-500 bg-paideia-green-900 text-paideia-gold-300 shadow-card transition hover:bg-paideia-green-800",
-          "bottom-[calc(4.5rem+env(safe-area-inset-bottom))] lg:bottom-6 lg:right-6",
-          aberta && "hidden"
-        )}
+        className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] right-4 z-30 flex h-12 w-12 items-center justify-center rounded-full border border-paideia-gold-500 bg-paideia-green-900 text-paideia-gold-300 shadow-overlay transition-colors duration-discreto ease-discreto hover:bg-paideia-green-800 lg:bottom-6 lg:right-6"
       >
-        <MessageSquareQuote className="h-5 w-5" />
+        <MessageSquareQuote className="h-5 w-5" aria-hidden />
       </button>
 
-      {aberta && (
-        <div className="fixed inset-0 z-40 bg-paideia-ink/30" onClick={() => setAberta(false)} aria-hidden />
-      )}
-
-      <div
-        ref={painelRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Diálogo com Sócrates"
-        tabIndex={-1}
-        className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-full flex-col bg-surface shadow-card outline-none transition-transform duration-200 sm:max-w-md sm:border-l sm:border-rule",
-          aberta ? "translate-x-0" : "pointer-events-none translate-x-full"
-        )}
-        style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
+      <Gaveta
+        aberta={aberta}
+        onFechar={() => setAberta(false)}
+        titulo="Sócrates"
+        acaoCabecalho={
+          conversa && (
+            <Link
+              href={`/socrates?c=${conversa.conversaId}`}
+              className="t-nota mt-0.5 inline-block font-semibold text-accent underline-offset-4 hover:underline"
+            >
+              Abrir diálogo completo
+            </Link>
+          )
+        }
+        classeCorpo="flex flex-col overflow-hidden pt-2"
       >
-        <div className="flex items-center justify-between gap-3 border-b border-rule px-4 py-3">
-          <div className="leading-tight">
-            <p className="font-serif text-base font-semibold text-ink">Sócrates</p>
-            {conversa && (
-              <Link
-                href={`/socrates?c=${conversa.conversaId}`}
-                className="text-xs font-semibold text-accent hover:underline"
-              >
-                Abrir diálogo completo
-              </Link>
-            )}
+        {erro ? (
+          <p role="alert" className="t-nota rounded-md border border-rule bg-sunken px-3 py-2 text-ink">
+            {erro}
+          </p>
+        ) : carregando && !conversa ? (
+          <div role="status" className="flex flex-1 items-center justify-center text-ink-muted">
+            <Loader2 className="h-5 w-5 animate-spin" aria-hidden />
+            <span className="sr-only">Abrindo o diálogo</span>
           </div>
-          <button
-            type="button"
-            onClick={() => setAberta(false)}
-            aria-label="Fechar"
-            className="rounded-full p-2 text-ink/60 hover:bg-canvas"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
-
-        <div className="min-h-0 flex-1 px-4 pb-4 pt-2">
-          {erro ? (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{erro}</p>
-          ) : carregando && !conversa ? (
-            <div className="flex h-full items-center justify-center text-ink/40">
-              <Loader2 className="h-5 w-5 animate-spin" />
-            </div>
-          ) : conversa ? (
-            <ChatWindow conversaId={conversa.conversaId} mensagensIniciais={conversa.mensagens} contexto={contexto} />
-          ) : null}
-        </div>
-      </div>
+        ) : conversa ? (
+          <ChatWindow conversaId={conversa.conversaId} mensagensIniciais={conversa.mensagens} contexto={contexto} />
+        ) : null}
+      </Gaveta>
     </>
   );
 }

@@ -94,6 +94,8 @@ export function ChatWindow({
 
       <form onSubmit={enviar} className="flex items-end gap-2 border-t border-rule pt-3">
         <textarea
+          data-autofoco
+          aria-label="Mensagem para Sócrates"
           value={texto}
           onChange={(e) => setTexto(e.target.value)}
           onKeyDown={(e) => {

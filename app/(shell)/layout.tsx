@@ -22,7 +22,7 @@ export default async function ShellLayout({ children }: { children: React.ReactN
         <div data-chrome className="contents">
           <Sidebar perfil={perfil} />
         </div>
-        <div data-shell-content className="flex min-h-dvh flex-col lg:pl-64">
+        <div data-shell-content className="flex min-h-dvh flex-col lg:pl-56">
           <div data-chrome className="contents">
             <Topbar perfil={perfil} naoLidas={naoLidas ?? 0} />
           </div>

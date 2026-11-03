@@ -59,21 +59,35 @@ function ariaDoCampo(id: string, { ajuda, erro, obrigatorio }: BaseCampo) {
   } as const;
 }
 
-export type CampoTextoProps = BaseCampo & Omit<React.InputHTMLAttributes<HTMLInputElement>, "id">;
+export type CampoTextoProps = BaseCampo &
+  Omit<React.InputHTMLAttributes<HTMLInputElement>, "id"> & {
+    // Controle dentro do campo, à direita (por exemplo, mostrar a senha).
+    fim?: React.ReactNode;
+  };
 
 export const CampoTexto = forwardRef<HTMLInputElement, CampoTextoProps>(function CampoTexto(
-  { rotulo, ajuda, erro, obrigatorio, className, ...props },
+  { rotulo, ajuda, erro, obrigatorio, fim, className, ...props },
   ref
 ) {
   const id = useId();
+  const campo = (
+    <input
+      ref={ref}
+      {...ariaDoCampo(id, { rotulo, ajuda, erro, obrigatorio })}
+      className={cn(CONTROLE, bordaControle(erro), fim && "pr-12", className)}
+      {...props}
+    />
+  );
   return (
     <Moldura id={id} rotulo={rotulo} ajuda={ajuda} erro={erro} obrigatorio={obrigatorio}>
-      <input
-        ref={ref}
-        {...ariaDoCampo(id, { rotulo, ajuda, erro, obrigatorio })}
-        className={cn(CONTROLE, bordaControle(erro), className)}
-        {...props}
-      />
+      {fim ? (
+        <div className="relative">
+          {campo}
+          <div className="absolute inset-y-0 right-1 flex items-center">{fim}</div>
+        </div>
+      ) : (
+        campo
+      )}
     </Moldura>
   );
 });

@@ -77,6 +77,7 @@ const config: Config = {
         corpo: ["1rem", { lineHeight: "1.6" }],
         interface: ["0.875rem", { lineHeight: "1.4" }],
         nota: ["0.8125rem", { lineHeight: "1.35" }],
+        micro: ["0.6875rem", { lineHeight: "1.2" }], // só rótulos do menu do celular, sob o romano
         // Escala genérica herdada pelas telas atuais.
         lg: ["1.25rem", { lineHeight: "1.75rem" }],
         xl: ["1.5rem", { lineHeight: "2rem" }],

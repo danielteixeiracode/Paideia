@@ -92,6 +92,7 @@ export function Gaveta({
   acaoCabecalho,
   rodape,
   className,
+  classeCorpo,
   children,
 }: {
   aberta: boolean;
@@ -101,6 +102,8 @@ export function Gaveta({
   acaoCabecalho?: React.ReactNode;
   rodape?: React.ReactNode;
   className?: string;
+  // Para conteúdos que controlam a própria rolagem (como o chat).
+  classeCorpo?: string;
   children: React.ReactNode;
 }) {
   const montado = useMontado();
@@ -138,7 +141,7 @@ export function Gaveta({
             </div>
             <BotaoFechar onFechar={onFechar} />
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">{children}</div>
+          <div className={cn("min-h-0 flex-1 overflow-y-auto px-5 py-4", classeCorpo)}>{children}</div>
           {rodape && <div className="border-t border-rule px-5 py-4">{rodape}</div>}
         </div>
       </div>,
