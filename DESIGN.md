@@ -198,6 +198,7 @@ As primitivas são as cores do Paideia e não mudam; as semânticas dão a cada 
 - **Corpo** (400, 1rem, 1.6): texto corrido (`.t-corpo`).
 - **Interface** (500, 0.875rem, 1.4): botões, abas, rótulos de controle (`.t-interface`).
 - **Nota** (400, 0.8125rem, 1.35, `ink-muted`): metadados e legendas (`.t-nota`).
+- **Micro** (0.6875rem, 1.2): só os rótulos do menu do celular, sob o algarismo romano.
 
 ### Named Rules
 **A Regra do Marcador Romano.** Toda seção se abre com algarismo romano e filete; nenhum rótulo pequeno acima do título.
@@ -262,7 +263,10 @@ Componentes base em `components/ui/`, todos nos três modos, com foco visível, 
 - **Focus:** anel de foco global em `focus`.
 
 ### Navigation
-- **Sidebar e barra do celular:** pedra verde (green-900) em todos os modos, itens em creme; item ativo em dourado com texto verde-950. Somem no modo foco.
+- **Sidebar** (14rem): pedra verde (green-900) em todos os modos. Cada seção do aluno é marcada pelo seu algarismo romano (I Início, II Obras, III Funções, IV Épocas, V Carteira, VI Sócrates), em dourado; item ativo em fundo dourado com texto verde-950 e `aria-current`. Administração separada por filete, com ícones Lucide. Rodapé com nome, grau e configurações.
+- **Topo:** fundo `canvas`; à esquerda o título da tela com romano e filete; à direita a busca ("Buscar ou ir para", Ctrl K), o seletor dos três modos, notificações e o menu da conta (no celular, o seletor de modo fica dentro do menu da conta).
+- **Celular:** barra inferior verde com os mesmos seis romanos e rótulos `micro`, alvo de 56px, item ativo em dourado com traço no topo; respeita a área segura.
+- **Modo foco:** sidebar, topo, barra do celular e botão do Sócrates somem.
 
 ### Templo
 Elemento central do Início e único momento de assinatura: SVG com frontão, arquitrave, 7 colunas (uma por função pedagógica) e estilóbato. A coluna se enche de dourado de baixo para cima; com todas cheias, o frontão se acende. Ao carregar, as colunas sobem em sequência (`--motion-signature-duration` 1100ms, `--motion-signature-ease`, intervalo `--motion-signature-stagger` 90ms).
