@@ -348,6 +348,17 @@ body {
   .filete-duplo-cima {
     border-top: 3px double rgb(var(--c-rule-strong) / 0.6);
   }
+  /* Dourado em relevo: o mesmo preenchimento das colunas do templo
+     (DefsOuro em components/ui/coluna-progresso.tsx), para elementos HTML. */
+  .ouro-relevo {
+    background-image: linear-gradient(
+      90deg,
+      theme("colors.paideia.gold.500"),
+      theme("colors.paideia.gold.300") 35%,
+      theme("colors.paideia.gold.400") 60%,
+      theme("colors.paideia.gold.600")
+    );
+  }
 
   /* Marcador de seção: algarismo romano seguido de filete. */
   .marcador {

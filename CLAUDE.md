@@ -105,3 +105,4 @@ Pendências técnicas:
 - Forma da gamificação clássica
 - Personalização por objetivo
 - Parceria com o Instituto Alcuíno de York
+- Vocabulário dos tipos de evento (exercicio_feito, dialogo_socratico, leitura, obra_guardada, obra_removida) é provisório.

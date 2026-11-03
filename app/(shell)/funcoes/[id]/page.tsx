@@ -87,7 +87,7 @@ export default async function FuncaoPage({ params }: { params: { id: string } })
         {exercicios.length === 0 ? (
           <EmptyState titulo="Nenhum exercício desta função ainda" />
         ) : (
-          <ul className="space-y-2">
+          <ul className="divide-y-hair divide-rule-strong/40">
             {exercicios.map((e) => (
               <ExercicioItem key={e.id} exercicio={e} obra={e.obra?.ativo ? e.obra : null} />
             ))}

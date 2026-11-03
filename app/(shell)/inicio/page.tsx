@@ -3,6 +3,7 @@ import { requirePerfil } from "@/lib/data/session";
 import { Templo, type ColunaTemplo } from "@/components/corpo/templo";
 import { ResponderSocrates } from "@/components/corpo/responder-socrates";
 import { Cartao } from "@/components/ui/cartao";
+import { TituloBloco } from "@/components/ui/titulo-bloco";
 import { Contador } from "@/components/ui/contador";
 import { classesBotao } from "@/components/ui/botao";
 import { preenchimentoColuna, frontaoAceso } from "@/lib/templo";
@@ -254,18 +255,6 @@ export default async function InicioPage() {
           </ol>
         )}
       </section>
-    </div>
-  );
-}
-
-// Título pequeno de bloco, aberto por filete, com o atalho para o membro.
-function TituloBloco({ titulo, href, link }: { titulo: string; href: string; link: string }) {
-  return (
-    <div className="filete flex items-baseline justify-between gap-3 pt-3">
-      <h2 className="text-interface font-semibold text-ink">{titulo}</h2>
-      <Link href={href} className="t-nota text-accent underline-offset-4 hover:underline">
-        {link}
-      </Link>
     </div>
   );
 }
