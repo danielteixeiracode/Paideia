@@ -310,6 +310,15 @@ Frontispício (marcador I, título "Início" em display, "Bem-vindo de volta") c
 ### Sócrates
 Botão circular fixo de pedra verde com borda dourada e gaveta lateral em `surface` com sombra de sobreposição; tela cheia no celular. Some no modo foco.
 
+- **Chat** (`components/socrates/chat-window.tsx`): um só componente, na página e na gaveta (`compacto`). Só interface; a API, o prompt-base e a lógica do Sócrates não mudam.
+  - **Falas:** as do Sócrates em serifa (`text-leitura`), com a marca Σ em `gold-ink` e sem balão; as do aluno em sans, à direita, num bloco `sunken` com filete fino à direita. Coluna na medida de leitura. Cada fala tem "Sócrates:" ou "Você:" para leitores de tela; a nova fala do Sócrates é anunciada uma vez numa região `aria-live` educada.
+  - **Rolagem:** abre no fim; uma fala nova só leva ao fim se o aluno já estava lá; se ele lia mais acima, aparece "Nova fala abaixo".
+  - **Campo:** Enter envia, Shift+Enter quebra a linha (IME em composição não envia); cresce até 160px; 16px no celular; botão "Enviar" (só ícone com `aria-label` na gaveta), desativado sem texto e carregando enquanto envia. Indicador "Sócrates está respondendo" com três pontos que pulsam, parados sob movimento reduzido.
+  - **Faixa de contexto**, acima do campo, só quando há o que dizer: "Vendo: …" (nome da obra, função, época ou exercício da tela) e "Respondendo: …" (a pergunta do Início), em `ink-muted`.
+  - **Vazio:** Σ, "Comece o diálogo" e três sugestões que preenchem o campo sem enviar. **Erro:** ícone, texto e borda dupla dourada, com "Tentar de novo"; a mensagem volta ao campo.
+- **Página** (`/socrates`): marcador VI, "Sócrates" e uma frase; no desktop, consultas à esquerda (título, data relativa, a atual com filete dourado e `aria-current`, "Nova consulta") e a conversa à direita, numa superfície contornada; no celular, as consultas abrem numa `Gaveta`. Altura pela tela, descontando `--header-height` e `--shell-respiro`.
+- **Gaveta:** o mesmo chat, compacto, com "Abrir diálogo completo", o foco no campo ao abrir e o contexto da tela.
+
 ### Movimento
 - **Entrada de tela** (`app/(shell)/template.tsx`, `.anim-pagina`): fade com deslocamento de 6px, 225ms, no movimento discreto; começa quando a tela já chegou, nunca atrasa a navegação; nenhuma animação com movimento reduzido. O Next 14 ainda não integra a View Transitions API.
 - **Resposta imediata:** ações do aluno são otimistas (`CarteiraBotao`, "Guardar esta obra" da paleta, `FormularioOtimista` nas Configurações): a interface muda no clique com um aviso, e volta ao estado anterior com aviso de erro se o servidor falhar. As ações devolvem `ResultadoAcao` (`lib/acoes.ts`).

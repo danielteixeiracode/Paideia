@@ -98,22 +98,16 @@ export function SocratesGaveta() {
             <span className="sr-only">Abrindo o diálogo</span>
           </div>
         ) : conversa ? (
-          <>
-            {pergunta && (
-              <figure className="mb-3 shrink-0 border-b border-rule pb-3">
-                <figcaption className="t-nota">Sócrates pergunta</figcaption>
-                <blockquote className="mt-1 font-serif text-subtitulo italic leading-snug text-ink">{pergunta}</blockquote>
-              </figure>
-            )}
-            <div className="min-h-0 flex-1">
-              <ChatWindow
-                conversaId={conversa.conversaId}
-                mensagensIniciais={conversa.mensagens}
-                contexto={contexto}
-                pergunta={pergunta ?? undefined}
-              />
-            </div>
-          </>
+          // A pergunta do Início aparece na faixa de contexto do próprio chat.
+          <div className="min-h-0 flex-1">
+            <ChatWindow
+              conversaId={conversa.conversaId}
+              mensagensIniciais={conversa.mensagens}
+              contexto={contexto}
+              pergunta={pergunta ?? undefined}
+              compacto
+            />
+          </div>
         ) : null}
       </Gaveta>
     </>

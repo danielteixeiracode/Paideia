@@ -1,62 +1,69 @@
 import { requirePerfil } from "@/lib/data/session";
-import { Card, Eyebrow } from "@/components/ui/primitives";
-import { ConversasSidebar } from "@/components/socrates/conversas-sidebar";
 import { ChatWindow } from "@/components/socrates/chat-window";
-import { NovaConversaButton } from "@/components/socrates/nova-conversa-button";
-import type { ConversaSocrates, MensagemSocrates } from "@/types/database";
+import { BotaoNovaConsulta, ConsultasNoCelular, ListaConsultas, type Consulta } from "@/components/socrates/lista-consultas";
+import { ContextoTela } from "@/components/socrates/contexto-tela";
+import type { MensagemSocrates } from "@/types/database";
 
-export default async function SocratesPage({
-  searchParams,
-}: {
-  searchParams: { c?: string };
-}) {
+export default async function SocratesPage({ searchParams }: { searchParams: { c?: string } }) {
   const { supabase, perfil } = await requirePerfil();
 
   const { data: conversas } = await supabase
     .from("conversas_socrates")
-    .select("*")
+    .select("id, titulo, atualizado_em")
     .eq("user_id", perfil.id)
     .order("atualizado_em", { ascending: false });
 
-  const lista = (conversas ?? []) as ConversaSocrates[];
-  const conversaAtiva = searchParams.c
-    ? lista.find((c) => c.id === searchParams.c)
-    : lista[0];
+  const consultas = (conversas ?? []) as Consulta[];
+  const ativa = searchParams.c ? consultas.find((c) => c.id === searchParams.c) : consultas[0];
 
   let mensagens: MensagemSocrates[] = [];
-  if (conversaAtiva) {
+  if (ativa) {
     const { data } = await supabase
       .from("mensagens_socrates")
       .select("*")
-      .eq("conversa_id", conversaAtiva.id)
+      .eq("conversa_id", ativa.id)
       .order("criado_em", { ascending: true });
     mensagens = (data ?? []) as MensagemSocrates[];
   }
+  const agora = new Date().toISOString();
 
   return (
-    <div className="flex h-[calc(100dvh-var(--header-height)-var(--shell-respiro))] min-h-[24rem] flex-col gap-5">
-      <div>
-        <Eyebrow>Mentor Diático em Vigília • Atenas, 399 a.C. (simbólico)</Eyebrow>
-        <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Diálogo com Sócrates</h1>
-      </div>
+    // Altura da tela menos cabeçalho e respiros: a conversa rola por dentro.
+    <div className="flex h-[calc(100dvh-var(--header-height)-var(--shell-respiro))] min-h-[28rem] flex-col gap-6">
+      <ContextoTela tipo="nenhum" />
 
-      <div className="grid flex-1 gap-5 overflow-hidden lg:grid-cols-[240px_1fr]">
-        <Card className="hidden overflow-hidden lg:flex">
-          <ConversasSidebar conversas={lista} ativaId={conversaAtiva?.id} />
-        </Card>
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <div className="marcador max-w-md" aria-hidden>
+            VI
+          </div>
+          <h1 className="t-titulo mt-3">Sócrates</h1>
+          <p className="t-nota mt-1">O diálogo socrático: ele pergunta mais do que responde.</p>
+        </div>
+        <div className="lg:hidden">
+          <ConsultasNoCelular consultas={consultas} ativaId={ativa?.id} agora={agora} />
+        </div>
+      </header>
 
-        <Card className="flex flex-1 flex-col overflow-hidden">
-          {conversaAtiva ? (
-            <ChatWindow conversaId={conversaAtiva.id} mensagensIniciais={mensagens} />
+      <div className="grid min-h-0 flex-1 gap-6 lg:grid-cols-[16rem_minmax(0,1fr)]">
+        <aside className="hidden min-h-0 lg:block">
+          <ListaConsultas consultas={consultas} ativaId={ativa?.id} agora={agora} />
+        </aside>
+
+        <section aria-label="Conversa" className="flex min-h-0 flex-col rounded-2xl border border-rule bg-surface p-4 sm:p-6">
+          {ativa ? (
+            <ChatWindow conversaId={ativa.id} mensagensIniciais={mensagens} />
           ) : (
-            <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center">
-              <p className="font-serif text-lg text-ink/70">
-                Nenhum diálogo iniciado. Comece uma nova consulta com Sócrates.
+            <div className="m-auto max-w-sm text-center">
+              <p aria-hidden className="font-serif text-titulo leading-none text-gold-ink">
+                Σ
               </p>
-              <NovaConversaButton />
+              <p className="t-subtitulo mt-3">Nenhuma consulta ainda</p>
+              <p className="t-nota mt-1">Abra uma consulta e faça a primeira pergunta.</p>
+              <BotaoNovaConsulta className="mt-5" />
             </div>
           )}
-        </Card>
+        </section>
       </div>
     </div>
   );
