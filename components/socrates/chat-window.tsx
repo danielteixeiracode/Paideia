@@ -246,7 +246,8 @@ export function ChatWindow({
         {temFaixa && (
           <div className="mx-auto mb-2 max-w-leitura space-y-0.5">
             {nomeContexto && <p className="t-nota truncate">Vendo: {nomeContexto}</p>}
-            {pergunta && <p className="t-nota line-clamp-3">Respondendo: “{pergunta}”</p>}
+            {/* A pergunta fica sempre inteira: o aluno responde a ela (cabe em até 3 linhas). */}
+            {pergunta && <p className="t-nota">Respondendo: “{pergunta}”</p>}
           </div>
         )}
 

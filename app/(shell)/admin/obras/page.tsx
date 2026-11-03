@@ -1,80 +1,65 @@
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { requireAdmin } from "@/lib/data/session";
-import { Eyebrow, Badge, EmptyState } from "@/components/ui/primitives";
 import { AdminTabs } from "@/components/admin/admin-tabs";
-import { romano } from "@/lib/utils";
-import type { Epoca, FuncaoPedagogica, Obra } from "@/types/database";
+import { classesBotao } from "@/components/ui/botao";
+import { TabelaObras, type ObraAdmin } from "./tabela";
 
-type ObraAdmin = Obra & {
-  epoca: Epoca | null;
-  obra_funcoes: { funcao: FuncaoPedagogica | null }[];
+type Linha = {
+  id: string;
+  titulo: string;
+  autor: string | null;
+  ativo: boolean;
+  epoca: { numero: number; nome: string } | null;
+  obra_funcoes: { funcao: { numero: number; nome: string } | null }[];
 };
 
 export default async function AdminObrasPage() {
+  // Só administrador (checado aqui e no middleware); vê também os rascunhos.
   const { supabase } = await requireAdmin();
 
   const { data } = await supabase
     .from("obras")
-    .select("*, epoca:epocas(*), obra_funcoes(funcao:funcoes_pedagogicas(*))")
+    .select("id, titulo, autor, ativo, epoca:epocas(numero, nome), obra_funcoes(funcao:funcoes_pedagogicas(numero, nome))")
     .order("ordem")
     .order("titulo");
-  const obras = (data ?? []) as unknown as ObraAdmin[];
+
+  const obras: ObraAdmin[] = ((data ?? []) as unknown as Linha[]).map((o) => ({
+    id: o.id,
+    titulo: o.titulo,
+    autor: o.autor,
+    ativo: o.ativo,
+    epoca: o.epoca,
+    funcoes: o.obra_funcoes
+      .map((l) => l.funcao)
+      .filter((f): f is { numero: number; nome: string } => !!f)
+      .sort((a, b) => a.numero - b.numero),
+  }));
 
   return (
-    <div className="space-y-6">
-      <div>
-        <Eyebrow>Administratio Paideiae</Eyebrow>
-        <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Obras</h1>
-        <p className="mt-1 text-sm text-ink/60">
-          Página provisória, só de leitura. O cadastro de obras virá numa próxima etapa.
-        </p>
-      </div>
+    <div className="space-y-8">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="t-titulo">Obras</h1>
+          <p className="t-nota mt-1">O acervo da formação, com os rascunhos. Só a administração vê esta tela.</p>
+        </div>
+        <Link href="/admin/obras/nova" className={classesBotao()}>
+          <Plus className="h-4 w-4" aria-hidden /> Nova obra
+        </Link>
+      </header>
+
       <AdminTabs />
 
       {obras.length === 0 ? (
-        <EmptyState titulo="Nenhuma obra cadastrada" />
-      ) : (
-        <div className="overflow-x-auto rounded-2xl border border-rule bg-surface shadow-card">
-          <table className="w-full text-sm">
-            <thead className="bg-canvas text-left text-[11px] uppercase text-ink/50">
-              <tr>
-                <th className="px-4 py-3">Obra</th>
-                <th className="px-4 py-3">Época</th>
-                <th className="px-4 py-3">Funções</th>
-                <th className="px-4 py-3">Publicada</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-rule">
-              {obras.map((obra) => (
-                <tr key={obra.id}>
-                  <td className="px-4 py-3">
-                    <Link href={`/obras/${obra.id}`} className="font-medium hover:underline">
-                      {obra.titulo}
-                    </Link>
-                    {obra.autor && <p className="text-xs text-ink/50">{obra.autor}</p>}
-                  </td>
-                  <td className="px-4 py-3 text-ink/60">
-                    {obra.epoca ? `${romano(obra.epoca.numero)} • ${obra.epoca.nome}` : "—"}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex flex-wrap gap-1">
-                      {obra.obra_funcoes
-                        .map((l) => l.funcao)
-                        .filter((f): f is FuncaoPedagogica => !!f)
-                        .sort((a, b) => a.numero - b.numero)
-                        .map((f) => (
-                          <Badge key={f.id}>{f.numero}. {f.nome}</Badge>
-                        ))}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <Badge tone={obra.ativo ? "green" : "neutral"}>{obra.ativo ? "Sim" : "Não"}</Badge>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="filete py-10 text-center">
+          <p className="t-subtitulo">Nenhuma obra cadastrada</p>
+          <p className="t-nota mt-1">Cadastre a primeira obra da formação. Ela começa como rascunho.</p>
+          <Link href="/admin/obras/nova" className={classesBotao({ className: "mt-4" })}>
+            <Plus className="h-4 w-4" aria-hidden /> Nova obra
+          </Link>
         </div>
+      ) : (
+        <TabelaObras obras={obras} />
       )}
     </div>
   );
