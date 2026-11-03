@@ -1,5 +1,4 @@
-import { Sidebar } from "@/components/layout/sidebar";
-import { Topbar } from "@/components/layout/topbar";
+import { Cabecalho } from "@/components/layout/cabecalho";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { ContextoTelaProvider } from "@/components/socrates/contexto-tela";
 import { SocratesGaveta } from "@/components/socrates/socrates-gaveta";
@@ -7,26 +6,17 @@ import { SaidaFoco } from "@/components/tema/saida-foco";
 import { requirePerfil } from "@/lib/data/session";
 
 export default async function ShellLayout({ children }: { children: React.ReactNode }) {
-  const { supabase, perfil } = await requirePerfil();
-
-  const { count: naoLidas } = await supabase
-    .from("notificacoes")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", perfil.id)
-    .eq("lida", false);
+  const { perfil } = await requirePerfil();
 
   return (
     <ContextoTelaProvider>
       {/* data-chrome: interface que some no modo foco (ver globals.css). */}
       <div className="min-h-dvh bg-canvas">
-        <div data-chrome className="contents">
-          <Sidebar perfil={perfil} />
-        </div>
-        <div data-shell-content className="flex min-h-dvh flex-col lg:pl-56">
+        <div data-shell-content className="flex min-h-dvh flex-col">
           <div data-chrome className="contents">
-            <Topbar perfil={perfil} naoLidas={naoLidas ?? 0} />
+            <Cabecalho perfil={perfil} />
           </div>
-          <main className="flex-1 px-4 pb-24 pt-5 sm:px-6 lg:px-8 lg:pb-8">{children}</main>
+          <main className="mx-auto w-full max-w-pagina flex-1 px-gutter pb-24 pt-6 md:pb-10">{children}</main>
         </div>
         <div data-chrome className="contents">
           <MobileNav />

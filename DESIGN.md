@@ -154,7 +154,7 @@ A ambição aparece como precisão e contenção, não como ornamento. Há um ú
 As primitivas são as cores do Paideia e não mudam; as semânticas dão a cada cor um papel e são resolvidas pelo tema ativo (`data-theme` no `<html>`). Os valores do frontmatter são os do modo claro.
 
 ### Primary
-- **Verde Esmeralda Profundo** (green-900, green-950): a pedra. Sidebar, barra do celular, botão do Sócrates, caixa do logo; no modo escuro, também fundo e superfície.
+- **Verde Esmeralda Profundo** (green-900, green-950): a pedra. Barra do celular, botão do Sócrates, caixa do logo do login; no modo escuro, também fundo e superfície.
 - **Verde Esmeralda** (green-800): ação principal e links no claro e no foco (`action`, `accent`).
 - **Verde Esmeralda Claro** (green-700): hover da ação; bordas no modo escuro.
 
@@ -207,9 +207,9 @@ As primitivas são as cores do Paideia e não mudam; as semânticas dão a cada 
 
 ## Layout
 
-Escala de espaço de 4px (`--space-1` a `--space-8`: 4, 8, 12, 16, 24, 32, 48, 64px). Gutter de 16px no celular, 24px a partir de 640px e 32px a partir de 1024px; respiro entre seções de 32px, e 48px no desktop. Grade de 4 colunas no celular, 8 no tablet e 12 no desktop (`.grade`), com espaçamento igual ao gutter. Página com largura máxima de 72rem; texto longo com medida de 66 caracteres.
+Escala de espaço de 4px (`--space-1` a `--space-8`: 4, 8, 12, 16, 24, 32, 48, 64px). Gutter de 16px no celular, 24px a partir de 640px e 32px a partir de 1024px; respiro entre seções de 32px, e 48px no desktop. Grade de 4 colunas no celular, 8 no tablet e 12 no desktop (`.grade`), com espaçamento igual ao gutter. Sem menu lateral: o conteúdo de toda tela autenticada fica centralizado no container `pagina` (72rem), com o gutter dos lados; o cabeçalho usa o mesmo container. Texto longo com medida de 66 caracteres.
 
-No modo foco, a sidebar, o topo, a barra do celular e o botão do Sócrates somem, e o conteúdo se centraliza na medida de leitura. A saída é um texto discreto no canto ("Sair do modo foco") e a tecla Esc.
+No modo foco, o cabeçalho, a barra do celular e o botão do Sócrates somem, e o conteúdo se centraliza na medida de leitura. A saída é um texto discreto no canto ("Sair do modo foco") e a tecla Esc.
 
 ## Elevation & Depth
 
@@ -263,10 +263,12 @@ Componentes base em `components/ui/`, todos nos três modos, com foco visível, 
 - **Focus:** anel de foco global em `focus`.
 
 ### Navigation
-- **Sidebar** (14rem): pedra verde (green-900) em todos os modos. Cada seção do aluno é marcada pelo seu algarismo romano (I Início, II Obras, III Funções, IV Épocas, V Carteira, VI Sócrates), em dourado; item ativo em fundo dourado com texto verde-950 e `aria-current`. Administração separada por filete, com ícones Lucide. Rodapé com nome, grau e configurações.
-- **Topo:** fundo `canvas`; à esquerda o título da tela com romano e filete; à direita a busca ("Buscar ou ir para", Ctrl K), o seletor dos três modos, notificações e o menu da conta (no celular, o seletor de modo fica dentro do menu da conta).
-- **Celular:** barra inferior verde com os mesmos seis romanos e rótulos `micro`, alvo de 56px, item ativo em dourado com traço no topo; respeita a área segura.
-- **Modo foco:** sidebar, topo, barra do celular e botão do Sócrates somem.
+- **Cabeçalho, a "arquitrave"** (fixo ao rolar): sobre a superfície do tema (`surface`), não sobre a pedra verde. Não há menu lateral; o conteúdo ocupa a largura inteira, no container `pagina` (72rem). O título da tela não aparece no topo: a navegação já mostra onde o aluno está.
+  - **Faixa de cima** (56px): marca "Paideia" (leva ao Início) à esquerda; à direita a busca ("Buscar ou ir para", com a dica Ctrl K, ainda sem função), o seletor dos três modos e o menu da conta (círculo com a inicial). O menu da conta tem Configurações, Sair e, só para o administrador, a seção Administração (Obras, Exercícios, Sócrates, Usuários). Fecha com Esc, clique fora ou ao navegar.
+  - **Faixa de baixo** (a partir de 768px): a navegação centralizada, cada item com seu romano em `gold-ink` (I Início, II Obras, III Funções, IV Épocas, V Carteira, VI Sócrates); item ativo em `ink` semibold, com sublinhado dourado e `aria-current`. Entre um filete fino em cima (`.filete`) e um filete duplo embaixo (`.filete-duplo-baixo`, 3px double).
+  - **Ao rolar:** ganha uma sombra de filete discreta (linha de `rule-strong` e sombra curta de tinta).
+- **Celular** (abaixo de 768px): no topo ficam só a marca, a busca (apenas ícone) e a conta; o seletor de modo vai para dentro do menu da conta. A navegação desce para a barra inferior de pedra verde, com os mesmos seis romanos e rótulos `micro`, alvo de 56px, item ativo em dourado com traço no topo; respeita a área segura.
+- **Modo foco:** cabeçalho, barra do celular e botão do Sócrates somem.
 
 ### Templo
 Elemento central do Início e único momento de assinatura: SVG com frontão, arquitrave, 7 colunas (uma por função pedagógica) e estilóbato. A coluna se enche de dourado de baixo para cima; com todas cheias, o frontão se acende. Ao carregar, as colunas sobem em sequência (`--motion-signature-duration` 1100ms, `--motion-signature-ease`, intervalo `--motion-signature-stagger` 90ms).

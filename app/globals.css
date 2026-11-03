@@ -300,6 +300,10 @@ body {
   .filete {
     border-top: var(--rule-width) solid rgb(var(--c-rule-strong) / 0.6);
   }
+  /* Filete duplo: duas réguas finas, como a base da arquitrave. */
+  .filete-duplo-baixo {
+    border-bottom: 3px double rgb(var(--c-rule-strong) / 0.6);
+  }
 
   /* Marcador de seção: algarismo romano seguido de filete. */
   .marcador {

@@ -15,7 +15,7 @@ export function MarcaTemplo({ className }: { className?: string }) {
   );
 }
 
-// Logo sobre o fundo de leitura (login). A sidebar tem sua versão sobre a pedra verde.
+// Logo sobre o fundo de leitura (login). O cabeçalho do app usa só a MarcaTemplo.
 export function Logo({ className, iconOnly = false }: { className?: string; iconOnly?: boolean }) {
   return (
     <div className={cn("flex items-center gap-3", className)}>

@@ -5,13 +5,13 @@ import { usePathname } from "next/navigation";
 import { NAV_ALUNO, rotaAtiva } from "@/lib/nav";
 import { cn, romano } from "@/lib/utils";
 
-// Mesma lista da sidebar, com o romano no lugar do ícone e alvo de toque de 56px.
+// Celular: a mesma lista da navegação do cabeçalho, com o romano e alvo de toque de 56px.
 export function MobileNav() {
   const pathname = usePathname();
   return (
     <nav
       aria-label="Seções"
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-paideia-green-900 lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-white/10 bg-paideia-green-900 md:hidden"
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
       <ul className="flex">

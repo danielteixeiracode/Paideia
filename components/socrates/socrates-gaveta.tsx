@@ -52,7 +52,7 @@ export function SocratesGaveta() {
         type="button"
         onClick={abrir}
         aria-label="Conversar com Sócrates"
-        className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] right-4 z-30 flex h-12 w-12 items-center justify-center rounded-full border border-paideia-gold-500 bg-paideia-green-900 text-paideia-gold-300 shadow-overlay transition-colors duration-discreto ease-discreto hover:bg-paideia-green-800 lg:bottom-6 lg:right-6"
+        className="fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom))] right-4 z-30 flex h-12 w-12 items-center justify-center rounded-full border border-paideia-gold-500 bg-paideia-green-900 text-paideia-gold-300 shadow-overlay transition-colors duration-discreto ease-discreto hover:bg-paideia-green-800 md:bottom-6 md:right-6"
       >
         <MessageSquareQuote className="h-5 w-5" aria-hidden />
       </button>
