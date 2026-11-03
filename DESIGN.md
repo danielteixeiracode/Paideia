@@ -333,6 +333,7 @@ Botão circular fixo de pedra verde com borda dourada e gaveta lateral em `surfa
   - **Vazio:** Σ, "Comece o diálogo" e três sugestões que preenchem o campo sem enviar. **Erro:** ícone, texto e borda dupla dourada, com "Tentar de novo"; a mensagem volta ao campo.
 - **Página** (`/socrates`): marcador VI, "Sócrates" e uma frase; no desktop, consultas à esquerda (título, data relativa, a atual com filete dourado e `aria-current`, "Nova consulta") e a conversa à direita, numa superfície contornada; no celular, as consultas abrem numa `Gaveta`. Altura pela tela, descontando `--header-height` e `--shell-respiro`.
 - **Gaveta:** o mesmo chat, compacto, com "Abrir diálogo completo", o foco no campo ao abrir e o contexto da tela.
+- **O que o Sócrates sabe:** além da tela e da pergunta do Início, um resumo do aluno montado no servidor (`lib/socrates-contexto.ts`; ver CLAUDE.md). Nada desse resumo aparece na interface.
 
 ### Service worker e offline
 `public/sw.js` guarda em cache só arquivos estáticos (`/_next/static`, ícones, manifest, fontes) e `public/offline.html`. Páginas são sempre pedidas à rede; sem rede, aparece a página offline (paleta do Paideia, claro e escuro do sistema, sem dado de ninguém). A API e páginas com login nunca vão para o cache. Ao ativar, a versão nova apaga as caches antigas (a v1 guardava páginas). O manifest e o `themeColor` usam green-900 (`#11271F`).

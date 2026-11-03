@@ -49,7 +49,6 @@ Direção de trabalho (proposta, ainda não confirmada em detalhe; confirme com 
 - O progresso não é um campo preenchido nem uma porcentagem: é derivado do registro de eventos, por função (perfil de faculdades).
 - Modelo de dados novo: funcoes_pedagogicas, obra_funcoes (N:N), exercicios (ligados à função), frutos (privados do aluno) e um registro de eventos (o que o aluno fez, quando, em qual obra, função e exercício).
 - carteira_itens guarda só o estado da obra para o aluno, sem porcentagem.
-- O Sócrates lê um resumo do registro, não o histórico inteiro.
 
 ## Estado do código
 
@@ -57,13 +56,15 @@ Modelo de dados em uso (supabase/migrations/2026-11-03-novo-modelo-corpo.sql, j�
 
 Telas do aluno no padrão novo (DESIGN.md): Início (templo), Obras, Funções, Épocas, Carteira, Sócrates, Configurações. Navegação no cabeçalho em faixa dupla (abas I a VI), barra inferior no celular, paleta de comandos (Ctrl K) e atalhos. Administração no padrão novo: visão geral, Obras e Exercícios (cadastro com validação, sem exclusão), Sócrates (configuração) e Usuários. Títulos das abas do navegador por rota ("Obras – Paideia").
 
-Do modelo antigo, ainda no app e fora dos menus (decidir se ficam): Biblioteca (`ativos`, `eixos`, `carteira_itens`), /admin/eixos (`eixos`, `capacidades`) e /admin/ativos (`ativos`, `eixos`). O contexto que a API do Sócrates monta ainda lê `carteira_itens` e `ativos` (o modelo antigo), não `carteira_obras` e `frutos`.
+Do modelo antigo, ainda no app e fora dos menus (decidir se ficam): Biblioteca (`ativos`, `eixos`, `carteira_itens`), /admin/eixos (`eixos`, `capacidades`) e /admin/ativos (`ativos`, `eixos`).
 
 Não construir novas funcionalidades sobre: `eixos`, `capacidades`, `ativos`, `carteira_itens`, `atividades_planejadas`, `planejamento_semanal`, `registros_estudo`, porcentagem por eixo.
 
 As abas Trilha de Formação e Mapa dos Estudos foram removidas do app; não recriar. O script que apaga as tabelas da trilha (`supabase/migrations/2026-11-03-remove-trilhas-e-mapa.sql`) já foi aplicado no banco real.
 
 Os dados de supabase/seeds/exemplo-corpo.sql são de teste e não representam a seleção real de obras do Daniel. Os de supabase/seeds/exemplo-eventos.sql também são de teste.
+
+Contexto do Sócrates (implementado, era direção de trabalho): o Sócrates lê um resumo do aluno, não o histórico inteiro. `lib/socrates-contexto.ts` monta no servidor, pela sessão do próprio aluno (nunca a chave de serviço), um resumo curto: nome, obras da Carteira (título, autor, época e quantos frutos deram), até 5 frutos recentes (trecho de até 200 caracteres nos 3 últimos), eventos por função com a mais e a menos exercitada, os 10 últimos eventos em frases, a tela atual e a pergunta do Início. Limite de cerca de 1500 tokens (6000 caracteres): corta primeiro os trechos, depois os eventos mais antigos. Sem dados: "O aluno ainda não registrou nada." O prompt vai nesta ordem: prompt-base do admin, bloco fixo de orientações (`ORIENTACOES_RESUMO`) e o resumo. A API não lê mais `carteira_itens` nem `ativos`; o resumo nunca vai para o navegador.
 
 Service worker (public/sw.js): guarda em cache só arquivos estáticos e a página offline (public/offline.html); páginas que exigem login e a API nunca vão para o cache.
 
@@ -73,7 +74,7 @@ Conferir manualmente (dependem de dados e de login): ficha de obra, edição de 
 
 Pendências técnicas:
 - O app só roda localmente por enquanto; não há configuração de hospedagem.
-- O contexto do Sócrates ainda usa a Carteira antiga (carteira_itens e ativos).
+- O prompt do Sócrates já vem na ordem certa para o cache (prompt-base primeiro), mas o cache de prompt não está ligado: o SDK em uso (@anthropic-ai/sdk 0.27) só o oferece pela API beta.
 
 ## Stack
 

@@ -1,26 +1,10 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createClient } from "@/lib/supabase/server";
-import { TIPOS_CONTEXTO, type ContextoTela } from "@/lib/socrates";
-import { ehPerguntaSocrates } from "@/lib/perguntas-socrates";
+import type { ContextoTela } from "@/lib/socrates";
+import { montarPromptSistema, montarResumoAluno } from "@/lib/socrates-contexto";
 
 export const runtime = "nodejs";
-
-const FONTE_CONTEXTO = {
-  obra: { tabela: "obras", coluna: "titulo", rotulo: "obra" },
-  funcao: { tabela: "funcoes_pedagogicas", coluna: "nome", rotulo: "função" },
-  epoca: { tabela: "epocas", coluna: "nome", rotulo: "época" },
-  exercicio: { tabela: "exercicios", coluna: "titulo", rotulo: "exercício" },
-} as const;
-
-// Uma linha dizendo ao Sócrates o que o aluno tem na tela, ou null.
-async function descreverTela(supabase: ReturnType<typeof createClient>, contexto?: ContextoTela) {
-  if (!contexto?.id || !(TIPOS_CONTEXTO as readonly string[]).includes(contexto.tipo)) return null;
-  const fonte = FONTE_CONTEXTO[contexto.tipo as keyof typeof FONTE_CONTEXTO];
-  const { data } = await supabase.from(fonte.tabela).select(fonte.coluna).eq("id", contexto.id).maybeSingle();
-  const nome = (data as Record<string, string> | null)?.[fonte.coluna];
-  return nome ? `O aluno está vendo: ${fonte.rotulo} ${nome}` : null;
-}
 
 export async function POST(request: Request) {
   const supabase = createClient();
@@ -54,23 +38,17 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Diálogo não encontrado." }, { status: 404 });
   }
 
-  const [{ data: historico }, { data: config }, { data: carteira }, { data: perfil }] =
-    await Promise.all([
-      supabase
-        .from("mensagens_socrates")
-        .select("*")
-        .eq("conversa_id", conversaId)
-        .order("criado_em", { ascending: true })
-        .limit(30),
-      supabase.from("config_socrates").select("*").eq("ativo", true).order("atualizado_em", { ascending: false }).limit(1).maybeSingle(),
-      supabase
-        .from("carteira_itens")
-        .select("status, progresso_percentual, ativo_ref:ativos(titulo, autor)")
-        .eq("user_id", user.id)
-        .neq("status", "concluido")
-        .limit(8),
-      supabase.from("perfis").select("nome, grau_atual").eq("id", user.id).single(),
-    ]);
+  // O resumo do aluno é lido pela sessão dele, antes de gravar a mensagem nova.
+  const [{ data: historico }, { data: config }, resumo] = await Promise.all([
+    supabase
+      .from("mensagens_socrates")
+      .select("*")
+      .eq("conversa_id", conversaId)
+      .order("criado_em", { ascending: true })
+      .limit(30),
+    supabase.from("config_socrates").select("*").eq("ativo", true).order("atualizado_em", { ascending: false }).limit(1).maybeSingle(),
+    montarResumoAluno(supabase, user.id, { tela: contextoTela, pergunta }),
+  ]);
 
   const { data: mensagemUsuario } = await supabase
     .from("mensagens_socrates")
@@ -78,20 +56,10 @@ export async function POST(request: Request) {
     .select("*")
     .single();
 
-  const linhaTela = await descreverTela(supabase, contextoTela);
-  // Só perguntas do próprio Sócrates (lib/perguntas-socrates.ts) entram no prompt.
-  const linhaPergunta = ehPerguntaSocrates(pergunta) ? `O aluno está respondendo a esta pergunta sua: "${pergunta}"` : null;
-
-  const carteiraTexto = (carteira ?? [])
-    .map((c: any) => `- ${c.ativo_ref?.titulo} (${c.ativo_ref?.autor ?? "autor desconhecido"}) — ${Math.round(c.progresso_percentual)}% concluído`)
-    .join("\n");
-
-  const contexto = `Discípulo: ${perfil?.nome ?? "desconhecido"} (${perfil?.grau_atual ?? "grau não definido"})
-
-Carteira Intelectual (ativos em andamento/planejados):
-${carteiraTexto || "Nenhum ativo em andamento."}${linhaTela ? `\n\n${linhaTela}` : ""}${linhaPergunta ? `\n${linhaPergunta}` : ""}`;
-
-  const systemPrompt = `${config?.system_prompt ?? "Você é Sócrates, mentor da Paideia. Conduza pelo método maiêutico."}\n\n---\nCONTEXTO DO DISCÍPULO:\n${contexto}`;
+  const systemPrompt = montarPromptSistema(
+    config?.system_prompt ?? "Você é Sócrates, mentor da Paideia. Conduza pelo método maiêutico.",
+    resumo
+  );
 
   const historicoFormatado = [
     ...(historico ?? []).map((m) => ({
