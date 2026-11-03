@@ -8,6 +8,7 @@ import { ChatWindow } from "@/components/socrates/chat-window";
 import { useContextoTela } from "@/components/socrates/contexto-tela";
 import { Gaveta } from "@/components/ui/sobreposicao";
 import { abrirConversaAtual } from "@/app/(shell)/socrates/actions";
+import { EVENTO_ABRIR_SOCRATES } from "@/lib/socrates";
 import type { MensagemSocrates } from "@/types/database";
 
 // Botão fixo + gaveta lateral com o mesmo chat e a mesma conversa de /socrates.
@@ -42,6 +43,14 @@ export function SocratesGaveta() {
       setCarregando(false);
     }
   }
+
+  // A paleta de comandos e os atalhos abrem a gaveta por este evento.
+  useEffect(() => {
+    if (naPaginaDoSocrates) return;
+    const onAbrir = () => abrir();
+    window.addEventListener(EVENTO_ABRIR_SOCRATES, onAbrir);
+    return () => window.removeEventListener(EVENTO_ABRIR_SOCRATES, onAbrir);
+  });
 
   if (naPaginaDoSocrates) return null;
 

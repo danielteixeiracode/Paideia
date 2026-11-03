@@ -39,18 +39,7 @@ export default function LoginPage() {
           ))}
         </div>
 
-        <footer className="mt-12 space-y-3 border-t-hair border-rule-strong/60 pt-6 text-center">
-          <nav aria-label="Sobre o Paideia" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-nota">
-            <a href="#" className="text-accent underline-offset-4 hover:underline">
-              Princípios Formativos
-            </a>
-            <a href="#" className="text-accent underline-offset-4 hover:underline">
-              Cânone Clássico
-            </a>
-            <a href="#" className="text-accent underline-offset-4 hover:underline">
-              Termos &amp; Ética
-            </a>
-          </nav>
+        <footer className="mt-12 border-t-hair border-rule-strong/60 pt-6 text-center">
           <p className="t-nota">Paideia: a educação dos homens livres desde a Grécia Clássica.</p>
         </footer>
       </div>

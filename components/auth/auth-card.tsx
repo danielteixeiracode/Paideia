@@ -16,7 +16,6 @@ export function AuthCard() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [mostrarSenha, setMostrarSenha] = useState(false);
-  const [manterAberto, setManterAberto] = useState(true);
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
   const [aviso, setAviso] = useState<string | null>(null);
@@ -120,29 +119,7 @@ export function AuthCard() {
               </button>
             }
           />
-          {modo === "entrar" && (
-            <div className="flex justify-end">
-              <Botao variante="discreto" tamanho="sm" className="text-gold-ink">
-                Esqueceu a chave de acesso?
-              </Botao>
-            </div>
-          )}
         </div>
-
-        {modo === "entrar" && (
-          <div className="flex items-center justify-between gap-3">
-            <label className="flex min-h-11 cursor-pointer items-center gap-2 text-nota text-ink sm:min-h-0">
-              <input
-                type="checkbox"
-                checked={manterAberto}
-                onChange={(e) => setManterAberto(e.target.checked)}
-                className="h-4 w-4 rounded-sm border-rule accent-[rgb(var(--c-action))]"
-              />
-              Manter pergaminhos abertos
-            </label>
-            <span className="t-nota">Sessão Segura</span>
-          </div>
-        )}
 
         {erro && (
           <p role="alert" className="flex items-start gap-2 rounded-md border-2 border-gold-ink bg-sunken px-3 py-2 text-nota text-ink">

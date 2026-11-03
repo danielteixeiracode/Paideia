@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 import { NAV_ALUNO, NAV_ADMIN, rotaAtiva } from "@/lib/nav";
 import { cn, romano } from "@/lib/utils";
 import { MarcaTemplo } from "@/components/ui/logo";
-import { useAviso } from "@/components/ui/aviso";
+import { useComandos } from "@/components/comandos/comandos";
 import { SeletorModo } from "@/components/tema/seletor-modo";
 import type { Perfil } from "@/types/database";
 
@@ -85,13 +85,14 @@ function NavegacaoPrincipal() {
   );
 }
 
-// Busca: ainda sem função (a paleta de comandos vem numa próxima etapa).
+// Abre a paleta de comandos (o mesmo que Ctrl K).
 function BotaoBusca() {
-  const avisar = useAviso();
+  const { abrirPaleta } = useComandos();
   return (
     <button
       type="button"
-      onClick={() => avisar("A busca chega numa próxima etapa.")}
+      onClick={abrirPaleta}
+      aria-haspopup="dialog"
       aria-keyshortcuts="Control+K"
       aria-label="Buscar ou ir para"
       className="flex h-9 items-center gap-2 rounded-md border border-rule bg-surface px-2.5 text-interface text-ink-muted transition-colors duration-discreto ease-discreto hover:border-ink-muted hover:text-ink max-md:w-9 max-md:justify-center max-md:px-0 [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:max-md:w-11"

@@ -9,3 +9,6 @@ export interface ContextoTela {
 }
 
 export const SEM_CONTEXTO: ContextoTela = { tipo: "nenhum" };
+
+// Pede à gaveta do Sócrates que se abra (usado pela paleta de comandos).
+export const EVENTO_ABRIR_SOCRATES = "paideia:abrir-socrates";

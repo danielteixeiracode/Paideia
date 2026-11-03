@@ -34,7 +34,7 @@ export default async function SocratesPage({
   }
 
   return (
-    <div className="flex h-[calc(100dvh-11rem)] flex-col gap-5 md:h-[calc(100dvh-10.5rem)]">
+    <div className="flex h-[calc(100dvh-var(--header-height)-var(--shell-respiro))] min-h-[24rem] flex-col gap-5">
       <div>
         <Eyebrow>Mentor Diático em Vigília • Atenas, 399 a.C. (simbólico)</Eyebrow>
         <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Diálogo com Sócrates</h1>

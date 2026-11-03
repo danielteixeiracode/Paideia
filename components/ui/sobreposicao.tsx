@@ -156,6 +156,8 @@ export function Dialogo({
   descricao,
   acoes,
   alerta = false,
+  posicao = "centro",
+  semCabecalho = false,
   className,
   children,
 }: {
@@ -166,6 +168,10 @@ export function Dialogo({
   acoes?: React.ReactNode;
   // Para confirmações que pedem decisão (por exemplo, apagar).
   alerta?: boolean;
+  // "topo": abre no alto da tela (paleta de comandos).
+  posicao?: "centro" | "topo";
+  // O conteúdo traz o próprio cabeçalho; o título fica só para leitores de tela.
+  semCabecalho?: boolean;
   className?: string;
   children?: React.ReactNode;
 }) {
@@ -175,7 +181,12 @@ export function Dialogo({
   if (!aberto || !montado) return null;
 
   return createPortal(
-      <div className="fixed inset-0 z-[60] flex items-end justify-center p-4 sm:items-center">
+      <div
+        className={cn(
+          "fixed inset-0 z-[60] flex justify-center p-4",
+          posicao === "topo" ? "items-start pt-[10dvh]" : "items-end sm:items-center"
+        )}
+      >
         <Fundo onFechar={onFechar} />
         <div
           ref={painelRef}
@@ -189,22 +200,33 @@ export function Dialogo({
             className
           )}
         >
-          <div className="flex items-start justify-between gap-3 px-6 pt-5">
-            <div className="min-w-0">
-              <h2 id={`${id}-titulo`} className="t-subtitulo">
+          {semCabecalho ? (
+            <>
+              <h2 id={`${id}-titulo`} className="sr-only">
                 {titulo}
               </h2>
-              {descricao && (
-                <p id={`${id}-descricao`} className="t-nota mt-1">
-                  {descricao}
-                </p>
-              )}
-            </div>
-            <BotaoFechar onFechar={onFechar} />
-          </div>
-          {children && <div className="min-h-0 overflow-y-auto px-6 pt-4">{children}</div>}
-          {acoes && <div className="flex flex-wrap justify-end gap-2 px-6 pb-5 pt-5">{acoes}</div>}
-          {!acoes && <div className="pb-5" />}
+              {children}
+            </>
+          ) : (
+            <>
+              <div className="flex items-start justify-between gap-3 px-6 pt-5">
+                <div className="min-w-0">
+                  <h2 id={`${id}-titulo`} className="t-subtitulo">
+                    {titulo}
+                  </h2>
+                  {descricao && (
+                    <p id={`${id}-descricao`} className="t-nota mt-1">
+                      {descricao}
+                    </p>
+                  )}
+                </div>
+                <BotaoFechar onFechar={onFechar} />
+              </div>
+              {children && <div className="min-h-0 overflow-y-auto px-6 pt-4">{children}</div>}
+              {acoes && <div className="flex flex-wrap justify-end gap-2 px-6 pb-5 pt-5">{acoes}</div>}
+              {!acoes && <div className="pb-5" />}
+            </>
+          )}
         </div>
       </div>,
     document.body
