@@ -4,6 +4,9 @@ import { requireAdmin } from "@/lib/data/session";
 import { AdminTabs } from "@/components/admin/admin-tabs";
 import { classesBotao } from "@/components/ui/botao";
 import { TabelaObras, type ObraAdmin } from "./tabela";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Administração: obras" };
 
 type Linha = {
   id: string;
@@ -38,7 +41,7 @@ export default async function AdminObrasPage() {
 
   return (
     <div className="space-y-8">
-      <header className="flex flex-wrap items-end justify-between gap-4">
+      <header className="filete flex flex-wrap items-end justify-between gap-4 pt-4">
         <div>
           <h1 className="t-titulo">Obras</h1>
           <p className="t-nota mt-1">O acervo da formação, com os rascunhos. Só a administração vê esta tela.</p>

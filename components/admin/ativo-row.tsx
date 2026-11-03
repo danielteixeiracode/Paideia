@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Loader2, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { atualizarAtivo, removerAtivo } from "@/app/(shell)/admin/actions";
 import { PublicarToggle } from "@/components/admin/publicar-toggle";
 import { DeleteButton } from "@/components/admin/delete-button";
-import { Badge } from "@/components/ui/primitives";
+import { Selo } from "@/components/ui/selo";
+import { Botao } from "@/components/ui/botao";
 import type { Ativo, Eixo } from "@/types/database";
 
 export function AtivoRow({
@@ -101,17 +102,12 @@ export function AtivoRow({
               className="rounded-md border border-rule px-3 py-2 text-sm lg:col-span-3"
             />
             <div className="flex items-center gap-2 lg:col-span-3">
-              <button type="submit" disabled={pending} className="btn-primary px-3 py-1.5 text-xs">
-                {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Salvar"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setEditing(false)}
-                disabled={pending}
-                className="rounded-md border border-rule px-3 py-1.5 text-xs text-ink/70"
-              >
+              <Botao type="submit" tamanho="sm" carregando={pending}>
+                Salvar
+              </Botao>
+              <Botao variante="secundario" tamanho="sm" onClick={() => setEditing(false)} disabled={pending}>
                 Cancelar
-              </button>
+              </Botao>
             </div>
           </form>
         </td>
@@ -123,11 +119,11 @@ export function AtivoRow({
     <tr>
       <td className="px-4 py-3">
         <p className="font-medium">{ativo.titulo}</p>
-        <p className="text-xs text-ink/50">{ativo.autor}</p>
+        <p className="text-nota text-ink-muted">{ativo.autor}</p>
       </td>
       <td className="px-4 py-3 capitalize">{ativo.tipo}</td>
       <td className="px-4 py-3">
-        <Badge tone="neutral">{eixoNome}</Badge>
+        <Selo>{eixoNome}</Selo>
       </td>
       <td className="px-4 py-3">
         <PublicarToggle id={ativo.id} ativo={ativo.ativo} />
@@ -136,7 +132,7 @@ export function AtivoRow({
         <div className="flex items-center justify-end gap-1">
           <button
             onClick={() => setEditing(true)}
-            className="rounded-lg p-1.5 text-ink/40 hover:bg-muted hover:text-ink"
+            className="rounded-lg p-1.5 text-ink-muted hover:bg-muted hover:text-ink"
             aria-label="Editar ativo"
           >
             <Pencil className="h-4 w-4" />

@@ -5,6 +5,7 @@ import { AdminTabs } from "@/components/admin/admin-tabs";
 import { FormularioObra } from "@/components/admin/formulario-obra";
 import { Selo } from "@/components/ui/selo";
 import { carregarOpcoes } from "../../opcoes";
+import { tituloDaFicha } from "@/lib/metadata";
 
 type ObraEdicao = {
   id: string;
@@ -15,6 +16,10 @@ type ObraEdicao = {
   ativo: boolean;
   obra_funcoes: { funcao_id: string; nota: string | null }[];
 };
+
+export function generateMetadata({ params }: { params: { id: string } }) {
+  return tituloDaFicha("obras", "titulo", params.id, "Editar: ");
+}
 
 export default async function EditarObraPage({ params }: { params: { id: string } }) {
   const { supabase } = await requireAdmin();
@@ -32,7 +37,7 @@ export default async function EditarObraPage({ params }: { params: { id: string 
 
   return (
     <div className="space-y-8">
-      <header>
+      <header className="filete pt-4">
         <Link href="/admin/obras" className="t-nota text-accent underline-offset-4 hover:underline">
           Voltar às obras
         </Link>

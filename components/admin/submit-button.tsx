@@ -2,6 +2,7 @@
 
 import { useFormStatus } from "react-dom";
 import { Loader2 } from "lucide-react";
+import { classesBotao } from "@/components/ui/botao";
 
 export function SubmitButton({ label, small = false }: { label: string; small?: boolean }) {
   const { pending } = useFormStatus();
@@ -9,9 +10,10 @@ export function SubmitButton({ label, small = false }: { label: string; small?: 
     <button
       type="submit"
       disabled={pending}
-      className={small ? "btn-primary px-3 py-1.5 text-xs" : "btn-primary"}
+      aria-busy={pending || undefined}
+      className={classesBotao({ tamanho: small ? "sm" : "md" })}
     >
-      {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : label}
+      {pending ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : label}
     </button>
   );
 }

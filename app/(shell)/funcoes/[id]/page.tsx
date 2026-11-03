@@ -10,8 +10,13 @@ import { CAMPOS_CARTAO_OBRA, paraObraLista, type ObraBanco } from "@/lib/data/ob
 import { preenchimentoColuna } from "@/lib/templo";
 import { romano } from "@/lib/utils";
 import { ExerciciosDaFuncao, type ExercicioDaFuncao } from "./exercicios";
+import { tituloDaFicha } from "@/lib/metadata";
 
 type Funcao = { id: string; numero: number; nome: string; o_que_forma: string | null; descricao: string | null };
+
+export function generateMetadata({ params }: { params: { id: string } }) {
+  return tituloDaFicha("funcoes_pedagogicas", "nome", params.id);
+}
 
 export default async function FuncaoPage({ params }: { params: { id: string } }) {
   const { supabase, perfil } = await requirePerfil();

@@ -8,6 +8,7 @@ import { Colunata, type FuncaoColunata } from "@/components/corpo/colunata";
 import { TituloBloco } from "@/components/ui/titulo-bloco";
 import { romano } from "@/lib/utils";
 import type { Exercicio } from "@/types/database";
+import { tituloDaFicha } from "@/lib/metadata";
 
 type ObraFicha = {
   id: string;
@@ -18,6 +19,10 @@ type ObraFicha = {
 };
 type FuncaoDaObra = FuncaoColunata & { nota: string | null };
 type ExercicioComFuncao = Exercicio & { funcao: FuncaoColunata | null };
+
+export function generateMetadata({ params }: { params: { id: string } }) {
+  return tituloDaFicha("obras", "titulo", params.id);
+}
 
 export default async function ObraPage({ params }: { params: { id: string } }) {
   const { supabase, perfil } = await requirePerfil();

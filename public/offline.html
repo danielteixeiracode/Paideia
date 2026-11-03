@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#11271F" />
+    <title>Sem conexão – Paideia</title>
+    <style>
+      /* Página offline: sem dado de ninguém, guardada pelo service worker.
+         Cores da paleta do Paideia, nos modos claro e escuro do sistema. */
+      :root {
+        --fundo: #faf1df;
+        --tinta: #241c10;
+        --tinta-secundaria: #6d6456;
+        --ouro: #71541e;
+        --filete: #b98c31;
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --fundo: #0a1a14;
+          --tinta: #faf1df;
+          --tinta-secundaria: #a4a698;
+          --ouro: #dcc48f;
+          --filete: #b98c31;
+          color-scheme: dark;
+        }
+      }
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        background: var(--fundo);
+        color: var(--tinta);
+        font-family: Georgia, "Times New Roman", serif;
+        padding: 1rem;
+      }
+      main {
+        max-width: 28rem;
+        text-align: center;
+      }
+      .marca {
+        font-size: 2.25rem;
+        color: var(--ouro);
+        margin: 0;
+      }
+      .filete {
+        width: 6rem;
+        margin: 1.25rem auto;
+        border: 0;
+        border-top: 0.5px solid var(--filete);
+      }
+      h1 {
+        font-weight: 500;
+        font-size: 1.75rem;
+        margin: 0;
+      }
+      p {
+        font-family: system-ui, sans-serif;
+        color: var(--tinta-secundaria);
+        line-height: 1.6;
+      }
+      a {
+        color: var(--ouro);
+        font-family: system-ui, sans-serif;
+      }
+      a:focus-visible {
+        outline: 2px solid var(--filete);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="marca" aria-hidden="true">Σ</p>
+      <h1>Sem conexão</h1>
+      <hr class="filete" />
+      <p>O Paideia precisa de internet para abrir suas páginas. Nada do que é seu fica guardado neste aparelho sem conexão.</p>
+      <p><a href="/inicio">Tentar de novo</a></p>
+    </main>
+  </body>
+</html>

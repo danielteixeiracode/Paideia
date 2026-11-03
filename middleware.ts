@@ -63,6 +63,7 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|manifest.json|sw.js|icons/|.*\\.png$|.*\\.svg$).*)",
+    // offline.html: a página que o service worker mostra sem conexão; não exige login.
+    "/((?!_next/static|_next/image|favicon.ico|manifest.json|sw.js|offline.html|icons/|.*\\.png$|.*\\.svg$).*)",
   ],
 };

@@ -3,6 +3,9 @@ import { requirePerfil } from "@/lib/data/session";
 import { Templo, type ColunaTemplo } from "@/components/corpo/templo";
 import { frontaoAceso, preenchimentoColuna } from "@/lib/templo";
 import { romano } from "@/lib/utils";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Funções" };
 
 type Funcao = { id: string; numero: number; nome: string; o_que_forma: string | null };
 

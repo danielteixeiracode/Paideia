@@ -5,6 +5,7 @@ import { AdminTabs } from "@/components/admin/admin-tabs";
 import { FormularioExercicio } from "@/components/admin/formulario-exercicio";
 import { Selo } from "@/components/ui/selo";
 import { carregarOpcoesExercicio } from "../../opcoes";
+import { tituloDaFicha } from "@/lib/metadata";
 
 type ExercicioEdicao = {
   id: string;
@@ -15,6 +16,10 @@ type ExercicioEdicao = {
   metodo: string | null;
   ativo: boolean;
 };
+
+export function generateMetadata({ params }: { params: { id: string } }) {
+  return tituloDaFicha("exercicios", "titulo", params.id, "Editar: ");
+}
 
 export default async function EditarExercicioPage({ params }: { params: { id: string } }) {
   const { supabase } = await requireAdmin();
@@ -28,7 +33,7 @@ export default async function EditarExercicioPage({ params }: { params: { id: st
 
   return (
     <div className="space-y-8">
-      <header>
+      <header className="filete pt-4">
         <Link href="/admin/exercicios" className="t-nota text-accent underline-offset-4 hover:underline">
           Voltar aos exercícios
         </Link>

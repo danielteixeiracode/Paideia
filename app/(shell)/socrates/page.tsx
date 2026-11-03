@@ -3,6 +3,9 @@ import { ChatWindow } from "@/components/socrates/chat-window";
 import { BotaoNovaConsulta, ConsultasNoCelular, ListaConsultas, type Consulta } from "@/components/socrates/lista-consultas";
 import { ContextoTela } from "@/components/socrates/contexto-tela";
 import type { MensagemSocrates } from "@/types/database";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Sócrates" };
 
 export default async function SocratesPage({ searchParams }: { searchParams: { c?: string } }) {
   const { supabase, perfil } = await requirePerfil();

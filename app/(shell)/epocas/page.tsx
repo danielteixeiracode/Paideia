@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { requirePerfil } from "@/lib/data/session";
 import { cn, romano } from "@/lib/utils";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Épocas" };
 
 type Epoca = { id: string; numero: number; nome: string };
 

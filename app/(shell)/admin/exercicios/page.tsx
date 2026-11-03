@@ -4,6 +4,9 @@ import { requireAdmin } from "@/lib/data/session";
 import { AdminTabs } from "@/components/admin/admin-tabs";
 import { classesBotao } from "@/components/ui/botao";
 import { TabelaExercicios, type ExercicioAdmin } from "./tabela";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Administração: exercícios" };
 
 export default async function AdminExerciciosPage() {
   // Só administrador (checado aqui e no middleware); vê também os rascunhos.
@@ -23,7 +26,7 @@ export default async function AdminExerciciosPage() {
 
   return (
     <div className="space-y-8">
-      <header className="flex flex-wrap items-end justify-between gap-4">
+      <header className="filete flex flex-wrap items-end justify-between gap-4 pt-4">
         <div>
           <h1 className="t-titulo">Exercícios</h1>
           <p className="t-nota mt-1">Os exercícios de cada função, gerais ou de uma obra, com os rascunhos.</p>

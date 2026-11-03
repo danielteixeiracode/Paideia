@@ -23,7 +23,8 @@ const body = Hanken_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Paideia — Formação Clássica",
+  // Cada rota dá o seu nome: "Obras – Paideia".
+  title: { default: "Paideia", template: "%s – Paideia" },
   description:
     "Paideia — formação clássica com o mínimo de leitura e a máxima profundidade.",
   manifest: "/manifest.json",
@@ -39,7 +40,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0F2E1F",
+  themeColor: "#11271F",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",

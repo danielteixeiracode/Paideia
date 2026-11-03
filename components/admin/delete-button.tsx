@@ -23,7 +23,7 @@ export function DeleteButton({
           startTransition(action);
         }
       }}
-      className="rounded-lg p-1.5 text-ink/40 hover:bg-red-50 hover:text-red-600"
+      className="rounded-lg p-1.5 text-ink-muted hover:bg-sunken hover:text-ink"
     >
       {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
     </button>

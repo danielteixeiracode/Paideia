@@ -7,8 +7,13 @@ import { NavegacaoLivro } from "@/components/ui/navegacao-livro";
 import { CartaoObra } from "@/components/corpo/cartao-obra";
 import { CAMPOS_CARTAO_OBRA, paraObraLista, type ObraBanco } from "@/lib/data/obras";
 import { romano } from "@/lib/utils";
+import { tituloDaFicha } from "@/lib/metadata";
 
 type Epoca = { id: string; numero: number; nome: string; descricao: string | null };
+
+export function generateMetadata({ params }: { params: { id: string } }) {
+  return tituloDaFicha("epocas", "nome", params.id);
+}
 
 export default async function EpocaPage({ params }: { params: { id: string } }) {
   const { supabase, perfil } = await requirePerfil();

@@ -51,24 +51,25 @@ Direção de trabalho (proposta, ainda não confirmada em detalhe; confirme com 
 - carteira_itens guarda só o estado da obra para o aluno, sem porcentagem.
 - O Sócrates lê um resumo do registro, não o histórico inteiro.
 
-## Estado do código (auditoria de 03/11/2026)
+## Estado do código
 
-Manter: Next.js, Supabase, login, papéis (aluno/administrador), padrão de RLS, middleware, identidade visual, componentes de interface, Sócrates e sua tela de configuração (/admin/socrates), /admin/usuarios.
+Modelo de dados em uso (supabase/migrations/2026-11-03-novo-modelo-corpo.sql, já aplicado): `epocas`, `funcoes_pedagogicas`, `obras`, `obra_funcoes`, `exercicios`, `carteira_obras` (estado da obra para o aluno, sem porcentagem), `frutos` e `registro_eventos` (só inserção; o progresso deriva dele). As telas do aluno leem `obras` e `carteira_obras`; `ativos` e `carteira_itens` são do modelo antigo.
 
-Adaptar: `ativos` → obras; Biblioteca → catálogo de obras; /admin/ativos → cadastro de obras; `carteira_itens` e `constancia_diaria` → base do registro; contexto do Sócrates → obras e frutos.
+Telas do aluno no padrão novo (DESIGN.md): Início (templo), Obras, Funções, Épocas, Carteira, Sócrates, Configurações. Navegação no cabeçalho em faixa dupla (abas I a VI), barra inferior no celular, paleta de comandos (Ctrl K) e atalhos. Administração no padrão novo: visão geral, Obras e Exercícios (cadastro com validação, sem exclusão), Sócrates (configuração) e Usuários. Títulos das abas do navegador por rota ("Obras – Paideia").
 
-Refazer: eixos, capacidades, planejamento, atividades, registros de estudo e as telas /hoje, /planejamento e o painel /inicio.
+Do modelo antigo, ainda no app e fora dos menus (decidir se ficam): Biblioteca (`ativos`, `eixos`, `carteira_itens`), /admin/eixos (`eixos`, `capacidades`) e /admin/ativos (`ativos`, `eixos`). O contexto que a API do Sócrates monta ainda lê `carteira_itens` e `ativos` (o modelo antigo), não `carteira_obras` e `frutos`.
 
-Não construir novas funcionalidades sobre: `eixos`, `capacidades`, `atividades_planejadas`, `planejamento_semanal`, `registros_estudo`, porcentagem por eixo.
+Não construir novas funcionalidades sobre: `eixos`, `capacidades`, `ativos`, `carteira_itens`, `atividades_planejadas`, `planejamento_semanal`, `registros_estudo`, porcentagem por eixo.
 
 As abas Trilha de Formação e Mapa dos Estudos foram removidas do app; não recriar. O script que apaga as tabelas da trilha (`supabase/migrations/2026-11-03-remove-trilhas-e-mapa.sql`) já foi aplicado no banco real.
 
-Os dados de supabase/seeds/exemplo-corpo.sql são de teste e não representam a seleção real de obras do Daniel.
+Os dados de supabase/seeds/exemplo-corpo.sql são de teste e não representam a seleção real de obras do Daniel. Os de supabase/seeds/exemplo-eventos.sql também são de teste.
+
+Service worker (public/sw.js): guarda em cache só arquivos estáticos e a página offline (public/offline.html); páginas que exigem login e a API nunca vão para o cache.
 
 Pendências técnicas:
-- O service worker (sw.js) guarda em cache páginas que exigem login: corrigir antes de publicar.
 - O app só roda localmente por enquanto; não há configuração de hospedagem.
-- Textos do login, do manifest e da sidebar ainda falam de Trivium/Quadrivium.
+- O contexto do Sócrates ainda usa a Carteira antiga (carteira_itens e ativos).
 
 ## Stack
 

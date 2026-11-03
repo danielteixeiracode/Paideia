@@ -3,6 +3,9 @@ import { requireAdmin } from "@/lib/data/session";
 import { AdminTabs } from "@/components/admin/admin-tabs";
 import { FormularioExercicio } from "@/components/admin/formulario-exercicio";
 import { carregarOpcoesExercicio } from "../opcoes";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Novo exercício" };
 
 export default async function NovoExercicioPage() {
   const { supabase } = await requireAdmin();
@@ -10,7 +13,7 @@ export default async function NovoExercicioPage() {
 
   return (
     <div className="space-y-8">
-      <header>
+      <header className="filete pt-4">
         <Link href="/admin/exercicios" className="t-nota text-accent underline-offset-4 hover:underline">
           Voltar aos exercícios
         </Link>

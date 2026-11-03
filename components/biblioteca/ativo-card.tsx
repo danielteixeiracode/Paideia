@@ -1,9 +1,11 @@
 "use client";
 
 import { useTransition } from "react";
-import { Loader2, Plus, Check, BookOpen, GraduationCap, Dumbbell, ScrollText, Headphones, Sparkles } from "lucide-react";
+import { Plus, Check, BookOpen, GraduationCap, Dumbbell, ScrollText, Headphones, Sparkles } from "lucide-react";
 import { adicionarAtivoCarteira } from "@/app/(shell)/biblioteca/actions";
-import { Badge } from "@/components/ui/primitives";
+import { Selo } from "@/components/ui/selo";
+import { Botao } from "@/components/ui/botao";
+import { Cartao } from "@/components/ui/cartao";
 import type { Ativo, Eixo } from "@/types/database";
 
 const ICONS: Record<string, typeof BookOpen> = {
@@ -28,44 +30,35 @@ export function AtivoCard({
   const Icon = ICONS[ativo.tipo] ?? BookOpen;
 
   return (
-    <div className="flex flex-col rounded-2xl border border-rule bg-surface p-5 shadow-card">
+    <Cartao className="flex flex-col">
       <div className="mb-3 flex items-center justify-between">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-canvas">
-          <Icon className="h-5 w-5 text-accent" />
+          <Icon className="h-5 w-5 text-accent" aria-hidden />
         </div>
-        {eixo && <Badge tone="neutral">{eixo.nome}</Badge>}
+        {eixo && <Selo>{eixo.nome}</Selo>}
       </div>
 
-      {ativo.subtitulo && <p className="text-[11px] uppercase tracking-wide text-gold-ink">{ativo.subtitulo}</p>}
-      <p className="mt-1 font-serif text-lg font-semibold text-ink">{ativo.titulo}</p>
-      {ativo.autor && <p className="text-xs text-ink/50">{ativo.autor}</p>}
+      {ativo.subtitulo && <p className="text-nota text-gold-ink">{ativo.subtitulo}</p>}
+      <p className="mt-1 font-serif text-lg font-medium text-ink">{ativo.titulo}</p>
+      {ativo.autor && <p className="text-nota text-ink-muted">{ativo.autor}</p>}
       {ativo.descricao && (
-        <p className="mt-2 flex-1 text-sm leading-relaxed text-ink/60 line-clamp-3">{ativo.descricao}</p>
+        <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-muted line-clamp-3">{ativo.descricao}</p>
       )}
 
-      <div className="mt-3 flex items-center gap-3 text-[11px] text-ink/50">
-        <span>{ativo.duracao_estimada_horas}h estimadas</span>
-        <span>•</span>
-        <span className="capitalize">{ativo.nivel}</span>
-      </div>
+      <p className="t-nota mt-3">
+        {ativo.duracao_estimada_horas}h estimadas, nível <span className="capitalize">{ativo.nivel}</span>
+      </p>
 
-      <button
-        disabled={naCarteira || pending}
+      <Botao
+        variante={naCarteira ? "secundario" : "primario"}
+        disabled={naCarteira}
+        carregando={pending}
         onClick={() => startTransition(() => adicionarAtivoCarteira(ativo.id))}
-        className={`mt-4 ${naCarteira ? "btn-secondary" : "btn-primary"}`}
+        icone={naCarteira ? <Check className="h-4 w-4" aria-hidden /> : <Plus className="h-4 w-4" aria-hidden />}
+        className="mt-4"
       >
-        {pending ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : naCarteira ? (
-          <>
-            <Check className="h-4 w-4" /> Na Carteira
-          </>
-        ) : (
-          <>
-            <Plus className="h-4 w-4" /> Adicionar à Carteira
-          </>
-        )}
-      </button>
-    </div>
+        {naCarteira ? "Na Carteira" : "Adicionar à Carteira"}
+      </Botao>
+    </Cartao>
   );
 }

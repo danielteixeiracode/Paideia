@@ -1,55 +1,40 @@
 import { requirePerfil } from "@/lib/data/session";
-import { Card, Eyebrow } from "@/components/ui/primitives";
+import { Cartao } from "@/components/ui/cartao";
 import { Botao } from "@/components/ui/botao";
+import { CampoTexto } from "@/components/ui/campo";
 import { FormularioOtimista } from "@/components/ui/formulario-otimista";
 import { atualizarPerfil } from "./actions";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Configurações" };
 
 export default async function ConfiguracoesPage() {
   const { perfil } = await requirePerfil();
 
   return (
-    <div className="max-w-xl space-y-6">
-      <div>
-        <Eyebrow>Régio Pessoal</Eyebrow>
-        <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Configurações</h1>
-      </div>
+    <div className="max-w-xl space-y-8">
+      <header className="filete pt-4">
+        <h1 className="t-titulo">Configurações</h1>
+        <p className="t-nota mt-1">Seu nome e suas metas de estudo.</p>
+      </header>
 
-      <Card>
-        <FormularioOtimista action={atualizarPerfil} sucesso="Alterações salvas." className="space-y-4">
-          <div>
-            <label className="label-caps mb-1.5 block">Nome</label>
-            <input
-              name="nome"
-              defaultValue={perfil.nome}
-              className="w-full rounded-lg border border-rule px-3 py-2 text-sm"
+      <Cartao>
+        <FormularioOtimista action={atualizarPerfil} sucesso="Alterações salvas." className="space-y-5">
+          <CampoTexto rotulo="Nome" name="nome" defaultValue={perfil.nome} autoComplete="name" />
+          <div className="grid gap-5 sm:grid-cols-2">
+            <CampoTexto rotulo="Meta diária (min)" name="meta_diaria_min" type="number" min={10} defaultValue={perfil.meta_diaria_min} />
+            <CampoTexto
+              rotulo="Meta semanal (h)"
+              name="meta_semanal_horas"
+              type="number"
+              min={1}
+              step="0.5"
+              defaultValue={perfil.meta_semanal_horas}
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="label-caps mb-1.5 block">Meta Diária (min)</label>
-              <input
-                name="meta_diaria_min"
-                type="number"
-                min={10}
-                defaultValue={perfil.meta_diaria_min}
-                className="w-full rounded-lg border border-rule px-3 py-2 text-sm"
-              />
-            </div>
-            <div>
-              <label className="label-caps mb-1.5 block">Meta Semanal (h)</label>
-              <input
-                name="meta_semanal_horas"
-                type="number"
-                min={1}
-                step="0.5"
-                defaultValue={perfil.meta_semanal_horas}
-                className="w-full rounded-lg border border-rule px-3 py-2 text-sm"
-              />
-            </div>
-          </div>
-          <Botao type="submit">Salvar Alterações</Botao>
+          <Botao type="submit">Salvar alterações</Botao>
         </FormularioOtimista>
-      </Card>
+      </Cartao>
     </div>
   );
 }

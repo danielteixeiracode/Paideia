@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Loader2, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import { atualizarEixo, removerEixo, criarCapacidade } from "@/app/(shell)/admin/actions";
 import { DeleteButton } from "@/components/admin/delete-button";
 import { SubmitButton } from "@/components/admin/submit-button";
 import { CapacidadeChip } from "@/components/admin/capacidade-chip";
-import { Card } from "@/components/ui/primitives";
+import { Cartao } from "@/components/ui/cartao";
+import { Botao } from "@/components/ui/botao";
 import type { Capacidade, Eixo } from "@/types/database";
 
 export function EixoCard({ eixo, capacidades }: { eixo: Eixo; capacidades: Capacidade[] }) {
@@ -14,7 +15,7 @@ export function EixoCard({ eixo, capacidades }: { eixo: Eixo; capacidades: Capac
   const [pending, startTransition] = useTransition();
 
   return (
-    <Card>
+    <Cartao>
       {editing ? (
         <form
           onSubmit={(e) => {
@@ -54,17 +55,12 @@ export function EixoCard({ eixo, capacidades }: { eixo: Eixo; capacidades: Capac
             className="rounded-md border border-rule px-3 py-2 text-sm"
           />
           <div className="flex items-center gap-2 sm:col-span-2">
-            <button type="submit" disabled={pending} className="btn-primary px-3 py-1.5 text-xs">
-              {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Salvar"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setEditing(false)}
-              disabled={pending}
-              className="rounded-md border border-rule px-3 py-1.5 text-xs text-ink/70"
-            >
+            <Botao type="submit" tamanho="sm" carregando={pending}>
+              Salvar
+            </Botao>
+            <Botao variante="secundario" tamanho="sm" onClick={() => setEditing(false)} disabled={pending}>
               Cancelar
-            </button>
+            </Botao>
           </div>
         </form>
       ) : (
@@ -74,13 +70,13 @@ export function EixoCard({ eixo, capacidades }: { eixo: Eixo; capacidades: Capac
               <span className="h-3 w-3 rounded-full" style={{ backgroundColor: eixo.cor }} />
               <div>
                 <p className="font-serif text-lg font-semibold">{eixo.nome}</p>
-                <p className="text-xs text-ink/50">{eixo.slug}</p>
+                <p className="text-nota text-ink-muted">{eixo.slug}</p>
               </div>
             </div>
             <div className="flex items-center gap-1">
               <button
                 onClick={() => setEditing(true)}
-                className="rounded-lg p-1.5 text-ink/40 hover:bg-muted hover:text-ink"
+                className="rounded-lg p-1.5 text-ink-muted hover:bg-muted hover:text-ink"
                 aria-label={`Editar eixo ${eixo.nome}`}
               >
                 <Pencil className="h-4 w-4" />
@@ -88,7 +84,7 @@ export function EixoCard({ eixo, capacidades }: { eixo: Eixo; capacidades: Capac
               <DeleteButton action={removerEixo.bind(null, eixo.id)} />
             </div>
           </div>
-          {eixo.descricao && <p className="mt-2 text-sm text-ink/60">{eixo.descricao}</p>}
+          {eixo.descricao && <p className="mt-2 text-sm text-ink-muted">{eixo.descricao}</p>}
         </>
       )}
 
@@ -104,10 +100,10 @@ export function EixoCard({ eixo, capacidades }: { eixo: Eixo; capacidades: Capac
           name="nome"
           required
           placeholder="Nova capacidade"
-          className="flex-1 rounded-md border border-rule bg-surface px-2.5 py-1.5 text-xs outline-none focus:border-paideia-gold-500"
+          className="flex-1 rounded-md border border-rule bg-surface px-2.5 py-1.5 text-nota focus:border-focus"
         />
         <SubmitButton label="Adicionar" small />
       </form>
-    </Card>
+    </Cartao>
   );
 }

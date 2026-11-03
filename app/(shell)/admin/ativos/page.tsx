@@ -1,10 +1,13 @@
 import { requireAdmin } from "@/lib/data/session";
-import { Card, Eyebrow } from "@/components/ui/primitives";
+import { Cartao } from "@/components/ui/cartao";
 import { AdminTabs } from "@/components/admin/admin-tabs";
 import { SubmitButton } from "@/components/admin/submit-button";
 import { AtivoRow } from "@/components/admin/ativo-row";
 import { criarAtivo } from "@/app/(shell)/admin/actions";
 import type { Ativo, Eixo } from "@/types/database";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Catálogo de ativos" };
 
 export default async function AdminAtivosPage() {
   const { supabase } = await requireAdmin();
@@ -18,15 +21,15 @@ export default async function AdminAtivosPage() {
   const listaEixos = (eixos ?? []) as Eixo[];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <Eyebrow>Administratio Paideiae</Eyebrow>
-        <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Catálogo de Ativos</h1>
-      </div>
+    <div className="space-y-8">
+      <header className="filete pt-4">
+        <h1 className="t-titulo">Catálogo de ativos</h1>
+        <p className="t-nota mt-1">Tela do modelo antigo (ativos e eixos), fora das abas.</p>
+      </header>
       <AdminTabs />
 
-      <Card>
-        <p className="font-serif text-lg font-semibold">Novo Ativo</p>
+      <Cartao>
+        <h2 className="t-subtitulo">Novo ativo</h2>
         <form action={criarAtivo} className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           <input name="titulo" required placeholder="Título" className="rounded-md border border-rule px-3 py-2 text-sm lg:col-span-2" />
           <select name="tipo" className="rounded-md border border-rule px-3 py-2 text-sm">
@@ -56,11 +59,11 @@ export default async function AdminAtivosPage() {
             <SubmitButton label="Publicar Ativo" />
           </div>
         </form>
-      </Card>
+      </Cartao>
 
       <div className="overflow-hidden rounded-2xl border border-rule bg-surface shadow-card">
         <table className="w-full text-sm">
-          <thead className="bg-canvas text-left text-[11px] uppercase text-ink/50">
+          <thead className="bg-canvas text-left text-nota text-ink-muted">
             <tr>
               <th className="px-4 py-3">Título</th>
               <th className="px-4 py-3">Tipo</th>

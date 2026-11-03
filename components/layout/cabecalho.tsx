@@ -26,6 +26,13 @@ export function Cabecalho({ perfil }: { perfil: Perfil }) {
         rolado && "shadow-[0_1px_0_rgb(var(--c-rule-strong)/0.35),0_8px_16px_-14px_rgb(var(--c-ink)/0.35)]"
       )}
     >
+      {/* Primeiro item do teclado: pula a navegação e vai direto ao conteúdo. */}
+      <a
+        href="#conteudo"
+        className="sr-only rounded-md bg-action px-4 py-2 text-interface font-semibold text-on-action focus:not-sr-only focus:absolute focus:left-gutter focus:top-2 focus:z-50"
+      >
+        Pular para o conteúdo
+      </a>
       <div className="mx-auto flex h-14 max-w-pagina items-center gap-3 px-gutter max-md:border-b max-md:border-rule">
         <Link href="/inicio" className="mr-auto flex items-center gap-2 rounded-md">
           <span className="flex h-8 w-8 items-center justify-center rounded-md border border-rule-strong/70 text-gold-ink">

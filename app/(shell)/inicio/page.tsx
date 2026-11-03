@@ -11,6 +11,9 @@ import { preenchimentoColuna, frontaoAceso } from "@/lib/templo";
 import { perguntaDoDia } from "@/lib/perguntas-socrates";
 import { descreverEvento } from "@/lib/eventos";
 import { cn, quandoRelativo, romano } from "@/lib/utils";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Início" };
 
 // Formas que vêm do banco nas consultas abaixo (todas pela sessão do aluno,
 // sob a RLS: só os dados dele e o conteúdo publicado).
@@ -296,7 +299,7 @@ async function montarContinuar(supabase: Awaited<ReturnType<typeof requirePerfil
 // O único bloco escuro do Início: a pedra verde, fixa em todos os modos.
 function BlocoContinuar({ dados, agora }: { dados: DadosContinuar; agora: Date }) {
   const botaoClaro = "bg-paideia-gold-400 text-paideia-green-950 hover:bg-paideia-gold-300 active:bg-paideia-gold-300";
-  const botaoContorno = "border-paideia-cream-100/70 text-paideia-cream-50 hover:border-paideia-cream-50 hover:bg-white/10 active:bg-white/15";
+  const botaoContorno = "border-paideia-cream-100/70 text-paideia-cream-50 hover:border-paideia-cream-50 hover:bg-paideia-cream-50/10 active:bg-paideia-cream-50/15";
 
   return (
     <section aria-labelledby="continuar-titulo" className="flex flex-col rounded-2xl bg-paideia-green-800 p-6 text-paideia-cream-50 sm:p-8 lg:col-span-2">

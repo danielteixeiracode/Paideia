@@ -3,6 +3,9 @@ import { requireAdmin } from "@/lib/data/session";
 import { AdminTabs } from "@/components/admin/admin-tabs";
 import { FormularioObra } from "@/components/admin/formulario-obra";
 import { carregarOpcoes } from "../opcoes";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Nova obra" };
 
 export default async function NovaObraPage() {
   const { supabase } = await requireAdmin();
@@ -10,7 +13,7 @@ export default async function NovaObraPage() {
 
   return (
     <div className="space-y-8">
-      <header>
+      <header className="filete pt-4">
         <Link href="/admin/obras" className="t-nota text-accent underline-offset-4 hover:underline">
           Voltar às obras
         </Link>

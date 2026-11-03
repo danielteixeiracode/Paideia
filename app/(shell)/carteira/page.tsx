@@ -4,6 +4,9 @@ import { TituloBloco } from "@/components/ui/titulo-bloco";
 import { CAMPOS_CARTAO_OBRA, paraObraLista, type ObraBanco } from "@/lib/data/obras";
 import { SementesCarteira } from "./sementes";
 import { FrutosCarteira, type FrutoLinha } from "./frutos";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Carteira" };
 
 export default async function CarteiraPage() {
   const { supabase, perfil } = await requirePerfil();

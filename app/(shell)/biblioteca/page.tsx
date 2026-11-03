@@ -1,7 +1,9 @@
 import { requirePerfil } from "@/lib/data/session";
-import { Eyebrow, EmptyState } from "@/components/ui/primitives";
 import { AtivoCard } from "@/components/biblioteca/ativo-card";
 import type { Ativo, Eixo } from "@/types/database";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Biblioteca" };
 
 export default async function BibliotecaPage() {
   const { supabase, perfil } = await requirePerfil();
@@ -18,20 +20,21 @@ export default async function BibliotecaPage() {
   const lista = (ativos ?? []) as Ativo[];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <Eyebrow>Repositório Perene • Paideia • {lista.length} Ativos Indexados</Eyebrow>
-        <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">
-          Biblioteca Clássica &amp; Repositório de Ativos
-        </h1>
-        <p className="mt-1 max-w-2xl text-sm text-ink/60">
+    <div className="space-y-8">
+      <header className="filete pt-4">
+        <h1 className="t-titulo">Biblioteca Clássica e Repositório de Ativos</h1>
+        <p className="t-leitura mt-2 text-ink-muted">
           Catálogo curado de tratados canônicos, diálogos maiêuticos, cursos guiados e exercícios
           dialéticos para alocação direta na sua Carteira Intelectual.
         </p>
-      </div>
+        <p className="t-nota mt-2">{lista.length === 1 ? "1 ativo" : `${lista.length} ativos`}</p>
+      </header>
 
       {lista.length === 0 ? (
-        <EmptyState titulo="Nenhum ativo publicado" descricao="O administrador ainda não publicou ativos no catálogo." />
+        <div className="filete py-10 text-center">
+          <p className="t-subtitulo">Nenhum ativo publicado</p>
+          <p className="t-nota mt-1">O administrador ainda não publicou ativos no catálogo.</p>
+        </div>
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {lista.map((ativo) => (

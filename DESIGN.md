@@ -228,7 +228,7 @@ Raios discretos, de arquitetura: 2px a 10px (cartões 8px, botões 6px, campos 4
 
 ## Components
 
-Componentes base em `components/ui/`, todos nos três modos, com foco visível, teclado e ARIA. Vitrine com todos os estados: `/design/componentes` (só em desenvolvimento). Em aparelhos de toque, o alvo mínimo é de 44px, e o hover só vale onde há mouse (`hoverOnlyWhenSupported`). As classes antigas `.btn-*`, `.card` e `.label-caps` e os componentes de `primitives.tsx` continuam até as telas serem migradas.
+Componentes base em `components/ui/`, todos nos três modos, com foco visível, teclado e ARIA. Vitrine com todos os estados: `/design/componentes` (só em desenvolvimento). Em aparelhos de toque, o alvo mínimo é de 44px, e o hover só vale onde há mouse (`hoverOnlyWhenSupported`). As classes antigas (`.btn-*`, `.card`, `.label-caps`) e os componentes de `primitives.tsx` (Card, Badge, Eyebrow, ProgressBar, EmptyState) foram apagados: todas as telas usam os componentes desta lista.
 
 | Componente | Arquivo | Uso |
 |---|---|---|
@@ -280,6 +280,9 @@ Componentes base em `components/ui/`, todos nos três modos, com foco visível, 
   - **Ao rolar:** ganha uma sombra de filete discreta (linha de `rule-strong` e sombra curta de tinta).
 - **Celular** (abaixo de 768px): no topo ficam só a marca, a busca (apenas ícone) e a conta; o seletor de modo vai para dentro do menu da conta. A navegação desce para a barra inferior, sobre a superfície do tema como o cabeçalho, com filete duplo em cima, os mesmos seis romanos em `gold-ink` e rótulos `micro` em `ink-muted`; item ativo em `ink` semibold, sublinhado em dourado e com `aria-current`; alvo de 56px; respeita a área segura.
 - **Modo foco:** cabeçalho, barra do celular e botão do Sócrates somem.
+- **Pular para o conteúdo:** primeiro item do teclado no cabeçalho, escondido até receber foco; leva ao `<main id="conteudo">`.
+- **Título da aba do navegador:** cada rota dá o seu ("Obras"), e o layout raiz completa com o modelo `%s – Paideia` (travessão, sem "·"); nas fichas, o nome vem do banco (`lib/metadata.ts`).
+- **Admin:** títulos abertos por filete, sem algarismo romano.
 
 ### Templo (selo do Início)
 Em dois tamanhos (`tamanho`): "selo" no Início, com o momento de assinatura, e "grande" em Funções, como navegação, já montado. Elemento de assinatura do Início, à direita do título (no celular, centralizado abaixo dele). SVG em `components/corpo/templo.tsx` (viewBox 240 × 196) com frontão, arquitrave, 7 colunas (uma por função pedagógica, de `ColunaSVG`) e estilóbato, com o algarismo romano de cada função embaixo.
@@ -330,6 +333,9 @@ Botão circular fixo de pedra verde com borda dourada e gaveta lateral em `surfa
 - **Página** (`/socrates`): marcador VI, "Sócrates" e uma frase; no desktop, consultas à esquerda (título, data relativa, a atual com filete dourado e `aria-current`, "Nova consulta") e a conversa à direita, numa superfície contornada; no celular, as consultas abrem numa `Gaveta`. Altura pela tela, descontando `--header-height` e `--shell-respiro`.
 - **Gaveta:** o mesmo chat, compacto, com "Abrir diálogo completo", o foco no campo ao abrir e o contexto da tela.
 
+### Service worker e offline
+`public/sw.js` guarda em cache só arquivos estáticos (`/_next/static`, ícones, manifest, fontes) e `public/offline.html`. Páginas são sempre pedidas à rede; sem rede, aparece a página offline (paleta do Paideia, claro e escuro do sistema, sem dado de ninguém). A API e páginas com login nunca vão para o cache. Ao ativar, a versão nova apaga as caches antigas (a v1 guardava páginas). O manifest e o `themeColor` usam green-900 (`#11271F`).
+
 ### Movimento
 - **Entrada de tela** (`app/(shell)/template.tsx`, `.anim-pagina`): fade com deslocamento de 6px, 225ms, no movimento discreto; começa quando a tela já chegou, nunca atrasa a navegação; nenhuma animação com movimento reduzido. O Next 14 ainda não integra a View Transitions API.
 - **Resposta imediata:** ações do aluno são otimistas (`CarteiraBotao`, "Guardar esta obra" da paleta, `FormularioOtimista` nas Configurações): a interface muda no clique com um aviso, e volta ao estado anterior com aviso de erro se o servidor falhar. As ações devolvem `ResultadoAcao` (`lib/acoes.ts`).
@@ -349,7 +355,10 @@ Botão circular fixo de pedra verde com borda dourada e gaveta lateral em `surfa
 - **Do** respeitar `prefers-reduced-motion` em qualquer movimento.
 
 ### Don't:
-- **Don't** usar eyebrow (rótulo pequeno acima do título). As telas atuais ainda usam `.label-caps`; ele sai no redesign de cada tela.
+- **Don't** usar eyebrow (rótulo pequeno acima do título). O componente e a classe foram apagados.
+- **Don't** usar opacidade solta para texto (`text-ink/60`): texto secundário é `text-ink-muted`.
+- **Don't** usar cores fora dos tokens (vermelho, `white`, `black`, hex soltos); a exceção são os dourados do ouro em relevo, que são primitivas da paleta.
+- **Don't** pôr algarismo romano nos títulos do admin: lá o título abre só com filete. Os romanos são da navegação do aluno, das funções, das épocas e das seções do aluno.
 - **Don't** usar emoji ou caractere Unicode no lugar de ícone.
 - **Don't** mudar a paleta sem instrução explícita do Daniel.
 - **Don't** usar pastel chapado nem cores saturadas ou infantis.

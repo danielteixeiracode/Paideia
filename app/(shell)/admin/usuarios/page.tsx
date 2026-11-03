@@ -1,6 +1,9 @@
 import { requireAdmin } from "@/lib/data/session";
 import { AdminTabs } from "@/components/admin/admin-tabs";
 import { TabelaUsuarios, type UsuarioAdmin } from "./tabela";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Administração: usuários" };
 
 export default async function AdminUsuariosPage() {
   const { supabase } = await requireAdmin();
@@ -13,7 +16,7 @@ export default async function AdminUsuariosPage() {
 
   return (
     <div className="space-y-8">
-      <header>
+      <header className="filete pt-4">
         <h1 className="t-titulo">Usuários</h1>
         <p className="t-nota mt-1">Quem usa o Paideia e com que papel. Mudar um papel pede confirmação.</p>
       </header>

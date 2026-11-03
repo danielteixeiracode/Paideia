@@ -2,6 +2,9 @@ import { Logo } from "@/components/ui/logo";
 import { AuthCard } from "@/components/auth/auth-card";
 import { CabecalhoSecao } from "@/components/ui/cabecalho-secao";
 import { SeletorModo } from "@/components/tema/seletor-modo";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Entrar" };
 
 const RECURSOS = [
   {

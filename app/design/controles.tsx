@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { TEMAS, type Tema } from "@/lib/tema";
 import { useTema } from "@/components/tema/use-tema";
 import { cn } from "@/lib/utils";
+import { Botao } from "@/components/ui/botao";
 
 const NOMES: Record<Tema, string> = { claro: "Claro", escuro: "Escuro", foco: "Foco" };
 
@@ -57,9 +58,9 @@ export function DemoMovimento() {
             />
           ))}
         </div>
-        <button type="button" onClick={() => setRodada((r) => r + 1)} className="btn-secondary">
+        <Botao variante="secundario" onClick={() => setRodada((r) => r + 1)}>
           Reproduzir
-        </button>
+        </Botao>
       </div>
 
       <div className="space-y-3">
@@ -74,9 +75,9 @@ export function DemoMovimento() {
             Confirmado
           </div>
         </div>
-        <button type="button" onClick={() => setAberto((a) => !a)} className="btn-secondary">
+        <Botao variante="secundario" onClick={() => setAberto((a) => !a)}>
           {aberto ? "Esconder" : "Mostrar"}
-        </button>
+        </Botao>
       </div>
 
       <p className="t-nota sm:col-span-2">

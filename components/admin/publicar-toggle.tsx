@@ -11,8 +11,8 @@ export function PublicarToggle({ id, ativo }: { id: string; ativo: boolean }) {
     <button
       disabled={pending}
       onClick={() => startTransition(() => alternarAtivoPublicado(id, !ativo))}
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-        ativo ? "bg-action text-on-action" : "bg-muted text-ink/50"
+      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-nota font-semibold ${
+        ativo ? "bg-action text-on-action" : "bg-muted text-ink-muted"
       }`}
     >
       {pending && <Loader2 className="h-3 w-3 animate-spin" />}

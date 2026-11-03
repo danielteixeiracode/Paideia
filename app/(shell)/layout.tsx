@@ -18,7 +18,9 @@ export default async function ShellLayout({ children }: { children: React.ReactN
             <div data-chrome className="contents">
               <Cabecalho perfil={perfil} />
             </div>
-            <main className="mx-auto w-full max-w-pagina flex-1 px-gutter pb-24 pt-6 md:pb-10">{children}</main>
+            <main id="conteudo" tabIndex={-1} className="mx-auto w-full max-w-pagina flex-1 px-gutter pb-24 pt-6 outline-none md:pb-10">
+              {children}
+            </main>
           </div>
           <div data-chrome className="contents">
             <MobileNav />

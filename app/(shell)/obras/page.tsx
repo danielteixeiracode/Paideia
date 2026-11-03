@@ -3,6 +3,9 @@ import { requirePerfil } from "@/lib/data/session";
 import { ExploradorObras } from "./explorador";
 import type { ObraLista } from "@/components/corpo/cartao-obra";
 import { CAMPOS_CARTAO_OBRA, paraObraLista, type ObraBanco } from "@/lib/data/obras";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Obras" };
 
 export default async function ObrasPage() {
   const { supabase, perfil } = await requirePerfil();

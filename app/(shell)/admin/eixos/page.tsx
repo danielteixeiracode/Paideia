@@ -1,10 +1,13 @@
 import { requireAdmin } from "@/lib/data/session";
-import { Card, Eyebrow } from "@/components/ui/primitives";
+import { Cartao } from "@/components/ui/cartao";
 import { AdminTabs } from "@/components/admin/admin-tabs";
 import { SubmitButton } from "@/components/admin/submit-button";
 import { EixoCard } from "@/components/admin/eixo-card";
 import { criarEixo } from "@/app/(shell)/admin/actions";
 import type { Capacidade, Eixo } from "@/types/database";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Eixos e capacidades" };
 
 export default async function AdminEixosPage() {
   const { supabase } = await requireAdmin();
@@ -18,11 +21,11 @@ export default async function AdminEixosPage() {
   const listaCapacidades = (capacidades ?? []) as Capacidade[];
 
   return (
-    <div className="space-y-6">
-      <div>
-        <Eyebrow>Administratio Paideiae</Eyebrow>
-        <h1 className="mt-1 font-serif text-2xl font-semibold sm:text-3xl">Eixos &amp; Capacidades</h1>
-      </div>
+    <div className="space-y-8">
+      <header className="filete pt-4">
+        <h1 className="t-titulo">Eixos e capacidades</h1>
+        <p className="t-nota mt-1">Tela do modelo antigo (eixos e capacidades), fora das abas.</p>
+      </header>
       <AdminTabs />
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -35,8 +38,8 @@ export default async function AdminEixosPage() {
         ))}
       </div>
 
-      <Card>
-        <p className="font-serif text-lg font-semibold">Novo Eixo</p>
+      <Cartao>
+        <h2 className="t-subtitulo">Novo eixo</h2>
         <form action={criarEixo} className="mt-3 grid gap-3 sm:grid-cols-2">
           <input name="nome" required placeholder="Nome (ex: Filosofia Geral)" className="rounded-md border border-rule px-3 py-2 text-sm" />
           <input name="slug" required placeholder="slug (ex: filosofia-geral)" className="rounded-md border border-rule px-3 py-2 text-sm" />
@@ -44,7 +47,7 @@ export default async function AdminEixosPage() {
           <input name="descricao" placeholder="Descrição breve" className="rounded-md border border-rule px-3 py-2 text-sm sm:col-span-2" />
           <SubmitButton label="Criar Eixo" />
         </form>
-      </Card>
+      </Cartao>
     </div>
   );
 }

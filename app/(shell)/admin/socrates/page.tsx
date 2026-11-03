@@ -1,6 +1,9 @@
 import { requireAdmin } from "@/lib/data/session";
 import { AdminTabs } from "@/components/admin/admin-tabs";
 import { FormularioSocrates } from "@/components/admin/formulario-socrates";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Administração: Sócrates" };
 
 export default async function AdminSocratesPage() {
   const { supabase } = await requireAdmin();
@@ -14,7 +17,7 @@ export default async function AdminSocratesPage() {
 
   return (
     <div className="space-y-8">
-      <header>
+      <header className="filete pt-4">
         <h1 className="t-titulo">Configuração do Sócrates</h1>
         <p className="t-nota mt-1 max-w-leitura">
           O prompt de sistema, o modelo e os parâmetros do mentor usado no diálogo e na gaveta. A conversa e a lógica não mudam por aqui.

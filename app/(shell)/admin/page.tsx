@@ -7,6 +7,9 @@ import { Selo } from "@/components/ui/selo";
 import { TituloBloco } from "@/components/ui/titulo-bloco";
 import { classesBotao } from "@/components/ui/botao";
 import { quandoRelativo, romano } from "@/lib/utils";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { title: "Administração" };
 
 type Alterada = {
   id: string;
@@ -42,12 +45,9 @@ export default async function AdminPage() {
 
   return (
     <div className="space-y-10">
-      <header className="flex flex-wrap items-end justify-between gap-4">
+      <header className="filete flex flex-wrap items-end justify-between gap-4 pt-4">
         <div>
-          <div className="marcador max-w-md" aria-hidden>
-            I
-          </div>
-          <h1 className="t-titulo mt-3">Administração</h1>
+          <h1 className="t-titulo">Administração</h1>
           <p className="t-nota mt-1">O acervo da formação e quem o usa.</p>
         </div>
         <div className="flex flex-wrap gap-2">

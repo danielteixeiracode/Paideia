@@ -12,7 +12,7 @@ import { ColunaProgresso } from "@/components/ui/coluna-progresso";
 import { SeletorTema } from "../controles";
 import { DemosInterativos } from "./interativos";
 
-export const metadata: Metadata = { title: "Componentes — Paideia" };
+export const metadata: Metadata = { title: "Componentes" };
 
 // Vitrine dos componentes base. Só em desenvolvimento, fora do menu.
 

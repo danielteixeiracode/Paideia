@@ -2,11 +2,13 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
-import { Badge } from "@/components/ui/primitives";
+import { Selo } from "@/components/ui/selo";
+import { Botao } from "@/components/ui/botao";
+import { Cartao } from "@/components/ui/cartao";
 import { romano } from "@/lib/utils";
 import { DemoMovimento, SeletorTema } from "./controles";
 
-export const metadata: Metadata = { title: "Sistema de design — Paideia" };
+export const metadata: Metadata = { title: "Sistema de design" };
 
 // Página de conferência dos tokens. Só existe em desenvolvimento e não
 // aparece em nenhum menu.
@@ -65,22 +67,18 @@ export default function DesignPage() {
                   </li>
                 ))}
               </ul>
-              <div className="card mt-4 space-y-3 p-4">
+              <Cartao className="mt-4 space-y-3 p-4">
                 <p className="t-subtitulo">Eneida</p>
                 <p className="t-nota">Texto secundário sobre a superfície.</p>
                 <Link href="#" className="t-interface text-accent hover:underline">
                   Link de destaque
                 </Link>
                 <div className="flex flex-wrap items-center gap-2">
-                  <button type="button" className="btn-primary">
-                    <BookOpen className="h-4 w-4" /> Ação
-                  </button>
-                  <button type="button" className="btn-secondary">
-                    Secundária
-                  </button>
-                  <Badge tone="gold">selo</Badge>
+                  <Botao icone={<BookOpen className="h-4 w-4" aria-hidden />}>Ação</Botao>
+                  <Botao variante="secundario">Secundária</Botao>
+                  <Selo tom="dourado">selo</Selo>
                 </div>
-              </div>
+              </Cartao>
             </div>
           ))}
         </div>
@@ -184,15 +182,13 @@ export default function DesignPage() {
 
       <Secao numero={6} titulo="Foco">
         <div className="flex flex-wrap items-center gap-4">
-          <button type="button" className="btn-primary">
-            Botão
-          </button>
+          <Botao>Botão</Botao>
           <Link href="#" className="t-interface text-accent underline underline-offset-4">
             Link
           </Link>
           <input
             placeholder="Campo de texto"
-            className="t-interface rounded-md border border-rule bg-surface px-3 py-2 text-ink placeholder:text-ink/40"
+            className="t-interface rounded-md border border-rule bg-surface px-3 py-2 text-ink placeholder:text-ink-muted"
           />
           <p className="t-nota">Use Tab para percorrer e conferir o anel de foco.</p>
         </div>
