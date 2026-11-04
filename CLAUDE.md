@@ -54,7 +54,9 @@ Direção de trabalho (proposta, ainda não confirmada em detalhe; confirme com 
 
 Modelo de dados em uso (supabase/migrations/2026-11-03-novo-modelo-corpo.sql, já aplicado): `epocas`, `funcoes_pedagogicas`, `obras`, `obra_funcoes`, `exercicios`, `carteira_obras` (estado da obra para o aluno, sem porcentagem), `frutos` e `registro_eventos` (só inserção; o progresso deriva dele). As telas do aluno leem `obras` e `carteira_obras`; `ativos` e `carteira_itens` são do modelo antigo.
 
-Telas do aluno no padrão novo (DESIGN.md): Início (templo), Obras, Funções, Épocas, Carteira, Sócrates, Configurações. Navegação no cabeçalho em faixa dupla (abas I a VI), barra inferior no celular, paleta de comandos (Ctrl K) e atalhos. Administração no padrão novo: visão geral, Obras e Exercícios (cadastro com validação, sem exclusão), Sócrates (configuração) e Usuários. Títulos das abas do navegador por rota ("Obras – Paideia").
+Telas do aluno no padrão novo (DESIGN.md): Início, Obras, Funções, Épocas, Carteira, Sócrates, Configurações. Navegação no cabeçalho em faixa dupla (abas I a VI), barra inferior no celular, paleta de comandos (Ctrl K) e atalhos. Administração no padrão novo: visão geral, Obras e Exercícios (cadastro com validação, sem exclusão), Sócrates (configuração) e Usuários. Títulos das abas do navegador por rota ("Obras – Paideia").
+
+O templo saiu do projeto (o desenho do Início e de Funções, a colunata, a coluna de progresso, a animação das colunas e o controle "uma vez por sessão"); não recriar. North Star do design: "O Códice". O progresso por função aparece como filete (`FileteProgresso`, `ProgressoFuncoes`), pela regra provisória de `lib/progresso-funcoes.ts` (eventos da função divididos pela meta de 10, limitado a 1). Nos cartões de obra, as funções aparecem em romanos (`RomanosFuncoes`).
 
 Do modelo antigo, ainda no app e fora dos menus (decidir se ficam): Biblioteca (`ativos`, `eixos`, `carteira_itens`), /admin/eixos (`eixos`, `capacidades`) e /admin/ativos (`ativos`, `eixos`).
 
@@ -68,9 +70,9 @@ Contexto do Sócrates (implementado, era direção de trabalho): o Sócrates lê
 
 Service worker (public/sw.js): guarda em cache só arquivos estáticos e a página offline (public/offline.html); páginas que exigem login e a API nunca vão para o cache.
 
-Páginas especiais no padrão novo: 404, erro e erro global (`components/ui/pagina-especial.tsx`), com caminho de volta ao Início; /design e /design/componentes só existem em desenvolvimento. Auditoria final (etapa 7b) feita em 360/390/768/1280px nos três modos: sem rolagem horizontal, contraste ≥ 4,5:1, alvos de toque de 44px (exceto as colunas do templo, acima de 24px), teclado e foco conferidos, movimento reduzido sem animação. Chaves secretas só no servidor: `SUPABASE_SERVICE_ROLE_KEY` não é usada pelo app (só pelos testes e2e) e `ANTHROPIC_API_KEY` só em app/api/socrates. Type-check, lint e build de produção passam.
+Páginas especiais no padrão novo: 404, erro e erro global (`components/ui/pagina-especial.tsx`), com caminho de volta ao Início; /design e /design/componentes só existem em desenvolvimento. Auditoria final (etapa 7b) feita em 360/390/768/1280px nos três modos: sem rolagem horizontal, contraste ≥ 4,5:1, alvos de toque de 44px, teclado e foco conferidos, movimento reduzido sem animação. Chaves secretas só no servidor: `SUPABASE_SERVICE_ROLE_KEY` não é usada pelo app (só pelos testes e2e) e `ANTHROPIC_API_KEY` só em app/api/socrates. Type-check, lint e build de produção passam.
 
-Conferir manualmente (dependem de dados e de login): ficha de obra, edição de obra e de exercício no admin, cartões de obra, sementes e frutos na Carteira e uma conversa do Sócrates com mensagens.
+Conferir manualmente (dependem dos dados da conta): sementes e frutos na Carteira, o "Continuar" e a atividade do Início com eventos, e uma conversa do Sócrates com mensagens. A ficha de obra, os cartões e as edições do admin foram conferidos com os dados de exemplo.
 
 Pendências técnicas:
 - O app só roda localmente por enquanto; não há configuração de hospedagem.

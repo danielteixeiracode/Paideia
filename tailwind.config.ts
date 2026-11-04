@@ -114,11 +114,11 @@ const config: Config = {
       },
       transitionDuration: {
         discreto: "var(--motion-subtle-duration)",
-        assinatura: "var(--motion-signature-duration)",
+        progresso: "var(--motion-progress-duration)",
       },
       transitionTimingFunction: {
         discreto: "var(--motion-subtle-ease)",
-        assinatura: "var(--motion-signature-ease)",
+        progresso: "var(--motion-progress-ease)",
       },
     },
   },

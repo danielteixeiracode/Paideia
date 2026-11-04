@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import { Selo } from "@/components/ui/selo";
 import { Botao } from "@/components/ui/botao";
-import { romano } from "@/lib/utils";
+import { cn, romano } from "@/lib/utils";
 
 export interface ExercicioAdmin {
   id: string;
@@ -72,9 +72,9 @@ export function TabelaExercicios({
             className="w-full rounded-md border border-rule bg-surface py-2 pl-9 pr-3 font-sans text-base text-ink placeholder:text-ink-muted transition-colors duration-discreto ease-discreto hover:border-ink-muted sm:text-interface [@media(pointer:coarse)]:min-h-11"
           />
         </label>
-        <label className="flex flex-col gap-1">
+        <label className="flex min-w-0 max-w-full flex-col gap-1">
           <span className="t-nota">Função</span>
-          <select value={funcao} onChange={(e) => setFuncao(e.target.value)} className={SELECAO}>
+          <select value={funcao} onChange={(e) => setFuncao(e.target.value)} className={cn(SELECAO, "max-w-full")}>
             <option value="">Todas</option>
             {funcoes.map((f) => (
               <option key={f.id} value={f.id}>
@@ -83,9 +83,9 @@ export function TabelaExercicios({
             ))}
           </select>
         </label>
-        <label className="flex flex-col gap-1">
+        <label className="flex min-w-0 max-w-full flex-col gap-1">
           <span className="t-nota">Obra</span>
-          <select value={obra} onChange={(e) => setObra(e.target.value)} className={SELECAO}>
+          <select value={obra} onChange={(e) => setObra(e.target.value)} className={cn(SELECAO, "max-w-full")}>
             <option value="todas">Todas</option>
             <option value="gerais">Gerais</option>
             {obras.map((o) => (
@@ -133,7 +133,7 @@ export function TabelaExercicios({
               {visiveis.map((e) => (
                 <tr key={e.id} className="align-baseline">
                   <td className="py-3 pr-4">
-                    <Link href={`/admin/exercicios/${e.id}/editar`} className="text-interface font-semibold text-ink underline-offset-4 hover:underline">
+                    <Link href={`/admin/exercicios/${e.id}/editar`} className="alvo-toque text-interface font-semibold text-ink underline-offset-4 hover:underline">
                       {e.titulo}
                     </Link>
                   </td>

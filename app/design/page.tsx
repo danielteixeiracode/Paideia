@@ -46,7 +46,7 @@ export default function DesignPage() {
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="t-titulo">Sistema de design</h1>
-          <p className="t-nota mt-1">Tokens do Paideia (North Star: O Templo). Página de desenvolvimento, fora do menu.</p>
+          <p className="t-nota mt-1">Tokens do Paideia (North Star: O Códice). Página de desenvolvimento, fora do menu.</p>
         </div>
         <SeletorTema />
       </header>

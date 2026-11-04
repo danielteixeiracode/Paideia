@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Landmark } from "lucide-react";
+import { BookmarkPlus } from "lucide-react";
 import { guardarObra, removerObra } from "@/app/(shell)/obras/actions";
 import { Botao } from "@/components/ui/botao";
 import { SeloEstadoObra } from "@/components/ui/selo";
@@ -40,7 +40,7 @@ export function CarteiraBotao({ obraId, estado }: { obraId: string; estado: stri
 
   if (!estadoLocal) {
     return (
-      <Botao tamanho="sm" onClick={alternar} icone={<Landmark className="h-3.5 w-3.5" aria-hidden />}>
+      <Botao tamanho="sm" onClick={alternar} icone={<BookmarkPlus className="h-3.5 w-3.5" aria-hidden />}>
         Guardar na Carteira
       </Botao>
     );

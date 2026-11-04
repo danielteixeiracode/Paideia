@@ -4,7 +4,7 @@ import { requirePerfil } from "@/lib/data/session";
 import { ExercicioItem } from "@/components/corpo/exercicio-item";
 import { ContextoTela } from "@/components/socrates/contexto-tela";
 import { CarteiraBotao } from "@/components/corpo/carteira-botao";
-import { Colunata, type FuncaoColunata } from "@/components/corpo/colunata";
+import { RomanosFuncoes, type FuncaoCurta } from "@/components/corpo/romanos-funcoes";
 import { TituloBloco } from "@/components/ui/titulo-bloco";
 import { romano } from "@/lib/utils";
 import type { Exercicio } from "@/types/database";
@@ -17,8 +17,8 @@ type ObraFicha = {
   descricao: string | null;
   epoca: { id: string; numero: number; nome: string } | null;
 };
-type FuncaoDaObra = FuncaoColunata & { nota: string | null };
-type ExercicioComFuncao = Exercicio & { funcao: FuncaoColunata | null };
+type FuncaoDaObra = FuncaoCurta & { nota: string | null };
+type ExercicioComFuncao = Exercicio & { funcao: FuncaoCurta | null };
 
 export function generateMetadata({ params }: { params: { id: string } }) {
   return tituloDaFicha("obras", "titulo", params.id);
@@ -42,11 +42,11 @@ export default async function ObraPage({ params }: { params: { id: string } }) {
     supabase.from("funcoes_pedagogicas").select("id, numero, nome").order("numero"),
   ]);
 
-  const funcoes: FuncaoDaObra[] = ((ligacoesR.data ?? []) as unknown as { nota: string | null; funcao: FuncaoColunata | null }[])
+  const funcoes: FuncaoDaObra[] = ((ligacoesR.data ?? []) as unknown as { nota: string | null; funcao: FuncaoCurta | null }[])
     .filter((l) => l.funcao)
     .map((l) => ({ ...l.funcao!, nota: l.nota }))
     .sort((a, b) => a.numero - b.numero);
-  const todasFuncoes = (todasR.data ?? []) as FuncaoColunata[];
+  const todasFuncoes = (todasR.data ?? []) as FuncaoCurta[];
 
   // Exercícios pertencem à função: entram os gerais das funções desta obra
   // e os escritos especificamente para ela.
@@ -63,7 +63,7 @@ export default async function ObraPage({ params }: { params: { id: string } }) {
   const exercicios = (exerciciosData ?? []) as unknown as ExercicioComFuncao[];
 
   // Um bloco por função da obra (mais as de exercícios só desta obra, se houver).
-  const grupos = new Map<string, { funcao: FuncaoColunata; nota: string | null; exercicios: ExercicioComFuncao[] }>();
+  const grupos = new Map<string, { funcao: FuncaoCurta; nota: string | null; exercicios: ExercicioComFuncao[] }>();
   for (const f of funcoes) grupos.set(f.id, { funcao: f, nota: f.nota, exercicios: [] });
   for (const e of exercicios) {
     if (!e.funcao) continue;
@@ -76,7 +76,7 @@ export default async function ObraPage({ params }: { params: { id: string } }) {
     <article className="space-y-12">
       <ContextoTela tipo="obra" id={obra.id} />
 
-      <header className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+      <header className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
         <div className="min-w-0">
           <div className="marcador max-w-md" aria-hidden>
             {obra.epoca ? romano(obra.epoca.numero) : "II"}
@@ -85,12 +85,10 @@ export default async function ObraPage({ params }: { params: { id: string } }) {
           <h1 className="t-display mt-3">{obra.titulo}</h1>
           {obra.autor && <p className="t-leitura mt-2 text-ink-muted">{obra.autor}</p>}
           {obra.descricao && <p className="t-leitura mt-5">{obra.descricao}</p>}
+          {todasFuncoes.length > 0 && <RomanosFuncoes funcoes={todasFuncoes} daObra={new Set(funcaoIds)} comLinks className="mt-6" />}
         </div>
         <div className="flex flex-col items-start gap-6 lg:items-end">
           <CarteiraBotao obraId={obra.id} estado={(carteiraR.data as { estado: string } | null)?.estado ?? null} />
-          {todasFuncoes.length > 0 && (
-            <Colunata funcoes={todasFuncoes} acesas={new Set(funcaoIds)} tamanho="grande" />
-          )}
         </div>
       </header>
 
@@ -108,7 +106,7 @@ export default async function ObraPage({ params }: { params: { id: string } }) {
                   {romano(funcao.numero)}
                 </p>
                 <h3 id={`funcao-${funcao.id}`} className="mt-2 font-serif text-lg font-medium leading-snug text-ink">
-                  <Link href={`/funcoes/${funcao.id}`} className="underline-offset-4 hover:underline">
+                  <Link href={`/funcoes/${funcao.id}`} className="alvo-toque underline-offset-4 hover:underline">
                     <span className="sr-only">Função {funcao.numero}: </span>
                     {funcao.nome}
                   </Link>

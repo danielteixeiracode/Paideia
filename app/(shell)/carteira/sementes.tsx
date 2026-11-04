@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CartaoObra, type ObraLista } from "@/components/corpo/cartao-obra";
-import type { FuncaoColunata } from "@/components/corpo/colunata";
+import type { FuncaoCurta } from "@/components/corpo/romanos-funcoes";
 import { Botao } from "@/components/ui/botao";
 import { useAviso } from "@/components/ui/aviso";
 import { guardarObra, removerObra } from "@/app/(shell)/obras/actions";
@@ -11,7 +11,7 @@ import { ERRO_CONEXAO } from "@/lib/acoes";
 
 // Sementes da Carteira. Remover é otimista: o cartão sai na hora, com um
 // aviso que permite desfazer; se o servidor falhar, ele volta com a mensagem.
-export function SementesCarteira({ sementes, funcoes }: { sementes: ObraLista[]; funcoes: FuncaoColunata[] }) {
+export function SementesCarteira({ sementes, funcoes }: { sementes: ObraLista[]; funcoes: FuncaoCurta[] }) {
   const [ocultas, setOcultas] = useState<Set<string>>(new Set());
   const avisar = useAviso();
 

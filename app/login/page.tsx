@@ -26,7 +26,7 @@ export default function LoginPage() {
           <SeletorModo />
         </div>
 
-        <h1 className="t-titulo mt-12 text-center">Bem-vindo ao templo dos seus estudos</h1>
+        <h1 className="t-titulo mt-12 text-center">Bem-vindo de volta aos seus estudos</h1>
         <p className="t-corpo mx-auto mt-3 max-w-md text-center text-ink-muted">
           A arte milenar da autoformação integral. Retome seu itinerário entre os mestres da sabedoria
           clássica.

@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { requirePerfil } from "@/lib/data/session";
-import { Templo, type ColunaTemplo } from "@/components/corpo/templo";
 import { ResponderSocrates } from "@/components/corpo/responder-socrates";
+import { ProgressoFuncoes, type FuncaoComEventos } from "@/components/corpo/progresso-funcoes";
 import { Cartao } from "@/components/ui/cartao";
 import { TituloBloco } from "@/components/ui/titulo-bloco";
 import { ListaAtividade } from "@/components/corpo/lista-atividade";
-import { Contador } from "@/components/ui/contador";
 import { classesBotao } from "@/components/ui/botao";
-import { preenchimentoColuna, frontaoAceso } from "@/lib/templo";
 import { perguntaDoDia } from "@/lib/perguntas-socrates";
 import { descreverEvento } from "@/lib/eventos";
 import { cn, quandoRelativo, romano } from "@/lib/utils";
@@ -61,7 +59,7 @@ export default async function InicioPage() {
       )
       .eq("user_id", uid)
       .order("criado_em", { ascending: false })
-      .limit(6),
+      .limit(12),
     supabase
       .from("carteira_obras")
       .select("obra_id, obra:obras(id, titulo, autor, epoca_id, obra_funcoes(funcao:funcoes_pedagogicas(numero)))")
@@ -72,7 +70,7 @@ export default async function InicioPage() {
       .select("id, tipo, criado_em, obra:obras(titulo), funcao:funcoes_pedagogicas(numero, nome), exercicio:exercicios(titulo)")
       .eq("user_id", uid)
       .order("criado_em", { ascending: false })
-      .limit(3),
+      .limit(4),
     supabase.from("frutos").select("obra_id").eq("user_id", uid).not("obra_id", "is", null),
     supabase.from("epocas").select("id, numero, nome").order("numero"),
     supabase.from("frutos").select("id", { count: "exact", head: true }).eq("user_id", uid),
@@ -86,16 +84,12 @@ export default async function InicioPage() {
   const totalEventos = totalR.count ?? 0;
   const totalFrutos = totalFrutosR.count ?? 0;
 
-  // Templo: eventos por função, preenchimento derivado (regra provisória).
+  // Eventos por função; o filete deriva deles (regra provisória em lib/progresso-funcoes.ts).
   const eventosPorFuncao = new Map<string, number>();
   for (const e of (eventosFuncaoR.data ?? []) as { funcao_id: string }[]) {
     eventosPorFuncao.set(e.funcao_id, (eventosPorFuncao.get(e.funcao_id) ?? 0) + 1);
   }
-  const colunas: ColunaTemplo[] = funcoes.map((f) => {
-    const eventos = eventosPorFuncao.get(f.id) ?? 0;
-    return { ...f, eventos, preenchimento: preenchimentoColuna(eventos) };
-  });
-  const aceso = frontaoAceso(colunas.map((c) => c.preenchimento));
+  const comEventos: FuncaoComEventos[] = funcoes.map((f) => ({ ...f, eventos: eventosPorFuncao.get(f.id) ?? 0 }));
 
   // Sementes: obras guardadas que ainda não deram fruto (como na Carteira).
   const obrasComFruto = new Set(((frutosObrasR.data ?? []) as { obra_id: string }[]).map((f) => f.obra_id));
@@ -103,99 +97,136 @@ export default async function InicioPage() {
   const epocasNaCarteira = new Set(carteira.map((i) => i.obra!.epoca_id).filter(Boolean));
 
   const continuar = await montarContinuar(supabase, recentes[0] ?? null);
-  const socrates = perguntaDoDia(colunas);
+  const socrates = perguntaDoDia(comEventos);
   const agora = new Date();
   const primeiroNome = perfil.nome.split(" ")[0];
 
+  // Embaixo, os frutos tomam o lugar das sementes quando existem; se também
+  // há sementes, ficam lado a lado (três colunas no desktop).
+  const mostrarSementes = frutos.length === 0 || sementes.length > 0;
+  const mostrarFrutos = frutos.length > 0;
+
   return (
-    <div className="space-y-12">
-      {/* Frontispício: título à esquerda, o templo como selo à direita. */}
-      <header className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-        <div>
-          <div className="marcador max-w-md" aria-hidden>
+    <div className="space-y-10">
+      <header className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 border-b-hair border-rule-strong/60 pb-3">
+        <div className="flex items-baseline gap-3">
+          <span aria-hidden className="t-romano text-subtitulo text-gold-ink">
             I
-          </div>
-          <h1 className="t-display mt-3">Início</h1>
-          <p className="t-leitura mt-3 text-ink-muted">Bem-vindo de volta, {primeiroNome}.</p>
+          </span>
+          <h1 className="t-titulo">Início</h1>
         </div>
-        {colunas.length > 0 && <Templo colunas={colunas} aceso={aceso} totalEventos={totalEventos} />}
+        <p className="text-interface text-ink-muted">
+          Bem-vindo de volta, {primeiroNome}.{" "}
+          <span className="whitespace-nowrap">
+            {totalEventos === 0
+              ? "Nenhum evento registrado ainda."
+              : `${totalEventos} ${totalEventos === 1 ? "evento registrado" : "eventos registrados"}.`}
+          </span>
+        </p>
       </header>
 
-      <div className="grid gap-5 lg:grid-cols-3">
-        <BlocoContinuar dados={continuar} agora={agora} />
+      <div className="grid gap-x-8 gap-y-10 lg:grid-cols-12 lg:items-start">
+        <div className="space-y-10 lg:col-span-7">
+          <BlocoContinuar dados={continuar} agora={agora} />
 
-        <Cartao as="section" className="flex flex-col">
-          <TituloBloco titulo="Sócrates pergunta" href="/socrates" link="Diálogos" />
-          {socrates ? (
-            <>
-              <p className="t-nota mt-4">
-                <span className="t-romano mr-1.5 text-gold-ink">{romano(socrates.funcao.numero)}</span>
-                {socrates.funcao.nome}
-              </p>
-              <blockquote className="mt-2 font-serif text-subtitulo italic leading-snug text-ink">{socrates.pergunta}</blockquote>
-              <div className="mt-auto pt-5">
-                <ResponderSocrates pergunta={socrates.pergunta} />
-              </div>
-            </>
-          ) : (
-            <p className="t-nota mt-4">As funções pedagógicas ainda não foram carregadas.</p>
-          )}
-        </Cartao>
+          <section aria-labelledby="atividade-titulo">
+            <TituloBloco titulo="Atividade recente" id="atividade-titulo" />
+            <div className="mt-1">
+              <ListaAtividade eventos={recentes.slice(0, 4)} agora={agora} vazio="Nada registrado ainda. O que você fizer aqui aparece nesta lista." />
+              {recentes.length > 4 && (
+                <details className="group">
+                  <summary className="alvo-toque mt-2 inline-block cursor-pointer list-none rounded-md text-nota text-accent underline-offset-4 hover:underline [&::-webkit-details-marker]:hidden">
+                    <span className="group-open:hidden">Ver tudo</span>
+                    <span className="hidden group-open:inline">Ver menos</span>
+                  </summary>
+                  <div className="mt-2 border-t-hair border-rule-strong/40">
+                    <ListaAtividade eventos={recentes.slice(4)} agora={agora} vazio="" />
+                  </div>
+                </details>
+              )}
+            </div>
+          </section>
+        </div>
+
+        <div className="space-y-10 lg:col-span-5">
+          <Cartao as="section" aria-labelledby="socrates-titulo">
+            <TituloBloco titulo="Sócrates pergunta" id="socrates-titulo" href="/socrates" link="Diálogos" />
+            {socrates ? (
+              <>
+                <p className="t-nota mt-3">
+                  <span className="t-romano mr-1.5 text-gold-ink">{romano(socrates.funcao.numero)}</span>
+                  {socrates.funcao.nome}
+                </p>
+                <blockquote className="mt-2 font-serif text-subtitulo italic leading-snug text-ink">{socrates.pergunta}</blockquote>
+                <div className="mt-4">
+                  <ResponderSocrates pergunta={socrates.pergunta} />
+                </div>
+              </>
+            ) : (
+              <p className="t-nota mt-3">As funções ainda não foram carregadas.</p>
+            )}
+          </Cartao>
+
+          <section aria-labelledby="funcoes-titulo">
+            <TituloBloco titulo="As sete funções" id="funcoes-titulo" href="/funcoes" link="Funções" />
+            {comEventos.length > 0 ? (
+              <ProgressoFuncoes funcoes={comEventos} className="mt-1" />
+            ) : (
+              <p className="t-nota mt-3">As funções ainda não foram carregadas.</p>
+            )}
+          </section>
+        </div>
       </div>
 
-      <div className="grid gap-10 md:grid-cols-3 md:gap-8">
-        <section>
-          <TituloBloco titulo="Na Carteira, sementes" href="/carteira" link="Carteira" />
-          <p className="t-nota mt-1">
-            <Contador valor={sementes.length} /> {sementes.length === 1 ? "obra à espera de fruto" : "obras à espera de fruto"}
-          </p>
-          {sementes.length === 0 ? (
-            <p className="t-corpo mt-4 text-ink-muted">
-              Nenhuma obra guardada ainda. Guarde uma pela ficha dela, em{" "}
-              <Link href="/obras" className="text-accent underline underline-offset-4">
-                Obras
-              </Link>
-              .
-            </p>
-          ) : (
-            <ul className="mt-3 divide-y-hair divide-rule-strong/40">
-              {sementes.slice(0, 4).map((s) => {
-                const numeros = Array.from(
-                  new Set(s.obra!.obra_funcoes.map((l) => l.funcao?.numero).filter((n): n is number => !!n))
-                ).sort((a, b) => a - b);
-                return (
-                  <li key={s.obra_id}>
-                    <Link href={`/obras/${s.obra!.id}`} className="group flex items-baseline justify-between gap-3 py-2.5">
-                      <span className="min-w-0">
-                        <span className="block truncate font-serif text-lg leading-snug text-ink group-hover:underline group-hover:underline-offset-4">
-                          {s.obra!.titulo}
+      <div className={cn("grid gap-x-8 gap-y-10 md:grid-cols-2", mostrarSementes && mostrarFrutos && "lg:grid-cols-3")}>
+        {mostrarSementes && (
+          <section aria-labelledby="sementes-titulo">
+            <TituloBloco titulo="Na Carteira" id="sementes-titulo" href="/carteira" link="Carteira" />
+            <p className="t-nota mt-1">{sementes.length === 1 ? "1 obra à espera de fruto" : `${sementes.length} obras à espera de fruto`}</p>
+            {sementes.length === 0 ? (
+              <p className="t-corpo mt-3 text-ink-muted">
+                Nenhuma obra guardada. Guarde uma pela ficha dela, em{" "}
+                <Link href="/obras" className="text-accent underline underline-offset-4">
+                  Obras
+                </Link>
+                .
+              </p>
+            ) : (
+              <ul className="mt-2 divide-y-hair divide-rule-strong/40">
+                {sementes.slice(0, 4).map((s) => {
+                  const numeros = Array.from(
+                    new Set(s.obra!.obra_funcoes.map((l) => l.funcao?.numero).filter((n): n is number => !!n))
+                  ).sort((a, b) => a - b);
+                  return (
+                    <li key={s.obra_id}>
+                      <Link href={`/obras/${s.obra!.id}`} className="group flex min-h-11 items-baseline justify-between gap-3 py-2.5">
+                        <span className="min-w-0">
+                          <span className="block truncate font-serif text-lg leading-snug text-ink group-hover:underline group-hover:underline-offset-4">
+                            {s.obra!.titulo}
+                          </span>
+                          {s.obra!.autor && <span className="t-nota block truncate">{s.obra!.autor}</span>}
                         </span>
-                        {s.obra!.autor && <span className="t-nota block truncate">{s.obra!.autor}</span>}
-                      </span>
-                      {numeros.length > 0 && (
-                        <span className="t-romano shrink-0 space-x-1.5 text-nota text-gold-ink" aria-label={`Funções ${numeros.join(", ")}`}>
-                          {numeros.map((n) => (
-                            <span key={n}>{romano(n)}</span>
-                          ))}
-                        </span>
-                      )}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </section>
+                        {numeros.length > 0 && (
+                          <span className="t-romano shrink-0 space-x-1.5 text-nota text-gold-ink" aria-label={`Funções ${numeros.join(", ")}`}>
+                            {numeros.map((n) => (
+                              <span key={n}>{romano(n)}</span>
+                            ))}
+                          </span>
+                        )}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </section>
+        )}
 
-        <section>
-          <TituloBloco titulo="Frutos recentes" href="/carteira" link="Carteira" />
-          <p className="t-nota mt-1">
-            <Contador valor={totalFrutos} /> {totalFrutos === 1 ? "fruto colhido" : "frutos colhidos"}
-          </p>
-          {frutos.length === 0 ? (
-            <p className="t-corpo mt-4 text-ink-muted">Os frutos aparecem aqui quando você responde a um exercício.</p>
-          ) : (
-            <ul className="mt-3 divide-y-hair divide-rule-strong/40">
+        {mostrarFrutos && (
+          <section aria-labelledby="frutos-titulo">
+            <TituloBloco titulo="Frutos recentes" id="frutos-titulo" href="/carteira" link="Carteira" />
+            <p className="t-nota mt-1">{totalFrutos === 1 ? "1 fruto colhido" : `${totalFrutos} frutos colhidos`}</p>
+            <ul className="mt-2 divide-y-hair divide-rule-strong/40">
               {frutos.map((f) => (
                 <li key={f.id} className="flex items-baseline gap-3 py-2.5">
                   <span className="t-romano w-8 shrink-0 text-nota text-gold-ink">{f.funcao ? romano(f.funcao.numero) : ""}</span>
@@ -206,12 +237,12 @@ export default async function InicioPage() {
                 </li>
               ))}
             </ul>
-          )}
-        </section>
+          </section>
+        )}
 
-        <section>
-          <TituloBloco titulo="Épocas" href="/epocas" link="Épocas" />
-          <ul className="mt-4 grid grid-cols-7 gap-0.5 sm:gap-1.5" aria-label="As sete épocas">
+        <section aria-labelledby="epocas-titulo">
+          <TituloBloco titulo="Épocas" id="epocas-titulo" href="/epocas" link="Épocas" />
+          <ul className="mt-3 grid grid-cols-7 gap-0.5 sm:gap-1.5" aria-label="As sete épocas">
             {epocas.map((e) => {
               const naCarteira = epocasNaCarteira.has(e.id);
               return (
@@ -233,20 +264,11 @@ export default async function InicioPage() {
               );
             })}
           </ul>
-          <p className="t-nota mt-3">
-            {epocasNaCarteira.size > 0
-              ? "Em dourado, as épocas das obras da sua Carteira."
-              : "Ao guardar obras, as épocas delas aparecem aqui em dourado."}
+          <p className="t-nota mt-2">
+            {epocasNaCarteira.size > 0 ? "Em dourado, as épocas das obras da sua Carteira." : "As épocas das obras guardadas aparecem em dourado."}
           </p>
         </section>
       </div>
-
-      <section>
-        <TituloBloco titulo="Atividade recente" href="/carteira" link="Carteira" />
-        <div className="mt-2">
-          <ListaAtividade eventos={recentes} agora={agora} vazio="Nada registrado ainda. O que você fizer no Paideia aparece aqui." />
-        </div>
-      </section>
     </div>
   );
 }
@@ -297,12 +319,15 @@ async function montarContinuar(supabase: Awaited<ReturnType<typeof requirePerfil
 }
 
 // O único bloco escuro do Início: a pedra verde, fixa em todos os modos.
+// Ajusta a altura ao conteúdo; sem obra, a função vira o título e o último
+// registro ocupa a primeira coluna de informação.
 function BlocoContinuar({ dados, agora }: { dados: DadosContinuar; agora: Date }) {
   const botaoClaro = "bg-paideia-gold-400 text-paideia-green-950 hover:bg-paideia-gold-300 active:bg-paideia-gold-300";
   const botaoContorno = "border-paideia-cream-100/70 text-paideia-cream-50 hover:border-paideia-cream-50 hover:bg-paideia-cream-50/10 active:bg-paideia-cream-50/15";
+  const ultimoRegistro = dados ? `${descreverEvento(dados.evento)}, ${quandoRelativo(dados.evento.criado_em, agora)}` : "";
 
   return (
-    <section aria-labelledby="continuar-titulo" className="flex flex-col rounded-2xl bg-paideia-green-800 p-6 text-paideia-cream-50 sm:p-8 lg:col-span-2">
+    <section aria-labelledby="continuar-titulo" className="rounded-2xl bg-paideia-green-800 p-6 text-paideia-cream-50 sm:p-7">
       <div className="flex items-center gap-3">
         <h2 id="continuar-titulo" className="text-interface font-semibold text-paideia-gold-300">
           Continuar
@@ -312,9 +337,9 @@ function BlocoContinuar({ dados, agora }: { dados: DadosContinuar; agora: Date }
 
       {dados ? (
         <>
-          <p className="mt-5 font-serif text-titulo leading-tight">{dados.obra?.titulo ?? dados.funcao?.nome}</p>
-          <dl className="mt-5 grid gap-4 sm:grid-cols-2">
-            {dados.funcao && (
+          <p className="mt-4 font-serif text-titulo leading-tight">{dados.obra?.titulo ?? dados.funcao?.nome}</p>
+          <dl className="mt-4 grid gap-4 sm:grid-cols-2">
+            {dados.obra && dados.funcao ? (
               <div>
                 <dt className="text-nota text-paideia-cream-200">Função</dt>
                 <dd className="mt-0.5 text-interface">
@@ -322,16 +347,19 @@ function BlocoContinuar({ dados, agora }: { dados: DadosContinuar; agora: Date }
                   {dados.funcao.nome}
                 </dd>
               </div>
+            ) : (
+              <div>
+                <dt className="text-nota text-paideia-cream-200">Último registro</dt>
+                <dd className="mt-0.5 text-interface">{ultimoRegistro}</dd>
+              </div>
             )}
             <div>
               <dt className="text-nota text-paideia-cream-200">Próximo exercício</dt>
               <dd className="mt-0.5 text-interface">{dados.proximo?.titulo ?? "Nenhum exercício desta função ainda"}</dd>
             </div>
           </dl>
-          <p className="mt-5 text-nota text-paideia-cream-200">
-            Último registro: {descreverEvento(dados.evento)}, {quandoRelativo(dados.evento.criado_em, agora)}.
-          </p>
-          <div className="mt-auto flex flex-wrap gap-3 pt-6">
+          {dados.obra && dados.funcao && <p className="mt-4 text-nota text-paideia-cream-200">Último registro: {ultimoRegistro}.</p>}
+          <div className="mt-5 flex flex-wrap gap-3">
             <Link
               href={dados.funcao ? `/funcoes/${dados.funcao.id}` : `/obras/${dados.obra!.id}`}
               className={classesBotao({ className: botaoClaro })}
@@ -347,11 +375,11 @@ function BlocoContinuar({ dados, agora }: { dados: DadosContinuar; agora: Date }
         </>
       ) : (
         <>
-          <p className="mt-5 font-serif text-titulo leading-tight">Comece pelas Obras</p>
-          <p className="mt-3 max-w-leitura text-corpo text-paideia-cream-200">
+          <p className="mt-4 font-serif text-titulo leading-tight">Comece pelas Obras</p>
+          <p className="mt-2 max-w-leitura text-corpo text-paideia-cream-200">
             Escolha uma obra e veja a que funções ela serve. O que você fizer aparece aqui para retomar depois.
           </p>
-          <div className="mt-auto pt-6">
+          <div className="mt-5">
             <Link href="/obras" className={classesBotao({ className: botaoClaro })}>
               Começar pelas Obras
             </Link>

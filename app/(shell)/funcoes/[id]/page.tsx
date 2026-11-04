@@ -1,13 +1,13 @@
 import { notFound } from "next/navigation";
 import { requirePerfil } from "@/lib/data/session";
 import { ContextoTela } from "@/components/socrates/contexto-tela";
-import { ColunaProgresso } from "@/components/ui/coluna-progresso";
+import { FileteProgresso } from "@/components/ui/filete-progresso";
 import { TituloBloco } from "@/components/ui/titulo-bloco";
 import { NavegacaoLivro } from "@/components/ui/navegacao-livro";
 import { CartaoObra } from "@/components/corpo/cartao-obra";
 import { ListaAtividade, type EventoAtividade } from "@/components/corpo/lista-atividade";
 import { CAMPOS_CARTAO_OBRA, paraObraLista, type ObraBanco } from "@/lib/data/obras";
-import { preenchimentoColuna } from "@/lib/templo";
+import { progressoFuncao } from "@/lib/progresso-funcoes";
 import { romano } from "@/lib/utils";
 import { ExerciciosDaFuncao, type ExercicioDaFuncao } from "./exercicios";
 import { tituloDaFicha } from "@/lib/metadata";
@@ -73,7 +73,7 @@ export default async function FuncaoPage({ params }: { params: { id: string } })
     <article className="space-y-12">
       <ContextoTela tipo="funcao" id={funcao.id} />
 
-      <header className="grid gap-8 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
+      <header className="grid gap-8 sm:grid-cols-[minmax(0,1fr)_12rem] sm:items-end">
         <div className="min-w-0">
           <div className="marcador max-w-md" aria-hidden>
             {romano(funcao.numero)}
@@ -85,9 +85,9 @@ export default async function FuncaoPage({ params }: { params: { id: string } })
           {funcao.o_que_forma && <p className="t-leitura mt-4">{funcao.o_que_forma}</p>}
           {funcao.descricao && <p className="t-corpo mt-3 max-w-leitura text-ink-muted">{funcao.descricao}</p>}
         </div>
-        <figure className="flex flex-col items-center">
-          <ColunaProgresso valor={preenchimentoColuna(eventos)} rotulo={`Sua coluna em ${funcao.nome}`} className="w-16" />
-          <figcaption className="t-nota mt-2">{eventos === 1 ? "1 evento seu" : `${eventos} eventos seus`}</figcaption>
+        <figure className="w-full max-w-[12rem]">
+          <figcaption className="t-nota mb-2">{eventos === 1 ? "1 evento seu" : `${eventos} eventos seus`}</figcaption>
+          <FileteProgresso valor={progressoFuncao(eventos)} rotulo={`Seu progresso em ${funcao.nome}`} />
         </figure>
       </header>
 

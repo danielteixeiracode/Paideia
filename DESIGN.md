@@ -135,18 +135,18 @@ components:
 
 ## Overview
 
-**Creative North Star: "O Templo"**
+**Creative North Star: "O Códice"**
 
-O sistema é arquitetura: ordem, proporção e base firme. Como num códice impresso, a página tem uma medida estável, títulos em serifa de corte clássico, algarismos romanos marcando as seções e réguas finas organizando o espaço. O verde esmeralda profundo é a pedra que sustenta a estrutura (navegação, áreas de destaque), o creme é o pergaminho onde se lê, e o dourado é a luz, usada com parcimônia em ações, filetes e no templo do Início.
+O sistema é uma página impressa: ordem, margem, régua e proporção. Como num códice, a página tem uma medida estável, títulos em serifa de corte clássico, algarismos romanos marcando as seções e réguas finas organizando o espaço. O verde esmeralda profundo é a pedra que sustenta a estrutura (navegação, áreas de destaque), o creme é o pergaminho onde se lê, e o dourado é a luz, usada com parcimônia em ações, filetes e no progresso das funções.
 
-A ambição aparece como precisão e contenção, não como ornamento. Há um único momento marcante, o templo, em que as colunas sobem e acendem; todo o resto é quieto, imediato e consistente. Três modos compartilham a mesma arquitetura: claro (pergaminho), escuro (verde bem profundo com dourado como destaque) e foco (papel quente, texto escuro e nenhuma interface além do conteúdo).
+A ambição aparece como precisão e contenção, não como ornamento. Não há ornamento de assinatura: o único movimento que não responde a uma ação é o filete das funções que se enche uma vez ao aparecer; todo o resto é quieto, imediato e consistente. Três modos compartilham a mesma arquitetura: claro (pergaminho), escuro (verde bem profundo com dourado como destaque) e foco (papel quente, texto escuro e nenhuma interface além do conteúdo).
 
 **Key Characteristics:**
 - Serifa EB Garamond para títulos e algarismos romanos; Hanken Grotesk para interface e texto corrido.
 - Marcador de seção: algarismo romano seguido de filete de 0,5px. Nunca eyebrow.
 - Verde escuro domina as áreas de destaque; creme é o fundo de leitura; dourado é acento.
 - Raios discretos, sombras mínimas, bordas finas.
-- Movimento em dois registros: discreto (180ms) e assinatura (1100ms, só no templo).
+- Movimento em dois registros: discreto (180ms) e progresso (900ms, só nos filetes das funções).
 - Ícones Lucide.
 
 ## Colors
@@ -180,7 +180,7 @@ As primitivas são as cores do Paideia e não mudam; as semânticas dão a cada 
 ### Named Rules
 **A Regra da Paleta Fixa.** Só as primitivas do Paideia e as derivações dos modos. Mudar a paleta exige instrução explícita do Daniel.
 
-**A Regra do Papel, Não da Cor.** Telas usam cores semânticas (`bg-surface`, `text-ink`, `text-accent`, `bg-action`); primitivas `paideia-*` só nas áreas de pedra que não mudam com o tema e no templo.
+**A Regra do Papel, Não da Cor.** Telas usam cores semânticas (`bg-surface`, `text-ink`, `text-accent`, `bg-action`); primitivas `paideia-*` só nas áreas de pedra que não mudam com o tema (o bloco "Continuar").
 
 ## Typography
 
@@ -224,11 +224,11 @@ Profundidade mínima: superfícies se separam do fundo pela cor e por bordas fin
 
 ## Shapes
 
-Raios discretos, de arquitetura: 2px a 10px (cartões 8px, botões 6px, campos 4px); pílula só em selos e no botão do Sócrates. Filete de 0,5px (`--rule-width`, `.filete`, `border-hair`) em dourado translúcido para marcar seções; bordas de 1px em `rule` para contornar superfícies. O templo é a forma-mãe: frontão triangular, colunas retas, base em degraus.
+Raios discretos: 2px a 10px (cartões 8px, botões 6px, campos 4px); pílula só em selos e no botão do Sócrates. Filete de 0,5px (`--rule-width`, `.filete`, `border-hair`) em dourado translúcido para marcar seções; bordas de 1px em `rule` para contornar superfícies. A forma-mãe é a página impressa: retângulos de margens firmes, réguas horizontais e proporção.
 
 ## Components
 
-Componentes base em `components/ui/`, todos nos três modos, com foco visível, teclado e ARIA. Vitrine com todos os estados: `/design/componentes` (só em desenvolvimento). Em aparelhos de toque, o alvo mínimo é de 44px, e o hover só vale onde há mouse (`hoverOnlyWhenSupported`). Links e controles pequenos que não podem crescer no desenho (atalho do `TituloBloco`, "Voltar" do admin, `Interruptor`, "Sair do modo foco") levam `.alvo-toque`: no toque, uma área invisível centrada de 44×44px. Única exceção: as colunas do templo (Início e Funções), sete colunas numa largura de celular dão de 31 a 42px; ficam acima dos 24px do WCAG 2.5.8 e cada função também se abre pela aba Funções. `cn` (`lib/utils.ts`) usa um tailwind-merge que conhece os tokens próprios (tamanhos de fonte, `border-hair`, sombras); sem isso, `text-interface` apagava `text-on-action` e o botão primário perdia o contraste. As classes antigas (`.btn-*`, `.card`, `.label-caps`) e os componentes de `primitives.tsx` (Card, Badge, Eyebrow, ProgressBar, EmptyState) foram apagados: todas as telas usam os componentes desta lista.
+Componentes base em `components/ui/`, todos nos três modos, com foco visível, teclado e ARIA. Vitrine com todos os estados: `/design/componentes` (só em desenvolvimento). Em aparelhos de toque, o alvo mínimo é de 44px, e o hover só vale onde há mouse (`hoverOnlyWhenSupported`). Links e controles pequenos que não podem crescer no desenho (atalho do `TituloBloco`, "Voltar" do admin, `Interruptor`, "Sair do modo foco") levam `.alvo-toque`: no toque, uma área invisível centrada de 44×44px. `cn` (`lib/utils.ts`) usa um tailwind-merge que conhece os tokens próprios (tamanhos de fonte, `border-hair`, sombras); sem isso, `text-interface` apagava `text-on-action` e o botão primário perdia o contraste. As classes antigas (`.btn-*`, `.card`, `.label-caps`) e os componentes de `primitives.tsx` (Card, Badge, Eyebrow, ProgressBar, EmptyState) foram apagados: todas as telas usam os componentes desta lista.
 
 | Componente | Arquivo | Uso |
 |---|---|---|
@@ -244,15 +244,15 @@ Componentes base em `components/ui/`, todos nos três modos, com foco visível, 
 | `PaletaComandos` | `../comandos/paleta.tsx` | Sobre o `Dialogo` (posição topo, cabeçalho próprio). Combobox com setas, Home/End, Enter e Esc. Busca obras, funções e épocas no banco com espera de 250ms (a partir de duas letras, pela sessão do aluno, sob RLS); navegação do aluno e, para o administrador, do admin; ações: modos claro/escuro/foco, abrir o Sócrates e guardar na Carteira a obra aberta. Campo vazio mostra os cinco recentes (no navegador); sem resultado, "Nada encontrado". Troca de item sem animação. |
 | `Interruptor` | `interruptor.tsx` | Liga/desliga com `role="switch"` e `aria-checked`, rótulo e ajuda por id; o rótulo também alterna. Ligado em `action`, desligado em `muted`. |
 | `TituloBloco` | `titulo-bloco.tsx` | Título de bloco aberto por filete, com atalho opcional para o membro; `grande` usa a serifa de subtítulo para seções principais. Não é eyebrow: é o próprio título. |
-| `CartaoObra` | `../corpo/cartao-obra.tsx` | Cartão inteiro clicável da obra, usado em Obras, Funções e Épocas: época em romano, selo "Na Carteira", título em serifa (nível 2 ou 3 conforme a página; `mostrarEpoca={false}` onde a época já está no topo, como na ficha da época), autor, nota opcional de `obra_funcoes` e a `Colunata`. Dados por `CAMPOS_CARTAO_OBRA` e `paraObraLista` (`lib/data/obras.ts`). |
+| `CartaoObra` | `../corpo/cartao-obra.tsx` | Cartão inteiro clicável da obra, usado em Obras, Funções e Épocas: época em romano, selo "Na Carteira", título em serifa (nível 2 ou 3 conforme a página; `mostrarEpoca={false}` onde a época já está no topo, como na ficha da época), autor, nota opcional de `obra_funcoes` e os romanos das funções (`RomanosFuncoes`). Dados por `CAMPOS_CARTAO_OBRA` e `paraObraLista` (`lib/data/obras.ts`). |
 | `MarcaFruto` | `../corpo/marca-fruto.tsx` | Marca de um fruto: por ora só o romano da função. O símbolo visual do fruto está em aberto (CLAUDE.md) e entra só neste componente quando for definido; não inventar ícone. |
 | `NavegacaoLivro` | `navegacao-livro.tsx` | Rodapé de página de livro: anterior e próxima (romano e nome), sobre filete duplo, com `rel="prev"`/`"next"`. |
 | `ListaAtividade` | `../corpo/lista-atividade.tsx` | Eventos do aluno em frases humanas, com romano da função e data relativa, separados por filete; texto vazio passado por quem usa. |
-| `Colunata` | `../corpo/colunata.tsx` | As sete funções como colunas; as que a obra exercita acesas no ouro em relevo (`.ouro-relevo`), as outras apagadas. Pequena (sem links, dentro de cartão clicável, cada coluna `role="img"` com `aria-label`) ou grande (cada coluna é link para a função, com o romano embaixo). |
+| `RomanosFuncoes` | `../corpo/romanos-funcoes.tsx` | As funções que a obra carrega, em romanos pequenos dourados (nome para leitor de tela e no `title`), nos cartões de obra; com `comLinks`, na ficha da obra, cada uma vira link com romano e nome (alvo de 44px). Sem função: "Sem função ligada". |
 | `ExercicioItem` | `../corpo/exercicio-item.tsx` | Linha de exercício: título, método em `Selo` contorno, "Só desta obra" quando específico, enunciado na medida de leitura e ligações para função e obra; separado por filete (`divide-y-hair`). |
-| `Contador` | `contador.tsx` | Número que conta até o valor no momento de assinatura (uma vez por sessão, nunca com movimento reduzido); algarismos tabulares. |
+| `ProgressoFuncoes` | `../corpo/progresso-funcoes.tsx` | As sete funções, uma linha por função (link para a ficha, 44px): romano, nome curto (`nomeCurtoFuncao`), `FileteProgresso` e a contagem de eventos à direita; sem porcentagem. `aria-label` com o nome inteiro e os eventos. Usada no Início e em Funções. |
 | `PaginaEspecial` | `pagina-especial.tsx` | 404 e erro: marcador ("404" ou "Erro"), título em serifa, filete, uma frase direta e "Voltar ao Início" (com "Tentar de novo" no erro). Usada em `app/not-found.tsx`, `app/error.tsx`, `app/(shell)/not-found.tsx` e `app/(shell)/error.tsx`; dentro do app a moldura continua. `app/global-error.tsx` repete o desenho sem componentes, porque substitui o layout raiz. |
-| `ColunaProgresso`, `ColunaSVG` | `coluna-progresso.tsx` | A coluna do templo como barra de progresso, sem número escrito; o leitor de tela ouve "vazia", "começando a encher", "mais da metade cheia" ou "cheia". `ColunaSVG` é a mesma coluna dentro de outro SVG, com proporções ajustáveis (`geometria`); o templo-selo a usa. |
+| `FileteProgresso` | `filete-progresso.tsx` | Régua de 3px em `rule` que se enche em `gold-ink` conforme o valor (0 a 1, de `lib/progresso-funcoes.ts`), enchendo uma vez ao aparecer (`.filete-encher`). Sem número escrito; com `rotulo`, o leitor de tela ouve "ainda não começou", "começando", "mais da metade" ou "completo"; sem ele, é decorativo e o valor vai em texto ao lado. |
 
 ### Buttons
 - **Shape:** cantos discretos (6px).
@@ -275,7 +275,7 @@ Componentes base em `components/ui/`, todos nos três modos, com foco visível, 
 - **Focus:** anel de foco global em `focus`.
 
 ### Navigation
-- **Cabeçalho, a "arquitrave"** (fixo ao rolar): sobre a superfície do tema (`surface`), não sobre a pedra verde. Não há menu lateral; o conteúdo ocupa a largura inteira, no container `pagina` (72rem). O título da tela não aparece no topo: a navegação já mostra onde o aluno está.
+- **Cabeçalho** (fixo ao rolar): sobre a superfície do tema (`surface`), não sobre a pedra verde. Não há menu lateral; o conteúdo ocupa a largura inteira, no container `pagina` (72rem). O título da tela não aparece no topo: a navegação já mostra onde o aluno está.
   - **Faixa de cima** (56px): marca "Paideia" (leva ao Início) à esquerda; à direita a busca ("Buscar ou ir para", com a dica Ctrl K, que abre a paleta de comandos), o seletor dos três modos e o menu da conta (círculo com a inicial). O menu da conta tem Configurações, Sair e, só para o administrador, a seção Administração (Painel, Obras, Exercícios, Sócrates, Usuários). Fecha com Esc, clique fora ou ao navegar.
   - **Faixa de baixo** (a partir de 768px): a navegação centralizada, cada item com seu romano em `gold-ink` (I Início, II Obras, III Funções, IV Épocas, V Carteira, VI Sócrates); item ativo em `ink` semibold, com sublinhado dourado e `aria-current`. Entre um filete fino em cima (`.filete`) e um filete duplo embaixo (`.filete-duplo-baixo`, 3px double).
   - **Ao rolar:** ganha uma sombra de filete discreta (linha de `rule-strong` e sombra curta de tinta).
@@ -285,27 +285,20 @@ Componentes base em `components/ui/`, todos nos três modos, com foco visível, 
 - **Título da aba do navegador:** cada rota dá o seu ("Obras"), e o layout raiz completa com o modelo `%s – Paideia` (travessão, sem "·"); nas fichas, o nome vem do banco (`lib/metadata.ts`).
 - **Admin:** títulos abertos por filete, sem algarismo romano.
 
-### Templo (selo do Início)
-Em dois tamanhos (`tamanho`): "selo" no Início, com o momento de assinatura, e "grande" em Funções, como navegação, já montado. Elemento de assinatura do Início, à direita do título (no celular, centralizado abaixo dele). SVG em `components/corpo/templo.tsx` (viewBox 240 × 196) com frontão, arquitrave, 7 colunas (uma por função pedagógica, de `ColunaSVG`) e estilóbato, com o algarismo romano de cada função embaixo.
-- **Legibilidade:** 220px de largura no desktop (mínimo 190px) e 240px no celular; cada fuste com 20 a 22px; romanos com 14 a 15px; traços de 1,5px de tela em qualquer tamanho (`vector-effect: non-scaling-stroke`); preenchimento em "dourado em relevo" (gradiente horizontal gold-500, gold-300, gold-400, gold-600: luz um pouco à esquerda do centro, como uma coluna redonda iluminada) contra o contorno green-800 e o fuste vazio cream-50.
-- **Preenchimento:** derivado de `registro_eventos` por `lib/templo.ts` (regra provisória); sem porcentagem escrita. Com as sete cheias, o frontão se acende em dourado.
-- **Legenda de altura fixa** (3,5rem, não move o layout): mostra romano, nome e quantidade de eventos da coluna apontada pelo mouse ou focada pelo teclado; sem coluna apontada, "A formação" e o total de eventos. No toque, o primeiro toque mostra a função na legenda e o segundo abre `/funcoes/[id]`. Cada coluna tem `aria-label` com função e eventos.
-- **Momento de assinatura:** ver Movimento.
-
 ### Obras
-- **Lista** (`/obras`): marcador II, título "Obras" em display e uma frase. Filtros que respondem na hora, no navegador: busca por título ou autor (sem acento), função (as sete, romano e nome) e época (romanos, com o nome no `title` e no `aria-label`), em pílulas com `aria-pressed`; contagem "N obras de M" em região viva e "Limpar filtros". Grade de 3, 2 e 1 colunas com o `Cartao` inteiro clicável: época em romano, "Na Carteira" (selo de ação), título em serifa, autor e a `Colunata` pequena. Hover: borda dourada e fundo `sunken`. Estado vazio do filtro e da lista. `loading.tsx` com esqueletos.
-- **Ficha** (`/obras/[id]`): marcador com o romano da época, título em display, autor, descrição; à direita, o botão da Carteira (otimista) e a `Colunata` grande. "O que esta obra forma": um bloco por função, com o romano grande, o nome (link), a nota de `obra_funcoes` e os exercícios (gerais da função e só desta obra). "Ligações": cartões pequenos para a época e as funções. Informa o contexto do Sócrates.
+- **Lista** (`/obras`): marcador II, título "Obras" em display e uma frase. Filtros que respondem na hora, no navegador: busca por título ou autor (sem acento), função (as sete, romano e nome) e época (romanos, com o nome no `title` e no `aria-label`), em pílulas com `aria-pressed`; contagem "N obras de M" em região viva e "Limpar filtros". Grade de 3, 2 e 1 colunas com o `Cartao` inteiro clicável: época em romano, "Na Carteira" (selo de ação), título em serifa, autor e os romanos das funções da obra (`RomanosFuncoes`). Hover: borda dourada e fundo `sunken`. Estado vazio do filtro e da lista. `loading.tsx` com esqueletos.
+- **Ficha** (`/obras/[id]`): marcador com o romano da época, título em display, autor, descrição; as funções da obra como links (romano e nome, `RomanosFuncoes comLinks`); à direita, o botão da Carteira (otimista). "O que esta obra forma": um bloco por função, com o romano grande, o nome (link), a nota de `obra_funcoes` e os exercícios (gerais da função e só desta obra). "Ligações": cartões pequenos para a época e as funções. Informa o contexto do Sócrates.
 
 ### Funções e Épocas
-- **Funções** (`/funcoes`): marcador III; o templo em tamanho grande (até 420px, largura total no celular) como navegação, já montado (sem repetir o momento de assinatura), com a mesma legenda do Início. Abaixo, as sete funções em linhas de códice: romano grande, nome em serifa, `o_que_forma` quando existir (nada no lugar quando vazio) e "N obras, N exercícios, N eventos seus".
-- **Função** (`/funcoes/[id]`): marcador com o romano, nome em display, `o_que_forma` e `descricao` quando existirem; à direita a `ColunaProgresso` com os eventos do aluno. "Obras que carregam esta função" (`CartaoObra` com a nota), "Exercícios" (filtro todos, gerais ou por obra, só quando há o que separar; exercícios de obras não publicadas ficam de fora), "Sua atividade nesta função" e `NavegacaoLivro`.
+- **Funções** (`/funcoes`): marcador III, título e frase; à direita (abaixo, no celular), "Seus eventos por função" com a mesma lista do Início (`ProgressoFuncoes`). Abaixo, as sete funções em linhas de códice: romano grande, nome em serifa, `o_que_forma` quando existir (nada no lugar quando vazio) e "N obras, N exercícios, N eventos seus".
+- **Função** (`/funcoes/[id]`): marcador com o romano, nome em display, `o_que_forma` e `descricao` quando existirem; à direita "N eventos seus" sobre um `FileteProgresso`. "Obras que carregam esta função" (`CartaoObra` com a nota), "Exercícios" (filtro todos, gerais ou por obra, só quando há o que separar; exercícios de obras não publicadas ficam de fora), "Sua atividade nesta função" e `NavegacaoLivro`.
 - **Épocas** (`/epocas`): marcador IV; linha do tempo horizontal a partir de 768px (filete atrás dos marcos) e lista vertical com filete à esquerda no celular. Cada época: romano num círculo (dourado, com anel, quando há obra dela na Carteira), nome em serifa e quantidade de obras. Não há coluna de período no banco, então nenhum período aparece.
 - **Época** (`/epocas/[id]`): marcador com o romano, nome, descrição quando existir, "Obras desta época" (`CartaoObra`) e `NavegacaoLivro`.
 - Cada rota tem `loading.tsx` com esqueletos; as fichas informam o contexto do Sócrates.
 
 ### Carteira
 - `/carteira`: marcador V, "Carteira", a frase "O livro entra como semente; o fruto é o ativo." e as contagens discretas "N sementes e N frutos", sem porcentagem. Informa ao Sócrates o contexto "nenhum".
-- **Sementes:** obras guardadas que ainda não deram fruto, em `CartaoObra` com a colunata (sem o selo "Na Carteira", redundante aqui) e, abaixo de cada uma, "Remover da Carteira" (botão discreto com texto, sem vermelho), otimista: o cartão sai na hora com um aviso que permite desfazer, e volta se o servidor falhar. Vazio: convite para guardar obras em Obras.
+- **Sementes:** obras guardadas que ainda não deram fruto, em `CartaoObra` com os romanos das funções (sem o selo "Na Carteira", redundante aqui) e, abaixo de cada uma, "Remover da Carteira" (botão discreto com texto, sem vermelho), otimista: o cartão sai na hora com um aviso que permite desfazer, e volta se o servidor falhar. Vazio: convite para guardar obras em Obras.
 - **Frutos:** linhas de códice com `MarcaFruto`, título (exercício, obra ou tipo), função, obra (link) e data relativa. Quando há texto do aluno, a linha é um disclosure (`aria-expanded`, `aria-controls`, `hidden`) que mostra o texto na medida de leitura. Vazio honesto, sem cobrança.
 - `loading.tsx` com esqueletos.
 
@@ -320,7 +313,11 @@ Em dois tamanhos (`tamanho`): "selo" no Início, com o momento de assinatura, e 
 - **Formulário de exercício** (`components/admin/formulario-exercicio.tsx`, em `/admin/exercicios/novo` e `/admin/exercicios/[id]/editar`): função (obrigatória, romano e nome); obra opcional, só entre as que carregam a função em `obra_funcoes` (com aviso quando nenhuma carrega, e a obra é limpa se a nova função não a tiver); título e enunciado obrigatórios; método em texto livre com sugestões (`datalist` com a tabela de métodos do CLAUDE.md); interruptor "Publicado" (rascunho por padrão). Validação em `lib/validacao-exercicio.ts`, no navegador e no servidor (que também confere se a obra carrega a função). Sem exclusão: "Despublicar". Exercício novo entra no fim da ordem da função. O aviso de saída é o hook comum `useAvisoDeSaida`.
 
 ### Início
-Frontispício (marcador I, título "Início" em display, "Bem-vindo de volta") com o templo-selo; "Continuar" (único bloco escuro, pedra green-800 fixa em todos os modos, com título da obra em serifa, função, próximo exercício e os botões "Retomar" e "Ver a obra"; sem eventos, "Começar pelas Obras"); "Sócrates pergunta" (cartão com a pergunta da função com menos eventos, em serifa itálica, perguntas provisórias em `lib/perguntas-socrates.ts`; o botão abre a gaveta com a pergunta no topo, enviada como contexto); três colunas de códice abertas por filete, não caixas (sementes da Carteira com as funções em romano, frutos recentes, as sete épocas com as da Carteira em dourado); atividade recente em linhas separadas por filete, com romano da função e data relativa (`lib/eventos.ts`). Cada bloco tem título pequeno com filete e o atalho para o membro correspondente; estados vazios dizem o que fazer, sem cobrança.
+Densa e sem área vazia: tudo o que importa aparece na primeira tela, e os cartões têm a altura do conteúdo.
+- **Cabeçalho de uma linha**, sobre um filete: romano I e "Início" (`t-titulo`) à esquerda; à direita, "Bem-vindo de volta, [nome]." e o total de eventos, em `ink-muted`.
+- **Duas colunas no desktop (7 e 5 de 12), uma no celular**, nesta ordem: à esquerda, "Continuar" (único bloco escuro, pedra green-800 fixa em todos os modos: obra em serifa, duas colunas de informação, função e próximo exercício, ou último registro e próximo exercício quando não há obra, e os botões "Retomar" e "Ver a obra"; sem eventos, "Comece pelas Obras") e "Atividade recente" (4 itens e "Ver tudo", que abre os demais no lugar com `details`, porque não há página de atividade); à direita, "Sócrates pergunta" (cartão com a pergunta da função com menos eventos, em serifa itálica, e o botão logo abaixo; perguntas provisórias em `lib/perguntas-socrates.ts`) e "As sete funções" (`ProgressoFuncoes`).
+- **Embaixo, em duas colunas:** "Na Carteira" (sementes com as funções em romano) e "Épocas" (as sete em romano, as da Carteira em dourado). Quando há frutos, "Frutos recentes" toma o lugar de "Na Carteira"; se também há sementes, as três ficam lado a lado no desktop.
+- Cada bloco abre com título pequeno sobre filete e o atalho para o membro correspondente; estados vazios curtos, dizendo o que fazer, sem cobrança.
 
 ### Sócrates
 Botão circular fixo de pedra verde com borda dourada e gaveta lateral em `surface` com sombra de sobreposição; tela cheia no celular. Some no modo foco.
@@ -348,13 +345,13 @@ Medido no Edge, com conta de teste temporária, em 360, 390, 768 e 1280px nos tr
 - **Entrada de tela** (`app/(shell)/template.tsx`, `.anim-pagina`): fade com deslocamento de 6px, 225ms, no movimento discreto; começa quando a tela já chegou, nunca atrasa a navegação; nenhuma animação com movimento reduzido. O Next 14 ainda não integra a View Transitions API.
 - **Resposta imediata:** ações do aluno são otimistas (`CarteiraBotao`, "Guardar esta obra" da paleta, `FormularioOtimista` nas Configurações): a interface muda no clique com um aviso, e volta ao estado anterior com aviso de erro se o servidor falhar. As ações devolvem `ResultadoAcao` (`lib/acoes.ts`).
 - **Discreto** (`--motion-subtle-duration` 180ms, `--motion-subtle-ease` `cubic-bezier(0.22, 1, 0.36, 1)`; utilitários `duration-discreto ease-discreto`): respostas a ações, como hover, abrir e confirmar.
-- **Assinatura** (`--motion-signature-duration` 1100ms, `--motion-signature-ease` `cubic-bezier(0.16, 1, 0.3, 1)`): só no Início. As colunas do templo sobem em sequência (90ms entre elas) e os números (`Contador`) contam até o valor, uma vez por sessão: o script do `<head>` marca `data-assinatura="vista"` no `<html>` a partir do `sessionStorage`, e então tudo aparece pronto. Os números ficam ocultos até o contador assumir, para não aparecerem prontos e voltarem a zero.
-- **Movimento reduzido:** com `prefers-reduced-motion: reduce`, todas as durações caem para 0,01ms e o templo aparece montado (medido: nenhuma animação com duração em Início, Obras, Funções, Carteira e Sócrates). Sem redução, o templo sobe na primeira visita ao Início e não volta a subir na mesma sessão.
+- **Progresso** (`--motion-progress-duration` 900ms, `--motion-progress-ease` `cubic-bezier(0.16, 1, 0.3, 1)`; `.filete-encher`): cada `FileteProgresso` enche da esquerda até o valor uma vez, ao aparecer. Só CSS, sem controle por sessão e sem outro efeito de assinatura.
+- **Movimento reduzido:** com `prefers-reduced-motion: reduce`, todas as durações caem para 0,01ms e os filetes aparecem prontos.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** usar cores semânticas nas telas (`bg-canvas`, `bg-surface`, `text-ink`, `text-ink-muted`, `text-accent`, `bg-action`) e primitivas só na pedra fixa e no templo.
+- **Do** usar cores semânticas nas telas (`bg-canvas`, `bg-surface`, `text-ink`, `text-ink-muted`, `text-accent`, `bg-action`) e primitivas só na pedra fixa.
 - **Do** montar telas novas com os componentes de `components/ui/`.
 - **Do** abrir cada seção com o marcador romano e filete.
 - **Do** usar EB Garamond só em títulos e algarismos romanos, e Hanken Grotesk no resto.
@@ -365,9 +362,9 @@ Medido no Edge, com conta de teste temporária, em 360, 390, 768 e 1280px nos tr
 ### Don't:
 - **Don't** usar eyebrow (rótulo pequeno acima do título). O componente e a classe foram apagados.
 - **Don't** usar opacidade solta para texto (`text-ink/60`): texto secundário é `text-ink-muted`.
-- **Don't** usar cores fora dos tokens (vermelho, `white`, `black`, hex soltos); a exceção são os dourados do ouro em relevo, que são primitivas da paleta.
+- **Don't** usar cores fora dos tokens (vermelho, `white`, `black`, hex soltos). As primitivas `paideia-*` só aparecem na pedra fixa.
 - **Don't** pôr algarismo romano nos títulos do admin: lá o título abre só com filete. Os romanos são da navegação do aluno, das funções, das épocas e das seções do aluno.
 - **Don't** usar emoji ou caractere Unicode no lugar de ícone.
 - **Don't** mudar a paleta sem instrução explícita do Daniel.
 - **Don't** usar pastel chapado nem cores saturadas ou infantis.
-- **Don't** criar um segundo momento de movimento marcante fora do templo.
+- **Don't** criar momento de assinatura: nada de colunas que sobem, números que contam ou efeito por sessão. O templo saiu do projeto; não recriar.

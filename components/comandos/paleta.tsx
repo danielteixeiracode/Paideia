@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { BookOpen, Hourglass, Landmark, Loader2, MessageSquareQuote, Moon, Search, Sprout, Sun, BookOpenText, CornerDownLeft } from "lucide-react";
+import { BookOpen, BookmarkPlus, Hourglass, Loader2, MessageSquareQuote, Moon, Search, Sprout, Sun, BookOpenText, CornerDownLeft } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { NAV_ADMIN, NAV_ALUNO } from "@/lib/nav";
 import { definirTema } from "@/lib/tema";
@@ -204,7 +204,7 @@ export function PaletaComandos({ aberta, onFechar, isAdmin }: { aberta: boolean;
         chave: "acao:guardar",
         grupo: "Ações",
         rotulo: "Guardar esta obra na Carteira",
-        marcador: <Landmark className="h-4 w-4" aria-hidden />,
+        marcador: <BookmarkPlus className="h-4 w-4" aria-hidden />,
         // Otimista: o aviso sai na hora; se o servidor falhar, outro aviso explica.
         executar: async () => {
           avisar("Obra guardada na Carteira.", { tom: "sucesso" });

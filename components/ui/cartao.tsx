@@ -5,13 +5,15 @@ export function Cartao({
   as: Tag = "div",
   className,
   children,
+  ...aria
 }: {
   as?: "div" | "article" | "section" | "li";
   className?: string;
   children: React.ReactNode;
+  "aria-labelledby"?: string;
 }) {
   return (
-    <Tag className={cn("rounded-2xl border border-rule bg-surface p-5 text-ink shadow-card", className)}>
+    <Tag {...aria} className={cn("rounded-2xl border border-rule bg-surface p-5 text-ink shadow-card", className)}>
       {children}
     </Tag>
   );

@@ -1,14 +1,14 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { BookOpen, Landmark } from "lucide-react";
+import { BookOpen, Hourglass } from "lucide-react";
 import { Botao } from "@/components/ui/botao";
 import { AreaTexto, CampoTexto, Selecao } from "@/components/ui/campo";
 import { Cartao, Painel } from "@/components/ui/cartao";
 import { CabecalhoSecao } from "@/components/ui/cabecalho-secao";
 import { Selo, SeloEstadoObra, SeloGrau } from "@/components/ui/selo";
 import { EsqueletoCartao, EsqueletoLista } from "@/components/ui/esqueleto";
-import { ColunaProgresso } from "@/components/ui/coluna-progresso";
+import { FileteProgresso } from "@/components/ui/filete-progresso";
 import { SeletorTema } from "../controles";
 import { DemosInterativos } from "./interativos";
 
@@ -166,7 +166,7 @@ function Vitrine() {
           <Selo tom="dourado">Dourado</Selo>
           <Selo tom="acao">Ação</Selo>
           <Selo tom="contorno">Contorno</Selo>
-          <Selo tom="dourado" icone={<Landmark className="h-3.5 w-3.5" aria-hidden />}>
+          <Selo tom="dourado" icone={<Hourglass className="h-3.5 w-3.5" aria-hidden />}>
             Com ícone
           </Selo>
         </div>
@@ -185,12 +185,12 @@ function Vitrine() {
       </section>
 
       <section className="space-y-4">
-        <CabecalhoSecao numero={8} titulo="Coluna de progresso" nivel={3} />
-        <div className="flex items-end gap-4">
-          <ColunaProgresso valor={0} rotulo="Memória e ouvido poético" />
-          <ColunaProgresso valor={0.3} rotulo="Imaginação épica" />
-          <ColunaProgresso valor={0.7} rotulo="Raciocínio moral" />
-          <ColunaProgresso valor={1} rotulo="Formação retórica" animar />
+        <CabecalhoSecao numero={8} titulo="Filete de progresso" nivel={3} />
+        <div className="space-y-3">
+          <FileteProgresso valor={0} rotulo="Memória e ouvido poético" />
+          <FileteProgresso valor={0.3} rotulo="Imaginação épica" />
+          <FileteProgresso valor={0.7} rotulo="Raciocínio moral" />
+          <FileteProgresso valor={1} rotulo="Formação retórica" />
         </div>
         <p className="t-nota">Vazia, começando, mais da metade e cheia. Sem número escrito.</p>
       </section>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { TEMAS, type Tema } from "@/lib/tema";
 import { useTema } from "@/components/tema/use-tema";
 import { cn } from "@/lib/utils";
+import { FileteProgresso } from "@/components/ui/filete-progresso";
 import { Botao } from "@/components/ui/botao";
 
 const NOMES: Record<Tema, string> = { claro: "Claro", escuro: "Escuro", foco: "Foco" };
@@ -31,7 +32,7 @@ export function SeletorTema() {
   );
 }
 
-// Movimento: o momento de assinatura (coluna que sobe) e o discreto.
+// Movimento: o filete de progresso que se enche e o discreto.
 export function DemoMovimento() {
   const [rodada, setRodada] = useState(0);
   const [aberto, setAberto] = useState(false);
@@ -48,14 +49,10 @@ export function DemoMovimento() {
   return (
     <div className="grid gap-6 sm:grid-cols-2">
       <div className="space-y-3">
-        <p className="t-interface text-ink">Assinatura</p>
-        <div className="flex h-40 items-end gap-3 rounded-md border border-rule bg-sunken p-4">
-          {[1, 0.7, 0.45, 1, 0.25, 0.8, 0.55].map((altura, i) => (
-            <div
-              key={`${rodada}-${i}`}
-              className="templo-subir flex-1 rounded-sm bg-gold"
-              style={{ height: `${altura * 100}%`, animationDelay: `calc(var(--motion-signature-stagger) * ${i})` }}
-            />
+        <p className="t-interface text-ink">Progresso</p>
+        <div className="flex h-40 flex-col justify-center gap-3 rounded-md border border-rule bg-sunken p-4">
+          {[1, 0.7, 0.45, 0.25].map((valor, i) => (
+            <FileteProgresso key={`${rodada}-${i}`} valor={valor} />
           ))}
         </div>
         <Botao variante="secundario" onClick={() => setRodada((r) => r + 1)}>

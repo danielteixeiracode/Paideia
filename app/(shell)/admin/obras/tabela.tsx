@@ -107,7 +107,7 @@ export function TabelaObras({ obras }: { obras: ObraAdmin[] }) {
               {visiveis.map((o) => (
                 <tr key={o.id} className="align-baseline">
                   <td className="py-3 pr-4">
-                    <Link href={`/admin/obras/${o.id}/editar`} className="font-serif text-lg font-medium text-ink underline-offset-4 hover:underline">
+                    <Link href={`/admin/obras/${o.id}/editar`} className="alvo-toque font-serif text-lg font-medium text-ink underline-offset-4 hover:underline">
                       {o.titulo}
                     </Link>
                   </td>

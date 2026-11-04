@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
 import { Botao } from "@/components/ui/botao";
-import type { FuncaoColunata } from "@/components/corpo/colunata";
+import type { FuncaoCurta } from "@/components/corpo/romanos-funcoes";
 import { CartaoObra, type ObraLista } from "@/components/corpo/cartao-obra";
 import { cn, romano } from "@/lib/utils";
 
@@ -23,7 +23,7 @@ export function ExploradorObras({
   epocas,
 }: {
   obras: ObraLista[];
-  funcoes: FuncaoColunata[];
+  funcoes: FuncaoCurta[];
   epocas: EpocaFiltro[];
 }) {
   const [funcao, setFuncao] = useState<string | null>(null);
@@ -155,7 +155,7 @@ function Opcao({
       title={titulo}
       onClick={onClick}
       className={cn(
-        "min-h-8 rounded-full border px-3 py-1 text-nota transition-colors duration-discreto ease-discreto [@media(pointer:coarse)]:min-h-11",
+        "min-h-8 min-w-11 rounded-full border px-3 py-1 text-nota transition-colors duration-discreto ease-discreto [@media(pointer:coarse)]:min-h-11",
         ativa ? "border-action bg-action font-semibold text-on-action [&_.t-romano]:text-current" : "border-rule bg-surface text-ink hover:border-ink-muted"
       )}
     >

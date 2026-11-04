@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { requirePerfil } from "@/lib/data/session";
-import { Templo, type ColunaTemplo } from "@/components/corpo/templo";
-import { frontaoAceso, preenchimentoColuna } from "@/lib/templo";
+import { ProgressoFuncoes } from "@/components/corpo/progresso-funcoes";
+import { TituloBloco } from "@/components/ui/titulo-bloco";
 import { romano } from "@/lib/utils";
 import type { Metadata } from "next";
 
@@ -36,26 +36,25 @@ export default async function FuncoesPage() {
   const eventosPorFuncao = contar((eventosR.data ?? []) as { funcao_id: string }[]);
 
   const funcoes = (funcoesR.data ?? []) as Funcao[];
-  const colunas: ColunaTemplo[] = funcoes.map((f) => {
-    const eventos = eventosPorFuncao.get(f.id) ?? 0;
-    return { id: f.id, numero: f.numero, nome: f.nome, eventos, preenchimento: preenchimentoColuna(eventos) };
-  });
-  const totalEventos = colunas.reduce((s, c) => s + c.eventos, 0);
+  const comEventos = funcoes.map((f) => ({ id: f.id, numero: f.numero, nome: f.nome, eventos: eventosPorFuncao.get(f.id) ?? 0 }));
 
   return (
     <div className="space-y-12">
-      <header className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-center">
+      <header className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:items-start">
         <div>
           <div className="marcador max-w-md" aria-hidden>
             III
           </div>
           <h1 className="t-display mt-3">Funções</h1>
           <p className="t-leitura mt-3 text-ink-muted">
-            As sete funções pedagógicas: o que cada obra forma em quem a lê. Cada coluna do templo é uma delas; escolha uma para entrar.
+            As sete funções pedagógicas: o que cada obra forma em quem a lê. Escolha uma para entrar.
           </p>
         </div>
-        {colunas.length > 0 && (
-          <Templo colunas={colunas} aceso={frontaoAceso(colunas.map((c) => c.preenchimento))} totalEventos={totalEventos} tamanho="grande" />
+        {comEventos.length > 0 && (
+          <section aria-labelledby="seus-eventos">
+            <TituloBloco titulo="Seus eventos por função" id="seus-eventos" />
+            <ProgressoFuncoes funcoes={comEventos} className="mt-1" />
+          </section>
         )}
       </header>
 

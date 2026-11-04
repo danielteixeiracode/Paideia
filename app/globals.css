@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* =========================================================================
-   Tokens do Paideia — North Star: "O Templo" (ver DESIGN.md).
+   Tokens do Paideia — North Star: "O Códice" (ver DESIGN.md).
    As cores semânticas guardam canais RGB ("R G B") para aceitar opacidade
    no Tailwind (bg-surface/60). Três temas por data-theme no <html>:
    claro (padrão), escuro e foco. O script em app/layout.tsx aplica o tema
@@ -111,12 +111,11 @@
   --shell-respiro: 9.5rem;
 
   /* Movimento. Discreto: respostas a ações (hover, abrir, confirmar).
-     Assinatura: o único momento marcante, no templo. */
+     Progresso: os filetes das funções se enchem uma vez ao aparecer. */
   --motion-subtle-duration: 180ms;
   --motion-subtle-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --motion-signature-duration: 1100ms;
-  --motion-signature-ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --motion-signature-stagger: 90ms;
+  --motion-progress-duration: 900ms;
+  --motion-progress-ease: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (min-width: 640px) {
@@ -143,12 +142,11 @@
   }
 }
 
-/* Movimento reduzido: o discreto vira instantâneo e a assinatura some. */
+/* Movimento reduzido: tudo vira instantâneo; os filetes aparecem prontos. */
 @media (prefers-reduced-motion: reduce) {
   :root {
     --motion-subtle-duration: 0.01ms;
-    --motion-signature-duration: 0.01ms;
-    --motion-signature-stagger: 0ms;
+    --motion-progress-duration: 0.01ms;
   }
   *,
   *::before,
@@ -241,38 +239,18 @@ body {
     gap: var(--grid-gap);
   }
 
-  /* Templo do Início: o momento de assinatura. As colunas sobem da base ao
-     carregar; quem pede movimento reduzido vê o templo já montado. */
+  /* Filete de progresso: enche da esquerda até o valor (o transform do
+     próprio elemento), uma vez ao aparecer. Com movimento reduzido, pronto. */
   @media (prefers-reduced-motion: no-preference) {
-    .templo-subir {
-      transform-box: fill-box;
-      transform-origin: bottom;
-      animation: templo-subir var(--motion-signature-duration) var(--motion-signature-ease) both;
+    .filete-encher {
+      animation: filete-encher var(--motion-progress-duration) var(--motion-progress-ease) both;
     }
   }
 }
 
-/* Assinatura já vista nesta sessão: o templo aparece pronto. */
-[data-assinatura="vista"] .templo-subir {
-  animation: none !important;
-}
-/* Números que vão contar ficam escondidos até o contador assumir, para não
-   aparecerem prontos e depois voltarem a zero. Com movimento reduzido ou
-   assinatura vista, aparecem direto. */
-@media (prefers-reduced-motion: no-preference) {
-  html:not([data-assinatura="vista"]) [data-contador]:not([data-contador-pronto]) {
-    visibility: hidden;
-  }
-}
-
-@keyframes templo-subir {
+@keyframes filete-encher {
   from {
-    transform: scaleY(0);
-    opacity: 0;
-  }
-  to {
-    transform: scaleY(1);
-    opacity: 1;
+    transform: scaleX(0);
   }
 }
 
@@ -359,23 +337,12 @@ body {
   .filete {
     border-top: var(--rule-width) solid rgb(var(--c-rule-strong) / 0.6);
   }
-  /* Filete duplo: duas réguas finas, como a base da arquitrave. */
+  /* Filete duplo: duas réguas finas, como a régua dupla de uma página impressa. */
   .filete-duplo-baixo {
     border-bottom: 3px double rgb(var(--c-rule-strong) / 0.6);
   }
   .filete-duplo-cima {
     border-top: 3px double rgb(var(--c-rule-strong) / 0.6);
-  }
-  /* Dourado em relevo: o mesmo preenchimento das colunas do templo
-     (DefsOuro em components/ui/coluna-progresso.tsx), para elementos HTML. */
-  .ouro-relevo {
-    background-image: linear-gradient(
-      90deg,
-      theme("colors.paideia.gold.500"),
-      theme("colors.paideia.gold.300") 35%,
-      theme("colors.paideia.gold.400") 60%,
-      theme("colors.paideia.gold.600")
-    );
   }
 
   /* Marcador de seção: algarismo romano seguido de filete. */

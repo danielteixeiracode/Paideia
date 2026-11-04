@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Cartao } from "@/components/ui/cartao";
 import { Selo } from "@/components/ui/selo";
-import { Colunata, type FuncaoColunata } from "@/components/corpo/colunata";
+import { RomanosFuncoes, type FuncaoCurta } from "@/components/corpo/romanos-funcoes";
 import { romano } from "@/lib/utils";
 
 export interface ObraLista {
@@ -15,7 +15,7 @@ export interface ObraLista {
 
 // Cartão da obra (Obras, Funções, Épocas): o cartão inteiro é um link.
 // Época em romano, selo da Carteira, título em serifa, autor, uma nota
-// opcional (a de obra_funcoes, na ficha da função) e a colunata das funções.
+// opcional (a de obra_funcoes, na ficha da função) e as funções da obra em romanos.
 export function CartaoObra({
   obra,
   funcoes,
@@ -24,7 +24,7 @@ export function CartaoObra({
   mostrarEpoca = true,
 }: {
   obra: ObraLista;
-  funcoes: FuncaoColunata[];
+  funcoes: FuncaoCurta[];
   nota?: string | null;
   // Nível do título do cartão, conforme a hierarquia da página.
   nivel?: 2 | 3;
@@ -57,7 +57,7 @@ export function CartaoObra({
         </Titulo>
         {obra.autor && <p className="t-nota mt-1">{obra.autor}</p>}
         {nota && <p className="mt-3 text-interface text-ink">{nota}</p>}
-        <Colunata funcoes={funcoes} acesas={new Set(obra.funcoes)} className="mt-auto pt-5" />
+        <RomanosFuncoes funcoes={funcoes} daObra={new Set(obra.funcoes)} className="mt-auto pt-5" />
       </Cartao>
     </Link>
   );
