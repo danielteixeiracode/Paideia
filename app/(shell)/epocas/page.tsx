@@ -36,8 +36,9 @@ export default async function EpocasPage() {
         </div>
         <h1 className="t-display mt-3">Épocas</h1>
         <p className="t-leitura mt-3 max-w-leitura text-ink-muted">
-          Sete períodos da educação clássica, de Roma ao Colégio Pedro II. Cada um recebeu a tradição do anterior e a passou adiante. Este mapa
-          situa cada obra nesse caminho, para você ver de onde vem o que lê e como essa herança chegou ao Brasil.
+          Os sete principais períodos da educação clássica, de Roma ao Colégio Pedro II: os pontos altos em que se soube formar a pessoa inteira.
+          Estudar com essa linha à vista situa cada obra no tempo em que ela formou gerações e mostra o saber como uma só tradição, que você
+          recebe como herdeiro para guardar e transmitir.
         </p>
         <p className="t-nota mt-3">Em dourado, as épocas das obras da sua Carteira.</p>
       </header>
