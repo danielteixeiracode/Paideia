@@ -35,9 +35,11 @@ export default async function EpocasPage() {
           IV
         </div>
         <h1 className="t-display mt-3">Épocas</h1>
-        <p className="t-leitura mt-3 text-ink-muted">
-          O eixo do tempo da formação, de Roma ao Império Brasileiro. Em dourado, as épocas das obras da sua Carteira.
+        <p className="t-leitura mt-3 max-w-leitura text-ink-muted">
+          Sete períodos da educação clássica, de Roma ao Colégio Pedro II. Cada um recebeu a tradição do anterior e a passou adiante. Este mapa
+          situa cada obra nesse caminho, para você ver de onde vem o que lê e como essa herança chegou ao Brasil.
         </p>
+        <p className="t-nota mt-3">Em dourado, as épocas das obras da sua Carteira.</p>
       </header>
 
       {epocas.length === 0 ? (
