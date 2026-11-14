@@ -1,61 +1,62 @@
 # Paideia
 
-> Aplicativo web de autoformação clássica: organiza trilhas de estudo, leituras e rotina, com um mentor de IA que conversa usando o progresso real de cada usuário.
+> Aplicativo web de formação clássica de nível médio: organiza obras, funções pedagógicas e exercícios, com um mentor de IA que conversa a partir do que cada aluno já fez.
 
 [PREENCHER: GIF ou print da aplicação]
 
 ## O problema
 
-Quem estuda por conta própria seguindo a tradição clássica (artes liberais, grandes livros) costuma ter o plano numa planilha, as leituras em outra lista e nenhum interlocutor para discutir o que está lendo. Ferramentas genéricas de produtividade não modelam trilhas de formação, e chatbots genéricos não sabem em que ponto do caminho a pessoa está.
+Quem segue uma formação clássica por conta própria costuma ter o plano numa lista, as leituras em outra e nenhum interlocutor para discutir o que leu. Ferramentas de produtividade medem conteúdo consumido, não formação; chatbots genéricos não sabem o que a pessoa leu nem o que já produziu.
 
 ## A solução
 
-O Paideia reúne num só lugar a trilha de formação, a "Carteira Intelectual" (leituras em andamento e planejadas), o planejamento das atividades e um mentor de IA, o **Sócrates**. A cada mensagem, o servidor monta o contexto do usuário (perfil, leituras em andamento, etapas recentes da trilha) e o injeta no prompt de sistema, para que o diálogo parta do ponto em que a pessoa realmente está.
+O Paideia organiza a formação em torno de um conjunto pequeno de obras, sete funções pedagógicas e sete épocas, sem sequência obrigatória: o aluno entra por qualquer ponto. Os exercícios pertencem às funções, e voltar à mesma obra por outra função é o caminho para aprofundar. O que o aluno produz (os "frutos") e tudo o que ele faz vão para um registro de eventos, de onde se deriva o progresso.
+
+O mentor de IA, o **Sócrates**, recebe a cada mensagem um resumo desse registro, montado no servidor, e conduz pelo método socrático: pergunta mais do que responde e nunca faz o exercício pelo aluno.
 
 ## Arquitetura
 
 ```mermaid
 flowchart LR
-    U[Usuário<br/>navegador / PWA] -->|páginas e server actions| N[Next.js 14<br/>App Router]
+    U[Aluno<br/>navegador / PWA] -->|páginas e server actions| N[Next.js 14<br/>App Router]
     N -->|middleware: sessão e papel| N
     N <-->|Auth, dados, RLS| S[(Supabase<br/>Postgres)]
-    U -->|POST /api/socrates| A[Rota de API<br/>Sócrates]
-    A -->|perfil, carteira, trilha,<br/>histórico, config do agente| S
-    A -->|prompt de sistema + histórico| C[API Anthropic<br/>Claude]
+    U -->|POST /api/socrates<br/>mensagem + tela atual| A[Rota de API<br/>Sócrates]
+    A -->|histórico e config do agente| S
+    A -->|carteira, frutos, registro de eventos<br/>lidos pela sessão do aluno| R[Resumo do aluno<br/>limite de tamanho]
+    R --> P[Prompt de sistema<br/>base + orientações + resumo]
+    P --> C[API Anthropic<br/>Claude]
     C -->|resposta| A
     A -->|grava mensagens| S
-    ADM[Administrador] -->|/admin: conteúdo,<br/>usuários, prompt e modelo| N
+    ADM[Administrador] -->|/admin: obras, exercícios,<br/>usuários, prompt e modelo| N
 ```
 
 ## Funcionalidades
 
-- **Início e Hoje:** visão geral e atividades do dia.
-- **Mapa dos Estudos:** organização da formação em três trilhos.
-- **Trilha de Formação:** etapas com status e percentual de progresso.
-- **Carteira Intelectual:** leituras com status e progresso.
-- **Biblioteca:** catálogo de obras ("ativos").
-- **Planejamento:** criação e organização de atividades.
-- **Sócrates:** diálogos com o mentor de IA, com histórico por conversa.
-- **Administração:** edição de eixos, capacidades, trilhas, obras, usuários e da configuração do Sócrates (prompt, modelo, temperatura, limite de tokens).
-- **Login** por e-mail e senha, com Google e Apple opcionais (OAuth do Supabase).
+- **Obras, Funções e Épocas:** catálogo das obras da formação, as sete funções pedagógicas e as sete épocas, cada uma com página própria e ligações entre si.
+- **Carteira Intelectual:** obras do aluno e os frutos produzidos a partir delas.
+- **Biblioteca.**
+- **Sócrates:** conversas com o mentor de IA, com histórico por diálogo e ciência da tela em que o aluno está.
+- **Progresso por função**, derivado do registro de eventos.
+- **Administração:** cadastro de obras e exercícios, gestão de usuários e configuração do Sócrates (prompt, modelo, temperatura, limite de tokens).
+- **Login** por e-mail e senha, com papéis de aluno e administrador; Google e Apple opcionais (OAuth do Supabase).
 - **PWA** instalável.
 
-[CONFIRMAR: descrição de cada tela; foi inferida dos nomes das rotas]
+[CONFIRMAR: descrição de cada tela; foi inferida das rotas e do PRODUCT.md]
 
 ## Stack
 
 - **Frontend e backend:** Next.js 14 (App Router, server actions, route handlers), React 18, TypeScript, Tailwind CSS
 - **Dados e autenticação:** Supabase (Postgres, Auth, Row Level Security)
 - **IA:** API Anthropic (Claude) via `@anthropic-ai/sdk`
-- **Validação:** Zod
 - **Testes:** Playwright (end-to-end)
 
 ## Decisões técnicas
 
-1. **Contexto do usuário montado no servidor, a cada mensagem.** A rota `/api/socrates` busca perfil, leituras em andamento e progresso na trilha e os injeta no prompt de sistema. A chave da API nunca chega ao navegador, e o agente responde com base em dados atuais, não no que o usuário lembra de contar.
-2. **Configuração do agente no banco, não no código.** Prompt de sistema, modelo, temperatura e `max_tokens` ficam na tabela `config_socrates` e são editados pelo painel de administração, sem novo deploy.
-3. **Segurança em camadas.** O acesso ao `/admin` é verificado no `middleware.ts` e de novo na camada de sessão; as tabelas usam RLS, e a chave de service role só é usada em rotas de servidor.
-4. **Histórico limitado às últimas 30 mensagens** por conversa ao chamar o modelo. [CONFIRMAR: motivo — controle de custo e de tamanho do contexto]
+1. **Resumo do aluno em vez do histórico inteiro.** A cada mensagem, `lib/socrates-contexto.ts` monta um resumo com as obras da Carteira, os frutos mais recentes, a contagem de eventos por função (mais e menos exercitadas), os últimos registros e a tela atual. O agente pergunta melhor sem receber dados brutos.
+2. **Orçamento fixo de contexto.** O resumo tem limite de cerca de 6.000 caracteres (~1.500 tokens). Acima disso, corta primeiro os trechos de texto dos frutos e depois os eventos mais antigos, preservando o que mais ajuda a conversa.
+3. **Ordem do prompt pensada para cache.** Prompt-base (estável) primeiro, orientações fixas em seguida e o resumo do aluno por último. A configuração do agente (prompt, modelo, temperatura, `max_tokens`) fica no banco e é editada pelo painel de administração, sem novo deploy. [CONFIRMAR: uso efetivo de prompt caching]
+4. **Isolamento de dados por construção.** O resumo é lido com a sessão do próprio aluno: RLS e filtro por `user_id` garantem que nada de outro aluno entre no prompt, e a chave da API só existe no servidor.
 
 ## Resultados
 
@@ -71,8 +72,9 @@ npm install
 
 1. No SQL Editor do Supabase, rode, nesta ordem:
    - `supabase/schema.sql` — tabelas, enums, triggers e políticas de RLS
-   - `supabase/seed.sql` — dados iniciais (eixos, capacidades, trilha das Sete Artes Liberais, obras de exemplo e prompt inicial do Sócrates)
-   - os arquivos de `supabase/migrations/`, em ordem de data
+   - `supabase/seed.sql` — dados iniciais e prompt inicial do Sócrates
+   - os arquivos de `supabase/migrations/`, em ordem de data [CONFIRMAR: se o schema.sql já inclui as migrations]
+   - opcional: `supabase/seeds/exemplo-*.sql`, dados de teste (cada um tem um script `-remover` correspondente)
 2. Copie `.env.local.example` para `.env.local` e preencha:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -95,5 +97,6 @@ update perfis set papel = 'administrador' where email = 'seu-email@exemplo.com';
 ## Próximos passos
 
 - [PREENCHER: próximos recursos planejados]
+- Teste de leitura e compreensão.
+- Formação personalizada por objetivo.
 - Substituir os ícones provisórios do PWA pela identidade visual final.
-- Ampliar a cobertura de testes end-to-end além do fluxo de administração.
